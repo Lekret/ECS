@@ -1,18 +1,17 @@
-using EcsLib.Internal;
 using System;
+using EcsLib.Internal;
 
 namespace EcsLib.Api
 {
     public sealed partial class EcsManager : IDisposable
     {
         public static EcsManager Instance { get; set; }
-        
+
+        private bool _isDestroyed;
         private readonly EcsAccessHandler _accessHandler;
         private readonly EntityWorld _world;
         internal readonly EcsComponents Components;
         
-        public bool IsDestroyed { get; private set; }
-
         public EcsManager(int componentsInitialCapacity = 30)
         {
             _world = new EntityWorld();
@@ -22,6 +21,11 @@ namespace EcsLib.Api
 
             if (Instance == null)
                 Instance = this;
+        }
+
+        public bool IsDestroyed()
+        {
+            return _isDestroyed;
         }
 
         public Entity CreateEntity()
@@ -48,7 +52,7 @@ namespace EcsLib.Api
         public void Dispose()
         {
             _world.DestroyAll();
-            IsDestroyed = true;
+            _isDestroyed = true;
         }
 
         internal void OnComponentChanged(Entity entity, int componentIndex)
@@ -69,7 +73,7 @@ namespace EcsLib.Api
 
         private bool CheckDestroyed()
         {
-            if (IsDestroyed)
+            if (_isDestroyed)
             {
                 ErrorHelper.Handle($"{nameof(EcsManager)} is already disposed");
                 return true;
