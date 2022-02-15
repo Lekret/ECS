@@ -17,7 +17,7 @@ namespace Example
         public TestSystem(EcsManager manager)
         {
             _logger = manager.Get<ILogger>();
-            _filter = manager.Filter()
+            _filter = EcsFilter.Create()
                 .Inc<Health>()
                 .Exc<GameObject>()
                 .End();

@@ -23,6 +23,11 @@ namespace EcsLib.Api
         {
             return other != null && _id == other._id && _owner == other._owner;
         }
+        
+        public override string ToString()
+        {
+            return $"Entity({_id})";
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Entity Create(EcsManager ecsManager = null)
@@ -31,12 +36,7 @@ namespace EcsLib.Api
                 ecsManager = EcsManager.Instance;
             return ecsManager.CreateEntity();
         }
-
-        public override string ToString()
-        {
-            return $"Entity({_id})";
-        }
-
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool IsDestroyed()
         {
@@ -54,7 +54,21 @@ namespace EcsLib.Api
         {
             return _id;
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool TryGet<T>(out T value)
+        {
+            if (Has<T>())
+            {
+                value = Get<T>();
+                return true;
+            }
+            
+            value = default;
+            return false;
+        }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T Get<T>()
         {
             if (_id == NULL_ID)
@@ -78,6 +92,7 @@ namespace EcsLib.Api
             return GetComponentRef<T>();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Entity Set<T>(T value)
         {
             if (_id == NULL_ID)
@@ -99,6 +114,7 @@ namespace EcsLib.Api
             return this;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Entity Remove<T>()
         {
             if (_id == NULL_ID)
@@ -129,14 +145,8 @@ namespace EcsLib.Api
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Has<T>()
         {
-            if (_id == NULL_ID)
-            {
-                LogError($"[{nameof(Has)}<{typeof(T)}>] Entity is null");
-                return false;
-            }
-
-            if (_isDestroyed)
-                return false;
+            if (_id == NULL_ID) return false;
+            if (_isDestroyed) return false;
             return GetFlagRef<T>();
         }
 
@@ -148,6 +158,7 @@ namespace EcsLib.Api
             return GetFlag(componentIndex);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Destroy()
         {
             if (_id == NULL_ID)
@@ -172,6 +183,7 @@ namespace EcsLib.Api
             _owner.OnEntityDestroyed(this);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal void Resurrect()
         {
             _isDestroyed = false;
