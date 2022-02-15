@@ -1,27 +1,18 @@
 using System;
 using System.Runtime.CompilerServices;
 using EcsLib.Internal;
-using UnityEngine;
 
 namespace EcsLib.Api
 {
     public sealed class Entity : IEquatable<Entity>
     {
-        public static readonly Entity Null = new Entity(null, NULL_ID);
         private const int SINGLETON_ID = 0;
         private const int NULL_ID = -1;
+        public static readonly Entity Null = new Entity(null, NULL_ID);
         private readonly EcsManager _owner;
         private readonly int _id;
         private bool _isDestroyed;
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Entity Create(EcsManager ecsManager = null)
-        {
-            if (ecsManager == null)
-                ecsManager = EcsManager.Instance;
-            return ecsManager.CreateEntity();
-        }
-        
         internal Entity(EcsManager owner, int id)
         {
             _owner = owner;
@@ -31,6 +22,14 @@ namespace EcsLib.Api
         public bool Equals(Entity other)
         {
             return other != null && _id == other._id && _owner == other._owner;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Entity Create(EcsManager ecsManager = null)
+        {
+            if (ecsManager == null)
+                ecsManager = EcsManager.Instance;
+            return ecsManager.CreateEntity();
         }
 
         public override string ToString()
@@ -63,16 +62,19 @@ namespace EcsLib.Api
                 LogError($"[{nameof(Get)}<{typeof(T)}>] Entity is null");
                 return default;
             }
+
             if (_isDestroyed)
             {
                 LogError($"[{nameof(Get)}<{typeof(T)}>] {this} is destroyed");
                 return default;
             }
+
             if (!Has<T>())
             {
                 LogError($"[{nameof(Get)}<{typeof(T)}>] {this} don't have component");
                 return default;
             }
+
             return GetComponentRef<T>();
         }
 
@@ -83,12 +85,13 @@ namespace EcsLib.Api
                 LogError($"[{nameof(Set)}<{typeof(T)}>] Entity is null");
                 return this;
             }
+
             if (_isDestroyed)
             {
                 LogError($"[{nameof(Set)}<{typeof(T)}>] {this} is destroyed");
                 return this;
             }
-            
+
             GetFlagRef<T>() = true;
             GetComponentRef<T>() = value;
             var componentIndex = ComponentMeta<T>.Index;
@@ -96,13 +99,14 @@ namespace EcsLib.Api
             return this;
         }
 
-        public Entity Remove<T>() 
+        public Entity Remove<T>()
         {
             if (_id == NULL_ID)
             {
                 LogError($"[{nameof(Remove)}<{typeof(T)}>] Entity is null");
                 return this;
             }
+
             if (_isDestroyed)
             {
                 LogError($"[{nameof(Remove)}<{typeof(T)}>] {this} is destroyed");
@@ -118,6 +122,7 @@ namespace EcsLib.Api
                 _owner.OnComponentChanged(this, componentIndex);
                 return this;
             }
+
             return this;
         }
 
@@ -129,11 +134,12 @@ namespace EcsLib.Api
                 LogError($"[{nameof(Has)}<{typeof(T)}>] Entity is null");
                 return false;
             }
+
             if (_isDestroyed)
                 return false;
             return GetFlagRef<T>();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal bool HasComponent(int componentIndex)
         {
@@ -141,7 +147,7 @@ namespace EcsLib.Api
                 return false;
             return GetFlag(componentIndex);
         }
-        
+
         public void Destroy()
         {
             if (_id == NULL_ID)
@@ -149,11 +155,13 @@ namespace EcsLib.Api
                 LogError($"[{nameof(Destroy)}] Entity is null");
                 return;
             }
+
             if (_id == SINGLETON_ID)
             {
                 LogError($"[{nameof(Destroy)}] Entity is singleton");
                 return;
             }
+
             if (_isDestroyed)
             {
                 LogError($"[{nameof(Destroy)}] {this} is already destroyed");
@@ -174,7 +182,7 @@ namespace EcsLib.Api
         {
             return ref _owner.Components.GetRawPool<T>()[_id];
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private ref bool GetFlagRef<T>()
         {
@@ -186,7 +194,7 @@ namespace EcsLib.Api
         {
             return ref _owner.Components.GetFlags(componentIndex)[_id];
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void LogError(string message)
         {
