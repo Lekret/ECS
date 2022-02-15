@@ -19,7 +19,7 @@ namespace EcsLib.Internal
             _flags = new List<bool[]>(capacity);
         }
 
-        internal void ResetEntityData(Entity entity)
+        internal void EraseEntityData(Entity entity)
         {
             var entityId = entity.GetId();
             foreach (var pool in _rawComponents)

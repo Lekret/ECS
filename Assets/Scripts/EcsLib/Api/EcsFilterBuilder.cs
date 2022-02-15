@@ -21,7 +21,7 @@ namespace EcsLib.Api
             var index = ComponentMeta<T>.Index;
             if (_excludedIndices.Contains(index))
             {
-                Error.Handle($"Can't include already excluded type {typeof(T)}");
+                ErrorHelper.Handle($"Can't include already excluded type {typeof(T)}");
                 return this;
             }
             _includedIndices.Add(index);
@@ -33,7 +33,7 @@ namespace EcsLib.Api
             var index = ComponentMeta<T>.Index;
             if (_includedIndices.Contains(index))
             {
-                Error.Handle($"Can't exclude already included type {typeof(T)}");
+                ErrorHelper.Handle($"Can't exclude already included type {typeof(T)}");
                 return this;
             }
             _excludedIndices.Add(index);

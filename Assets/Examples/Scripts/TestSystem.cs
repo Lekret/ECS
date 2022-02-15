@@ -1,4 +1,5 @@
-﻿using EcsLib.Api;
+﻿using System;
+using EcsLib.Api;
 using UnityEngine;
 
 namespace Example

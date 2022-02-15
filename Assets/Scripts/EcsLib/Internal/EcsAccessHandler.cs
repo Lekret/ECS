@@ -47,6 +47,8 @@ namespace EcsLib.Internal
             RegisterFilter(filter, excluded);
             foreach (var entity in _world.Entities)
             {
+                if (entity.IsDestroyed()) 
+                    continue;
                 filter.HandleEntity(entity);
             }
             return filter;

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace EcsLib.Api
 {
-    public static class Error
+    public static class ErrorHelper
     {
         public static Action<string> OnError { get; set; } = Debug.LogError;
         

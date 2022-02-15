@@ -62,8 +62,8 @@ namespace EcsLib.Api
         {
             if (CheckDestroyed())
                 return;
-            Components.ResetEntityData(entity);
-            _world.RemoveEntity(entity);
+            Components.EraseEntityData(entity);
+            _world.DestroyEntity(entity);
             _accessHandler.OnEntityDestroyed(entity);
         }
 
@@ -71,7 +71,7 @@ namespace EcsLib.Api
         {
             if (IsDestroyed)
             {
-                Error.Handle($"{nameof(EcsManager)} is already disposed");
+                ErrorHelper.Handle($"{nameof(EcsManager)} is already disposed");
                 return true;
             }
             return false;
