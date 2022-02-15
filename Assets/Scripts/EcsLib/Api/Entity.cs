@@ -69,19 +69,12 @@ namespace EcsLib.Api
         {
             if (_id == DESTROYED_ID)
                 return false;
-            
             return GetFlagRef<T>();
         }
 
         public T Get<T>()
         {
-            if (_id == DESTROYED_ID)
-            {
-                LogError($"{this}, can't get component {typeof(T)}");
-                return default;
-            }
-
-            if (!Has<T>())
+            if (_id == DESTROYED_ID || !Has<T>())
             {
                 LogError($"{this}, can't get component {typeof(T)}, returning default");
                 return default;
