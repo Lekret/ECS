@@ -1,5 +1,4 @@
-﻿using System;
-using EcsLib.Api;
+﻿using EcsLib.Api;
 using UnityEngine;
 
 namespace Example
@@ -41,13 +40,7 @@ namespace Example
 
         public void Tick()
         {
-            foreach (var enti in _filterN)
-            {
-                foreach (var entity in _filter)
-                {
-                    Debug.Log($"Count: {_filter.Count}, should be 1. Value: {entity.Get<Health>().Value}");
-                }
-            }
+            
         }
     }
 }

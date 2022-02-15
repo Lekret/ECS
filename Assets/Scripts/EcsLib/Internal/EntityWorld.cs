@@ -61,7 +61,7 @@ namespace EcsLib.Internal
 
         private static void LogError(string message)
         {
-            ErrorHelper.Handle(message);
+            EcsError.Handle(message);
         }
     }
 }

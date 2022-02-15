@@ -1,9 +1,8 @@
-using System;
 using EcsLib.Internal;
 
 namespace EcsLib.Api
 {
-    public sealed partial class EcsManager : IDisposable
+    public sealed partial class EcsManager
     {
         public static EcsManager Instance { get; set; }
 
@@ -35,7 +34,7 @@ namespace EcsLib.Api
             return _world.CreateEntity(this);
         }
 
-        public Entity GetEntity(int id)
+        public Entity GetEntityById(int id)
         {
             if (CheckDestroyed())
                 return Entity.Null;
@@ -49,8 +48,10 @@ namespace EcsLib.Api
             return _accessHandler.CreateFilter();
         }
         
-        public void Dispose()
+        public void Destroy()
         {
+            if (CheckDestroyed())
+                return;
             _world.DestroyAll();
             _isDestroyed = true;
         }
@@ -75,7 +76,7 @@ namespace EcsLib.Api
         {
             if (_isDestroyed)
             {
-                ErrorHelper.Handle($"{nameof(EcsManager)} is already disposed");
+                EcsError.Handle($"{nameof(EcsManager)} is already disposed");
                 return true;
             }
             return false;

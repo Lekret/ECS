@@ -198,7 +198,7 @@ namespace EcsLib.Api
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void LogError(string message)
         {
-            ErrorHelper.Handle(message);
+            EcsError.Handle(message);
         }
     }
 }
