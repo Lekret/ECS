@@ -43,7 +43,7 @@ namespace EcsLib.Internal
             return entity;
         }
         
-        internal void DestroyEntity(Entity entity)
+        internal void OnEntityDestroyed(Entity entity)
         {
             _destroyedEntities.Enqueue(entity);
         }

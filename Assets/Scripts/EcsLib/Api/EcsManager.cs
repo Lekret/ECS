@@ -62,8 +62,8 @@ namespace EcsLib.Api
         {
             if (CheckDestroyed())
                 return;
-            Components.EraseEntityData(entity);
-            _world.DestroyEntity(entity);
+            Components.OnEntityDestroyed(entity);
+            _world.OnEntityDestroyed(entity);
             _accessHandler.OnEntityDestroyed(entity);
         }
 

@@ -19,7 +19,8 @@ namespace EcsLib.Internal
             _flags = new List<bool[]>(capacity);
         }
 
-        internal void EraseEntityData(Entity entity)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal void OnEntityDestroyed(Entity entity)
         {
             var entityId = entity.GetId();
             foreach (var pool in _rawComponents)
