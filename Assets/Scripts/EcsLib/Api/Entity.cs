@@ -83,13 +83,13 @@ namespace EcsLib.Api
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T Get<T>()
         {
-            if (_id == NULL_ID)
+            if (IsNull())
             {
                 LogError($"[{nameof(Get)}<{typeof(T)}>] Entity is null");
                 return default;
             }
 
-            if (_isDestroyed)
+            if (IsDestroyed())
             {
                 LogError($"[{nameof(Get)}<{typeof(T)}>] {this} is destroyed");
                 return default;
@@ -107,13 +107,13 @@ namespace EcsLib.Api
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Entity Set<T>(T value)
         {
-            if (_id == NULL_ID)
+            if (IsNull())
             {
                 LogError($"[{nameof(Set)}<{typeof(T)}>] Entity is null");
                 return this;
             }
 
-            if (_isDestroyed)
+            if (IsDestroyed())
             {
                 LogError($"[{nameof(Set)}<{typeof(T)}>] {this} is destroyed");
                 return this;
@@ -129,13 +129,13 @@ namespace EcsLib.Api
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Entity Remove<T>()
         {
-            if (_id == NULL_ID)
+            if (IsNull())
             {
                 LogError($"[{nameof(Remove)}<{typeof(T)}>] Entity is null");
                 return this;
             }
 
-            if (_isDestroyed)
+            if (IsDestroyed())
             {
                 LogError($"[{nameof(Remove)}<{typeof(T)}>] {this} is destroyed");
                 return this;
@@ -157,15 +157,15 @@ namespace EcsLib.Api
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Has<T>()
         {
-            if (_id == NULL_ID) return false;
-            if (_isDestroyed) return false;
+            if (IsNull()) return false;
+            if (IsDestroyed()) return false;
             return GetFlagRef<T>();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal bool HasComponent(int componentIndex)
         {
-            if (_isDestroyed)
+            if (IsDestroyed())
                 return false;
             return GetFlag(componentIndex);
         }
@@ -173,19 +173,19 @@ namespace EcsLib.Api
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Destroy()
         {
-            if (_id == NULL_ID)
+            if (IsNull())
             {
                 LogError($"[{nameof(Destroy)}] Entity is null");
                 return;
             }
 
-            if (_id == SINGLETON_ID)
+            if (IsSingleton())
             {
                 LogError($"[{nameof(Destroy)}] Entity is singleton");
                 return;
             }
 
-            if (_isDestroyed)
+            if (IsDestroyed())
             {
                 LogError($"[{nameof(Destroy)}] {this} is already destroyed");
                 return;
