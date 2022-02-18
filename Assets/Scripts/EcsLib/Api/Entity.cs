@@ -44,6 +44,18 @@ namespace EcsLib.Api
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool IsSingleton()
+        {
+            return _id == SINGLETON_ID;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool IsNull()
+        {
+            return _id == NULL_ID;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public EcsManager GetOwner()
         {
             return _owner;

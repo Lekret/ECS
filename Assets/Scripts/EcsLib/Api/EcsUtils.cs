@@ -1,6 +1,6 @@
 namespace EcsLib.Api
 {
-    public static class EntityUtils
+    public static class EcsUtils
     {
         public static Entity ToEntity(this int id, EcsManager manager = null)
         {
