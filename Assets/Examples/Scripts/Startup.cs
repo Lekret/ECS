@@ -4,15 +4,9 @@ using UnityEngine;
 
 namespace Examples.Scripts
 {
-    public struct Item
-    {
-        
-    }
-
-    public struct Count
-    {
-        
-    }
+    public struct Item { }
+    public struct Count { }
+    public struct ItemType { }
     
     public class Startup : MonoBehaviour
     {
@@ -24,16 +18,16 @@ namespace Examples.Scripts
             var manager = new EcsManager();
             manager.Set<ILogger>(new Logger());
             _systems.Add(new TestSystem(manager));
-            
-            manager.Invariant(new AlwaysTogether()
-                .Inc<Item>()
-                .Inc<Count>());
+
+            manager.Invariant(new AlwaysWith<Item>()
+                .ShouldBe<Count>()
+                .ShouldBe<ItemType>());
 
             var entity = Entity.Create();
             entity.Set(new Item());
             entity.Set(new Count());
             entity.Remove<Count>();
-            Debug.LogError(entity.Has<int>());
+            entity.Remove<Item>();
         }
 
         private void Start()
