@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using EcsLib.Api;
 
 namespace EcsLib.Internal
@@ -41,7 +42,31 @@ namespace EcsLib.Internal
 
         internal EcsFilter InternalBuildFilter(List<int> included, List<int> excluded)
         {
-            var filter = new EcsFilter(included, excluded);
+            if (TryGetExistingFilter(included, excluded, out var filter))
+                return filter;
+            return CreateNewFilter(included, excluded);
+        }
+
+        private bool TryGetExistingFilter(List<int> included, List<int> excluded, out EcsFilter filter)
+        {
+            foreach (var filters in _filtersByType)
+            {
+                foreach (var f in filters)
+                {
+                    if (f.MatchesIndices(included, excluded))
+                    {
+                        filter = f;
+                        return true;
+                    }
+                }
+            }
+            filter = null;
+            return false;
+        }
+        
+        private EcsFilter CreateNewFilter(IEnumerable<int> included, IEnumerable<int> excluded)
+        {
+            var filter = new EcsFilter(included.ToArray(), excluded.ToArray());
             IncreaseFiltersRegistry();
             RegisterFilter(filter, included);
             RegisterFilter(filter, excluded);
@@ -53,7 +78,7 @@ namespace EcsLib.Internal
             }
             return filter;
         }
-        
+
         private void RegisterFilter(EcsFilter filter, IEnumerable<int> componentIndices)
         {
             foreach (var index in componentIndices)

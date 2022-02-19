@@ -8,13 +8,13 @@ namespace EcsLib.Api
     public sealed class EcsFilter : IEnumerable<Entity>
     {
         private readonly HashSet<Entity> _entities = new HashSet<Entity>();
-        private readonly List<int> _withIndices;
-        private readonly List<int> _withoutIndices;
+        private readonly int[] _included;
+        private readonly int[] _excluded;
 
-        internal EcsFilter(List<int> withIndices, List<int> withoutIndices)
+        internal EcsFilter(int[] included, int[] excluded)
         {
-            _withIndices = withIndices;
-            _withoutIndices = withoutIndices;
+            _included = included;
+            _excluded = excluded;
         }
 
         public event Action<Entity> EntityAdded;
@@ -65,15 +65,15 @@ namespace EcsLib.Api
 
         private bool CanAdd(Entity entity)
         {
-            for (var i = 0; i < _withoutIndices.Count; i++)
+            for (var i = 0; i < _excluded.Length; i++)
             {
-                if (entity.HasComponent(_withoutIndices[i]))
+                if (entity.HasComponent(_excluded[i]))
                     return false;
             }
 
-            for (var i = 0; i < _withIndices.Count; i++)
+            for (var i = 0; i < _included.Length; i++)
             {
-                if (!entity.HasComponent(_withIndices[i]))
+                if (!entity.HasComponent(_included[i]))
                     return false;
             }
 
@@ -94,6 +94,32 @@ namespace EcsLib.Api
             {
                 EntityRemoved?.Invoke(entity);
             }
+        }
+
+        public bool MatchesIndices(List<int> included, List<int> excluded)
+        {
+            if (included.Count != _included.Length) return false;
+            if (excluded.Count != _excluded.Length) return false;
+            return IndicesEquals(_included, included) && IndicesEquals(_excluded, excluded);
+        }
+
+        private static bool IndicesEquals(IReadOnlyCollection<int> left, IReadOnlyCollection<int> right)
+        {
+            for (var i = 0; i < left.Count; i++)
+            {
+                var contains = false;
+                for (var k = 0; k < right.Count; k++)
+                {
+                    if (i == k)
+                    {
+                        contains = true;
+                        break;
+                    }
+                }
+                if (!contains)
+                    return false;
+            }
+            return true;
         }
     }
 }

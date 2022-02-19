@@ -3,46 +3,81 @@ using EcsLib.Internal;
 
 namespace EcsLib.Api
 {
-    public readonly struct EcsFilterBuilder
+    public struct EcsFilterBuilder
     {
+        private static readonly List<int> IncludedIndices = new List<int>();
+        private static readonly List<int> ExcludedIndices = new List<int>();
         private readonly EcsAccessor _accessor;
-        private readonly List<int> _includedIndices;
-        private readonly List<int> _excludedIndices;
+        private EcsFilter _filter;
 
         internal EcsFilterBuilder(EcsAccessor accessor)
         {
             _accessor = accessor;
-            _includedIndices = new List<int>();
-            _excludedIndices = new List<int>();
+            _filter = null;
+            IncludedIndices.Clear();
+            ExcludedIndices.Clear();
         }
 
         public EcsFilterBuilder Inc<T>()
         {
+            if (IsEnded())
+            {
+                LogError($"[{nameof(Inc)}<{typeof(T)}>] Filter is end");
+                return this;
+            }
+            
             var index = ComponentMeta<T>.Index;
-            if (_excludedIndices.Contains(index))
+            if (ExcludedIndices.Contains(index))
             {
                 EcsError.Handle($"Can't include already excluded type {typeof(T)}");
                 return this;
             }
-            _includedIndices.Add(index);
+            IncludedIndices.Add(index);
             return this;
         }
 
         public EcsFilterBuilder Exc<T>()
         {
+            if (IsEnded())
+            {
+                LogError($"[{nameof(Exc)}<{typeof(T)}>] Filter is end");
+                return this;
+            }
+
             var index = ComponentMeta<T>.Index;
-            if (_includedIndices.Contains(index))
+            if (IncludedIndices.Contains(index))
             {
                 EcsError.Handle($"Can't exclude already included type {typeof(T)}");
                 return this;
             }
-            _excludedIndices.Add(index);
+            ExcludedIndices.Add(index);
             return this;
         }
         
         public EcsFilter End()
         {
-            return _accessor.InternalBuildFilter(_includedIndices, _excludedIndices);
+            if (IsEnded())
+            {
+                LogError($"[{nameof(End)}] Filter is end");
+            }
+            else
+            {
+                _filter = _accessor.InternalBuildFilter(IncludedIndices, ExcludedIndices);
+                IncludedIndices.Clear();
+                ExcludedIndices.Clear();
+            }
+            
+            return _filter;
+        }
+
+        private bool IsEnded()
+        {
+            return _filter != null;
+        }
+
+        private static void LogError(string message)
+        {
+            EcsError.Handle(message);
         }
     }
 }
