@@ -8,7 +8,7 @@ namespace EcsLib.Internal
     internal class ComponentMeta<T> : ComponentMeta
     {
         internal static readonly int Index;
-        
+
         static ComponentMeta()
         {
             Index = Count;

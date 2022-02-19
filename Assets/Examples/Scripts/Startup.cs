@@ -1,5 +1,4 @@
 ﻿using EcsLib.Api;
-using EcsLib.Api.Invariants.Impl;
 using UnityEngine;
 
 namespace Examples.Scripts
@@ -18,10 +17,7 @@ namespace Examples.Scripts
             var manager = new EcsManager();
             manager.Set<ILogger>(new Logger());
             _systems.Add(new TestSystem(manager));
-
-            manager.Invariant(new AlwaysWith<Item>()
-                .ShouldBe<Count>()
-                .ShouldBe<ItemType>());
+            manager.EnsureSingletonsInitialized();
 
             var entity = Entity.Create();
             entity.Set(new Item());
