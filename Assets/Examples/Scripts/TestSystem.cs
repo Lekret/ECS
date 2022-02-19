@@ -1,7 +1,7 @@
 ﻿using EcsLib.Api;
 using UnityEngine;
 
-namespace Example
+namespace Examples.Scripts
 {
     public struct Health
     {

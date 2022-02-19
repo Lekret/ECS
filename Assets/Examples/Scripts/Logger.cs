@@ -1,4 +1,4 @@
-﻿namespace Example
+﻿namespace Examples.Scripts
 {
     public interface ILogger
     {

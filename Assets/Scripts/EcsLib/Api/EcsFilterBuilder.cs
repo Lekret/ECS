@@ -5,13 +5,13 @@ namespace EcsLib.Api
 {
     public readonly struct EcsFilterBuilder
     {
-        private readonly EcsAccessHandler _accessHandler;
+        private readonly EcsAccessor _accessor;
         private readonly List<int> _includedIndices;
         private readonly List<int> _excludedIndices;
 
-        internal EcsFilterBuilder(EcsAccessHandler accessHandler)
+        internal EcsFilterBuilder(EcsAccessor accessor)
         {
-            _accessHandler = accessHandler;
+            _accessor = accessor;
             _includedIndices = new List<int>();
             _excludedIndices = new List<int>();
         }
@@ -42,7 +42,7 @@ namespace EcsLib.Api
         
         public EcsFilter End()
         {
-            return _accessHandler.InternalBuildFilter(_includedIndices, _excludedIndices);
+            return _accessor.InternalBuildFilter(_includedIndices, _excludedIndices);
         }
     }
 }

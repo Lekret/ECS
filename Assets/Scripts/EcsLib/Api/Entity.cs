@@ -101,7 +101,7 @@ namespace EcsLib.Api
                 return default;
             }
 
-            return GetComponentRef<T>();
+            return GetComponent<T>();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -119,10 +119,14 @@ namespace EcsLib.Api
                 return this;
             }
 
-            GetFlagRef<T>() = true;
-            GetComponentRef<T>() = value;
-            var componentIndex = ComponentMeta<T>.Index;
-            _owner.OnComponentChanged(this, componentIndex);
+            if (SetComponent(value))
+            {
+                _owner.OnComponentChanged(this, ComponentMeta<T>.Index);
+            }
+            else
+            {
+                LogError($"[{nameof(SetComponent)}<{typeof(T)}>] {this} Can't add component by invariant");
+            }
             return this;
         }
 
@@ -141,14 +145,17 @@ namespace EcsLib.Api
                 return this;
             }
 
-            ref var flag = ref GetFlagRef<T>();
+            var flag = GetFlag<T>();
             if (flag)
             {
-                flag = false;
-                GetComponentRef<T>() = default;
-                var componentIndex = ComponentMeta<T>.Index;
-                _owner.OnComponentChanged(this, componentIndex);
-                return this;
+                if (RemoveComponent<T>())
+                {
+                    _owner.OnComponentChanged(this, ComponentMeta<T>.Index);
+                }
+                else
+                {
+                    LogError($"[{nameof(RemoveComponent)}<{typeof(T)}>] {this} Can't remove component by invariant");
+                }
             }
 
             return this;
@@ -159,7 +166,7 @@ namespace EcsLib.Api
         {
             if (IsNull()) return false;
             if (IsDestroyed()) return false;
-            return GetFlagRef<T>();
+            return GetFlag<T>();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -200,23 +207,35 @@ namespace EcsLib.Api
         {
             _isDestroyed = false;
         }
-
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private ref T GetComponentRef<T>()
+        private bool SetComponent<T>(T value)
         {
-            return ref _owner.Components.GetRawPool<T>()[_id];
+            return _owner.Components.SetComponent(this, value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private bool RemoveComponent<T>()
+        {
+            return _owner.Components.RemoveComponent<T>(this);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private ref bool GetFlagRef<T>()
+        private T GetComponent<T>()
         {
-            return ref _owner.Components.GetFlags<T>()[_id];
+            return _owner.Components.GetComponent<T>(_id);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private ref bool GetFlag(int componentIndex)
+        private bool GetFlag<T>()
         {
-            return ref _owner.Components.GetFlags(componentIndex)[_id];
+            return _owner.Components.GetFlag<T>(_id);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private bool GetFlag(int componentIndex)
+        {
+            return _owner.Components.GetFlag(componentIndex, _id);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

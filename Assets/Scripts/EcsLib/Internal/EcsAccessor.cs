@@ -3,12 +3,12 @@ using EcsLib.Api;
 
 namespace EcsLib.Internal
 {
-    internal sealed class EcsAccessHandler
+    internal sealed class EcsAccessor
     {
         private readonly List<List<EcsFilter>> _filtersByType = new List<List<EcsFilter>>();
-        private readonly EntityWorld _world;
+        private readonly EcsWorld _world;
 
-        public EcsAccessHandler(EntityWorld world)
+        public EcsAccessor(EcsWorld world)
         {
             _world = world;
         }

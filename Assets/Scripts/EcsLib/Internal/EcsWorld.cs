@@ -3,7 +3,7 @@ using EcsLib.Api;
 
 namespace EcsLib.Internal
 {
-    internal sealed class EntityWorld
+    internal sealed class EcsWorld
     {
         private readonly Queue<Entity> _destroyedEntities = new Queue<Entity>();
         private readonly List<Entity> _entities = new List<Entity>();

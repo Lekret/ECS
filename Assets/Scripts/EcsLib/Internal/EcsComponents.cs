@@ -1,20 +1,22 @@
-﻿using System.Runtime.CompilerServices;
-using System.Collections.Generic;
+﻿using System;
 using System.Collections;
-using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using EcsLib.Api;
 
 namespace EcsLib.Internal
 {
     internal sealed class EcsComponents
     {
-        private readonly EntityWorld _entityWorld;
+        private readonly EcsWorld _world;
+        private readonly EcsInvariance _invariance;
         private readonly List<Array> _rawComponents;
         private readonly List<bool[]> _flags;
 
-        internal EcsComponents(EntityWorld entityWorld, int capacity)
+        internal EcsComponents(EcsWorld world, EcsInvariance invariance, int capacity)
         {
-            _entityWorld = entityWorld;
+            _world = world;
+            _invariance = invariance;
             _rawComponents = new List<Array>(capacity);
             _flags = new List<bool[]>(capacity);
         }
@@ -34,21 +36,60 @@ namespace EcsLib.Internal
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal T[] GetRawPool<T>()
+        internal T GetComponent<T>(int entityId)
+        {
+            return GetRawPool<T>()[entityId];
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal bool GetFlag<T>(int entityId)
+        {
+            return GetFlag(ComponentMeta<T>.Index, entityId);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal bool GetFlag(int componentIndex, int entityId)
+        {
+            return GetFlags(componentIndex)[entityId];
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal bool SetComponent<T>(Entity entity, T value)
+        {
+            var componentIndex = ComponentMeta<T>.Index;
+            if (_invariance.CanAddComponent(entity, componentIndex))
+            {
+                var id = entity.GetId();
+                GetRawPool<T>()[id] = value;
+                GetFlags(componentIndex)[id] = true;
+                return true;
+            }
+            return false;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal bool RemoveComponent<T>(Entity entity)
+        {
+            var componentIndex = ComponentMeta<T>.Index;
+            if (_invariance.CanRemoveComponent(entity, componentIndex))
+            {
+                var id = entity.GetId();
+                GetRawPool<T>()[id] = default;
+                GetFlags(componentIndex)[id] = false;
+                return true;
+            }
+            return false;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private T[] GetRawPool<T>()
         {
             var componentIndex = ComponentMeta<T>.Index;
             return GetUpdatedArray<T>(_rawComponents, componentIndex);
         }
-    
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal bool[] GetFlags<T>()
-        {
-            var componentIndex = ComponentMeta<T>.Index;
-            return GetFlags(componentIndex);
-        }
-    
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal bool[] GetFlags(int componentIndex)
+        private bool[] GetFlags(int componentIndex)
         {
             return GetUpdatedArray<bool>(_flags, componentIndex);
         }
@@ -61,7 +102,7 @@ namespace EcsLib.Internal
                 list.Add(null);
             }
 
-            var requiredLength = _entityWorld.MaxEntityId + 1;
+            var requiredLength = _world.MaxEntityId + 1;
             if (list[componentIndex] == null)
             {
                 var newArray = new T[requiredLength];

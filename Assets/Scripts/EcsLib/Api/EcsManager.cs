@@ -1,3 +1,4 @@
+using EcsLib.Api.Invariants;
 using EcsLib.Internal;
 
 namespace EcsLib.Api
@@ -7,15 +8,17 @@ namespace EcsLib.Api
         public static EcsManager Instance { get; set; }
 
         private bool _isDestroyed;
-        private readonly EcsAccessHandler _accessHandler;
-        private readonly EntityWorld _world;
+        private readonly EcsAccessor _accessor;
+        private readonly EcsInvariance _invariance;
+        private readonly EcsWorld _world;
         internal readonly EcsComponents Components;
         
         public EcsManager(int componentsInitialCapacity = 30)
         {
-            _world = new EntityWorld();
-            _accessHandler = new EcsAccessHandler(_world);
-            Components = new EcsComponents(_world, componentsInitialCapacity);
+            _world = new EcsWorld();
+            _accessor = new EcsAccessor(_world);
+            _invariance = new EcsInvariance();
+            Components = new EcsComponents(_world, _invariance, componentsInitialCapacity);
             _singletonEntity = CreateEntity();
 
             if (Instance == null)
@@ -45,7 +48,7 @@ namespace EcsLib.Api
         {
             if (CheckDestroyed())
                 return default;
-            return _accessHandler.CreateFilter();
+            return _accessor.CreateFilter();
         }
         
         public void Destroy()
@@ -60,7 +63,7 @@ namespace EcsLib.Api
         {
             if (CheckDestroyed())
                 return;
-            _accessHandler.OnComponentChanged(entity, componentIndex);
+            _accessor.OnComponentChanged(entity, componentIndex);
         }
         
         internal void OnEntityDestroyed(Entity entity)
@@ -69,7 +72,7 @@ namespace EcsLib.Api
                 return;
             Components.OnEntityDestroyed(entity);
             _world.OnEntityDestroyed(entity);
-            _accessHandler.OnEntityDestroyed(entity);
+            _accessor.OnEntityDestroyed(entity);
         }
 
         private bool CheckDestroyed()
@@ -80,6 +83,16 @@ namespace EcsLib.Api
                 return true;
             }
             return false;
+        }
+
+        public void Invariant(IEcsAddInvariant invariant)
+        {
+            _invariance.AddInvariant(invariant);
+        }
+
+        public void Invariant(IEcsRemoveInvariant invariant)
+        {
+            _invariance.AddInvariant(invariant);
         }
     }
 }
