@@ -14,6 +14,8 @@ namespace EcsLib.Api
         {
             _accessor = accessor;
             _filter = null;
+            if (IncludedIndices.Count > 0 || ExcludedIndices.Count > 0)
+                LogError($"Previous {nameof(EcsFilterBuilder)} isn't ended");
             CleanIndices();
         }
 
