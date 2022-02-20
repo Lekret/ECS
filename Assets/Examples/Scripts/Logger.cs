@@ -2,13 +2,13 @@
 
 namespace Examples.Scripts
 {
+    [EcsSingleton]
     public interface ILogger
     {
         void Info(string message);
         void Error(string message);
     }
     
-    [EcsSingleton]
     public class Logger : ILogger
     {
         public void Info(string message)
