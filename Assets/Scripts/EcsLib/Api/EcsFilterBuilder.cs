@@ -19,7 +19,7 @@ namespace EcsLib.Api
 
         public EcsFilterBuilder Inc<T>()
         {
-            if (IsEnded())
+            if (CheckEnded())
                 return this;
             var index = ComponentMeta<T>.Index;
             if (ExcludedIndices.Contains(index))
@@ -33,7 +33,7 @@ namespace EcsLib.Api
 
         public EcsFilterBuilder Exc<T>()
         {
-            if (IsEnded())
+            if (CheckEnded())
                 return this;
             var index = ComponentMeta<T>.Index;
             if (IncludedIndices.Contains(index))
@@ -47,13 +47,15 @@ namespace EcsLib.Api
         
         public EcsFilter End()
         {
-            if (!IsEnded())
+            if (!CheckEnded())
+            {
                 _filter = _accessor.InternalBuildFilter(IncludedIndices, ExcludedIndices);
-            CleanIndices();
+                CleanIndices();
+            }
             return _filter;
         }
 
-        private bool IsEnded()
+        private bool CheckEnded()
         {
             var ended = _filter != null;
             if (ended)
