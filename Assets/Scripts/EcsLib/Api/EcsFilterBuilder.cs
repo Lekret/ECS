@@ -14,8 +14,7 @@ namespace EcsLib.Api
         {
             _accessor = accessor;
             _filter = null;
-            IncludedIndices.Clear();
-            ExcludedIndices.Clear();
+            CleanIndices();
         }
 
         public EcsFilterBuilder Inc<T>()
@@ -57,16 +56,10 @@ namespace EcsLib.Api
         public EcsFilter End()
         {
             if (IsEnded())
-            {
                 LogError($"[{nameof(End)}] Filter is end");
-            }
             else
-            {
                 _filter = _accessor.InternalBuildFilter(IncludedIndices, ExcludedIndices);
-                IncludedIndices.Clear();
-                ExcludedIndices.Clear();
-            }
-            
+            CleanIndices();
             return _filter;
         }
 
@@ -78,6 +71,14 @@ namespace EcsLib.Api
         private static void LogError(string message)
         {
             EcsError.Handle(message);
+        }
+
+        private static void CleanIndices()
+        {
+            if (IncludedIndices.Count > 0)
+                IncludedIndices.Clear();
+            if (ExcludedIndices.Count > 0)
+                ExcludedIndices.Clear();
         }
     }
 }
