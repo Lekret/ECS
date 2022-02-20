@@ -24,6 +24,10 @@ namespace Examples.Scripts
             entity.Set(new Count());
             entity.Remove<Count>();
             entity.Remove<Item>();
+
+            var fi = manager.Filter().Inc<int>();
+            fi.End();
+            fi.End();
         }
 
         private void Start()

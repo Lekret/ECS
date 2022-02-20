@@ -20,11 +20,7 @@ namespace EcsLib.Api
         public EcsFilterBuilder Inc<T>()
         {
             if (IsEnded())
-            {
-                LogError($"[{nameof(Inc)}<{typeof(T)}>] Filter is end");
                 return this;
-            }
-            
             var index = ComponentMeta<T>.Index;
             if (ExcludedIndices.Contains(index))
             {
@@ -38,11 +34,7 @@ namespace EcsLib.Api
         public EcsFilterBuilder Exc<T>()
         {
             if (IsEnded())
-            {
-                LogError($"[{nameof(Exc)}<{typeof(T)}>] Filter is end");
                 return this;
-            }
-
             var index = ComponentMeta<T>.Index;
             if (IncludedIndices.Contains(index))
             {
@@ -55,9 +47,7 @@ namespace EcsLib.Api
         
         public EcsFilter End()
         {
-            if (IsEnded())
-                LogError($"[{nameof(End)}] Filter is end");
-            else
+            if (!IsEnded())
                 _filter = _accessor.InternalBuildFilter(IncludedIndices, ExcludedIndices);
             CleanIndices();
             return _filter;
@@ -65,7 +55,10 @@ namespace EcsLib.Api
 
         private bool IsEnded()
         {
-            return _filter != null;
+            var ended = _filter != null;
+            if (ended)
+                LogError("Filter is ended");
+            return ended;
         }
 
         private static void LogError(string message)
