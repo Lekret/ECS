@@ -12,11 +12,9 @@ namespace Examples.Scripts
     {
         private readonly EcsFilter _filter;
         private readonly EcsFilter _filterN;
-        private readonly ILogger _logger;
 
         public TestSystem(EcsManager manager)
         {
-            _logger = manager.Get<ILogger>();
             _filter = EcsFilter.Create()
                 .Inc<Health>()
                 .Exc<GameObject>()

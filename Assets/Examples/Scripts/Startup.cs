@@ -15,9 +15,7 @@ namespace Examples.Scripts
         {
             _systems = new EcsSystems();
             var manager = new EcsManager();
-            manager.Set<ILogger>(new Logger());
             _systems.Add(new TestSystem(manager));
-            manager.EnsureSingletonsInitialized();
 
             var entity = Entity.Create();
             entity.Set(new Item());

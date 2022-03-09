@@ -1,8 +1,5 @@
-﻿using EcsLib.Api;
-
-namespace Examples.Scripts
+﻿namespace Examples.Scripts
 {
-    [EcsSingleton]
     public interface ILogger
     {
         void Info(string message);

@@ -1,10 +1,9 @@
-using System.Runtime.CompilerServices;
 using EcsLib.Api.Invariants;
 using EcsLib.Internal;
 
 namespace EcsLib.Api
 {
-    public sealed partial class EcsManager
+    public sealed class EcsManager
     {
         public static EcsManager Instance { get; set; }
 
@@ -12,7 +11,6 @@ namespace EcsLib.Api
         private readonly EcsAccessor _accessor;
         private readonly EcsInvariance _invariance;
         private readonly EcsWorld _world;
-        private readonly EcsSingletons _singletons;
         
         internal readonly EcsComponents Components;
         
@@ -22,7 +20,6 @@ namespace EcsLib.Api
             _accessor = new EcsAccessor(_world);
             _invariance = new EcsInvariance();
             Components = new EcsComponents(_world, _invariance, componentsInitialCapacity);
-            _singletons = new EcsSingletons();
 
             if (Instance == null)
                 Instance = this;
@@ -96,25 +93,6 @@ namespace EcsLib.Api
         public void Invariant(IEcsRemoveInvariant invariant)
         {
             _invariance.AddInvariant(invariant);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public T Get<T>() where T : class
-        {
-            return _singletons.Get<T>();
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public EcsManager Set<T>(T value) where T : class
-        {
-            _singletons.Set(value);
-            return this;
-        }
-
-        public EcsManager EnsureSingletonsInitialized()
-        {
-            _singletons.EnsureInitialized();
-            return this;
         }
     }
 }
