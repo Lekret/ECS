@@ -9,7 +9,7 @@ namespace EcsLib.Internal
         private readonly List<List<EcsFilter>> _filtersByType = new List<List<EcsFilter>>();
         private readonly EcsWorld _world;
 
-        public EcsAccessor(EcsWorld world)
+        internal EcsAccessor(EcsWorld world)
         {
             _world = world;
         }
