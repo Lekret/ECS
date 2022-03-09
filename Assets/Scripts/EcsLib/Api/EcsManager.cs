@@ -3,6 +3,11 @@ using EcsLib.Internal;
 
 namespace EcsLib.Api
 {
+    public struct EcsConfig
+    {
+        public int ComponentsInitialCapacity;
+    }
+    
     public sealed class EcsManager
     {
         public static EcsManager Instance { get; set; }
@@ -14,12 +19,12 @@ namespace EcsLib.Api
         
         internal readonly EcsComponents Components;
         
-        public EcsManager(int componentsInitialCapacity = 30)
+        public EcsManager(EcsConfig config = default)
         {
             _world = new EcsWorld();
             _accessor = new EcsAccessor(_world);
             _invariance = new EcsInvariance();
-            Components = new EcsComponents(_world, _invariance, componentsInitialCapacity);
+            Components = new EcsComponents(_world, _invariance, config.ComponentsInitialCapacity);
 
             if (Instance == null)
                 Instance = this;
