@@ -6,7 +6,6 @@ namespace EcsLib.Api
 {
     public sealed class Entity : IEquatable<Entity>
     {
-        private const int SINGLETON_ID = 0;
         private const int NULL_ID = -1;
         public static readonly Entity Null = new Entity(null, NULL_ID);
         private readonly EcsManager _owner;
@@ -41,12 +40,6 @@ namespace EcsLib.Api
         public bool IsDestroyed()
         {
             return _isDestroyed;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool IsSingleton()
-        {
-            return _id == SINGLETON_ID;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -183,12 +176,6 @@ namespace EcsLib.Api
             if (IsNull())
             {
                 LogError($"[{nameof(Destroy)}] Entity is null");
-                return;
-            }
-
-            if (IsSingleton())
-            {
-                LogError($"[{nameof(Destroy)}] Entity is singleton");
                 return;
             }
 
