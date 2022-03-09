@@ -12,7 +12,7 @@ namespace EcsLib.Internal
         internal int MaxEntityId => _idGenerator.CurrentId;
         internal IEnumerable<Entity> Entities => _entities;
 
-        public EcsWorld(int initialEntityCapacity)
+        internal EcsWorld(int initialEntityCapacity)
         {
             _entities = new List<Entity>(initialEntityCapacity);
         }
