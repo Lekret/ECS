@@ -5,8 +5,14 @@ namespace EcsLib.Api
 {
     public struct EcsConfig
     {
-        public static readonly EcsConfig Default;
-        public int ComponentsInitialCapacity;
+        public static readonly EcsConfig Default = new EcsConfig
+        {
+            InitialComponentsCapacity = 128,
+            InitialEntityCapacity = 512,
+        };
+        
+        public int InitialComponentsCapacity;
+        public int InitialEntityCapacity;
     }
     
     public sealed class EcsManager
@@ -24,10 +30,10 @@ namespace EcsLib.Api
         
         public EcsManager(EcsConfig config)
         {
-            _world = new EcsWorld();
+            _world = new EcsWorld(config.InitialEntityCapacity);
             _accessor = new EcsAccessor(_world);
             _invariance = new EcsInvariance();
-            Components = new EcsComponents(_world, _invariance, config.ComponentsInitialCapacity);
+            Components = new EcsComponents(_world, _invariance, config.InitialComponentsCapacity);
 
             if (Instance == null)
                 Instance = this;

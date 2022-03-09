@@ -6,12 +6,17 @@ namespace EcsLib.Internal
     internal sealed class EcsWorld
     {
         private readonly Queue<Entity> _destroyedEntities = new Queue<Entity>();
-        private readonly List<Entity> _entities = new List<Entity>();
         private readonly IDGenerator _idGenerator = new IDGenerator();
+        private readonly List<Entity> _entities;
 
         internal int MaxEntityId => _idGenerator.CurrentId;
         internal IEnumerable<Entity> Entities => _entities;
 
+        public EcsWorld(int initialEntityCapacity)
+        {
+            _entities = new List<Entity>(initialEntityCapacity);
+        }
+        
         internal Entity CreateEntity(EcsManager owner)
         {
             Entity entity;
