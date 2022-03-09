@@ -5,6 +5,7 @@ namespace EcsLib.Api
 {
     public struct EcsConfig
     {
+        public static readonly EcsConfig Default;
         public int ComponentsInitialCapacity;
     }
     
@@ -19,7 +20,9 @@ namespace EcsLib.Api
         
         internal readonly EcsComponents Components;
         
-        public EcsManager(EcsConfig config = default)
+        public EcsManager() : this(EcsConfig.Default) { }
+        
+        public EcsManager(EcsConfig config)
         {
             _world = new EcsWorld();
             _accessor = new EcsAccessor(_world);
