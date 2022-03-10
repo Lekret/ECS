@@ -6,7 +6,7 @@ namespace EcsLib.Internal
 {
     internal sealed class EcsAccessor
     {
-        private readonly List<List<EcsFilter>> _filtersByType = new List<List<EcsFilter>>();
+        private readonly List<List<EcsFilter>> _typeToFilter = new List<List<EcsFilter>>();
         private readonly EcsWorld _world;
 
         internal EcsAccessor(EcsWorld world)
@@ -22,7 +22,7 @@ namespace EcsLib.Internal
         internal void OnComponentChanged(Entity entity, int componentIndex)
         {
             IncreaseFiltersRegistry();
-            var filters = _filtersByType[componentIndex];
+            var filters = _typeToFilter[componentIndex];
             foreach (var filter in filters)
             {
                 filter.HandleEntity(entity);
@@ -31,7 +31,7 @@ namespace EcsLib.Internal
 
         internal void OnEntityDestroyed(Entity entity)
         {
-            foreach (var filters in _filtersByType)
+            foreach (var filters in _typeToFilter)
             {
                 foreach (var filter in filters)
                 {
@@ -49,7 +49,7 @@ namespace EcsLib.Internal
 
         private bool TryGetExistingFilter(IReadOnlyCollection<int> included, IReadOnlyCollection<int> excluded, out EcsFilter filter)
         {
-            foreach (var filters in _filtersByType)
+            foreach (var filters in _typeToFilter)
             {
                 foreach (var f in filters)
                 {
@@ -83,15 +83,15 @@ namespace EcsLib.Internal
         {
             foreach (var index in componentIndices)
             {
-                _filtersByType[index].Add(filter);
+                _typeToFilter[index].Add(filter);
             }
         }
 
         private void IncreaseFiltersRegistry()
         {
-            while (_filtersByType.Count < ComponentMeta.Count)
+            while (_typeToFilter.Count < ComponentMeta.Count)
             {
-                _filtersByType.Add(new List<EcsFilter>());
+                _typeToFilter.Add(new List<EcsFilter>());
             }
         }
     }
