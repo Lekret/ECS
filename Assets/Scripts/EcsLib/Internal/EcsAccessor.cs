@@ -40,14 +40,14 @@ namespace EcsLib.Internal
             }
         }
 
-        internal EcsFilter InternalBuildFilter(List<int> included, List<int> excluded)
+        internal EcsFilter InternalBuildFilter(IReadOnlyCollection<int> included, IReadOnlyCollection<int> excluded)
         {
             if (TryGetExistingFilter(included, excluded, out var filter))
                 return filter;
             return CreateNewFilter(included, excluded);
         }
 
-        private bool TryGetExistingFilter(List<int> included, List<int> excluded, out EcsFilter filter)
+        private bool TryGetExistingFilter(IReadOnlyCollection<int> included, IReadOnlyCollection<int> excluded, out EcsFilter filter)
         {
             foreach (var filters in _filtersByType)
             {

@@ -96,7 +96,7 @@ namespace EcsLib.Api
             }
         }
 
-        public bool MatchesIndices(List<int> included, List<int> excluded)
+        public bool MatchesIndices(IReadOnlyCollection<int> included, IReadOnlyCollection<int> excluded)
         {
             if (included.Count != _included.Length) return false;
             if (excluded.Count != _excluded.Length) return false;
