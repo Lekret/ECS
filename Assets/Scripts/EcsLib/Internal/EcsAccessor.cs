@@ -14,7 +14,7 @@ namespace EcsLib.Internal
             _world = world;
         }
 
-        internal EcsFilterBuilder CreateFilter()
+        internal EcsFilterBuilder CreateFilterBuilder()
         {
             return new EcsFilterBuilder(this);
         }

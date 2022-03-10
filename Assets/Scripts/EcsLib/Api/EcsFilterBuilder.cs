@@ -8,12 +8,17 @@ namespace EcsLib.Api
         private static readonly List<int> IncludedIndices = new List<int>();
         private static readonly List<int> ExcludedIndices = new List<int>();
         private readonly EcsAccessor _accessor;
-        private EcsFilter _filter;
+        private bool _isInvalid;
+
+        internal static readonly EcsFilterBuilder Null = new EcsFilterBuilder
+        {
+            _isInvalid = true
+        };
 
         internal EcsFilterBuilder(EcsAccessor accessor)
         {
+            _isInvalid = false;
             _accessor = accessor;
-            _filter = null;
             if (IncludedIndices.Count > 0 || ExcludedIndices.Count > 0)
                 LogError($"Previous {nameof(EcsFilterBuilder)} isn't ended");
             CleanIndices();
@@ -21,7 +26,7 @@ namespace EcsLib.Api
 
         public EcsFilterBuilder Inc<T>()
         {
-            if (CheckEnded())
+            if (CheckInvalid())
                 return this;
             var index = ComponentMeta<T>.Index;
             if (ExcludedIndices.Contains(index))
@@ -35,7 +40,7 @@ namespace EcsLib.Api
 
         public EcsFilterBuilder Exc<T>()
         {
-            if (CheckEnded())
+            if (CheckInvalid())
                 return this;
             var index = ComponentMeta<T>.Index;
             if (IncludedIndices.Contains(index))
@@ -49,20 +54,17 @@ namespace EcsLib.Api
         
         public EcsFilter End()
         {
-            if (!CheckEnded())
-            {
-                _filter = _accessor.InternalBuildFilter(IncludedIndices, ExcludedIndices);
-                CleanIndices();
-            }
-            return _filter;
+            CheckInvalid();
+            var filter = _accessor.InternalBuildFilter(IncludedIndices, ExcludedIndices);
+            CleanIndices();
+            return filter;
         }
 
-        private bool CheckEnded()
+        private bool CheckInvalid()
         {
-            var ended = _filter != null;
-            if (ended)
-                LogError("Filter is ended");
-            return ended;
+            if (_isInvalid)
+                LogError($"{nameof(EcsFilterBuilder)} is invalid");
+            return _isInvalid;
         }
 
         private static void LogError(string message)

@@ -61,8 +61,8 @@ namespace EcsLib.Api
         public EcsFilterBuilder Filter()
         {
             if (CheckDestroyed())
-                return default;
-            return _accessor.CreateFilter();
+                return EcsFilterBuilder.Null;
+            return _accessor.CreateFilterBuilder();
         }
         
         public void Destroy()
