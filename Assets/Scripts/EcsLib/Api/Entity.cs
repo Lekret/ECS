@@ -7,8 +7,7 @@ namespace EcsLib.Api
     public readonly struct Entity : IEquatable<Entity>
     {
         public const int NULL_ID = -1;
-        public static readonly Entity Null = new Entity(null, NULL_ID);
-        
+
         private readonly EcsManager _owner;
         private readonly int _id;
 
@@ -16,6 +15,20 @@ namespace EcsLib.Api
         {
             _owner = owner;
             _id = id;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Entity Null()
+        {
+            return new Entity(null, NULL_ID);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Entity Create(EcsManager ecsManager = null)
+        {
+            if (ecsManager == null)
+                ecsManager = EcsManager.Instance;
+            return ecsManager.CreateEntity();
         }
 
         public bool Equals(Entity other)
@@ -37,15 +50,13 @@ namespace EcsLib.Api
         {
             return $"Entity({_id})";
         }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Entity Create(EcsManager ecsManager = null)
-        {
-            if (ecsManager == null)
-                ecsManager = EcsManager.Instance;
-            return ecsManager.CreateEntity();
-        }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public bool IsNull()
+        {
+            return _id == NULL_ID;
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool IsAlive()
         {

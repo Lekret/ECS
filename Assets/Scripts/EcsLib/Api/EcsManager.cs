@@ -44,14 +44,14 @@ namespace EcsLib.Api
         public Entity CreateEntity()
         {
             if (CheckDestroyed())
-                return Entity.Null;
+                return Entity.Null();
             return _world.CreateEntity(this);
         }
 
         public Entity GetEntityById(int id)
         {
             if (CheckDestroyed())
-                return Entity.Null;
+                return Entity.Null();
             return _world.GetEntityById(id);
         }
 

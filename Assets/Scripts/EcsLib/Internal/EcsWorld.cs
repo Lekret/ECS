@@ -28,15 +28,12 @@ namespace EcsLib.Internal
         {
             if (_entities.TryGetValue(id, out var entity))
                 return entity;
-            return Entity.Null;
+            return Entity.Null();
         }
 
         internal bool IsAlive(Entity entity)
         {
-            if (entity == Entity.Null)
-                return false;
-            var original = GetEntityById(entity.GetId());
-            return original != Entity.Null;
+            return !entity.IsNull() && _entities.ContainsKey(entity.GetId());
         }
 
         internal void OnEntityDestroyed(Entity entity)
