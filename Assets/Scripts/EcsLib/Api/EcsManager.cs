@@ -59,13 +59,18 @@ namespace EcsLib.Api
         {
             return _accessor.CreateFilterBuilder();
         }
-        
+
         public void Destroy()
         {
             if (CheckDestroyed())
                 return;
             _world.DestroyAll();
             _isDestroyed = true;
+        }
+        
+        public bool IsAlive(Entity entity)
+        {
+            return _world.IsAlive(entity);
         }
 
         internal void OnComponentChanged(Entity entity, int componentIndex)
@@ -92,11 +97,6 @@ namespace EcsLib.Api
                 return true;
             }
             return false;
-        }
-        
-        internal bool IsAlive(Entity entity)
-        {
-            return _world.IsAlive(entity);
         }
     }
 }

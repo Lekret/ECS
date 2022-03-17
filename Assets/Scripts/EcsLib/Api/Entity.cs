@@ -6,7 +6,7 @@ namespace EcsLib.Api
 {
     public struct Entity : IEquatable<Entity>
     {
-        private const int NULL_ID = -1;
+        public const int NULL_ID = -1;
         public static readonly Entity Null = new Entity(null, NULL_ID);
         
         private readonly EcsManager _owner;
@@ -51,12 +51,6 @@ namespace EcsLib.Api
         {
             return _owner.IsAlive(this);
         }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool IsNull()
-        {
-            return _id == NULL_ID;
-        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public EcsManager GetOwner()
@@ -86,15 +80,9 @@ namespace EcsLib.Api
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public T Get<T>()
         {
-            if (IsNull())
-            {
-                LogError($"[{nameof(Get)}<{typeof(T)}>] Entity is null");
-                return default;
-            }
-
             if (!IsAlive())
             {
-                LogError($"[{nameof(Get)}<{typeof(T)}>] {this} is destroyed");
+                LogError($"[{nameof(Get)}<{typeof(T)}>] {this} is not alive");
                 return default;
             }
 
@@ -110,15 +98,9 @@ namespace EcsLib.Api
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Entity Set<T>(T value)
         {
-            if (IsNull())
-            {
-                LogError($"[{nameof(Set)}<{typeof(T)}>] Entity is null");
-                return this;
-            }
-
             if (!IsAlive())
             {
-                LogError($"[{nameof(Set)}<{typeof(T)}>] {this} is destroyed");
+                LogError($"[{nameof(Set)}<{typeof(T)}>] {this} is not alive");
                 return this;
             }
 
@@ -130,15 +112,9 @@ namespace EcsLib.Api
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Entity Remove<T>()
         {
-            if (IsNull())
-            {
-                LogError($"[{nameof(Remove)}<{typeof(T)}>] Entity is null");
-                return this;
-            }
-
             if (!IsAlive())
             {
-                LogError($"[{nameof(Remove)}<{typeof(T)}>] {this} is destroyed");
+                LogError($"[{nameof(Remove)}<{typeof(T)}>] {this} is not alive");
                 return this;
             }
 
@@ -152,31 +128,21 @@ namespace EcsLib.Api
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Has<T>()
         {
-            if (IsNull()) return false;
-            if (!IsAlive()) return false;
-            return GetFlag<T>();
+            return IsAlive() && GetFlag<T>();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal bool HasComponent(int componentIndex)
         {
-            if (!IsAlive())
-                return false;
-            return GetFlag(componentIndex);
+            return IsAlive() && GetFlag(componentIndex);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Destroy()
         {
-            if (IsNull())
-            {
-                LogError($"[{nameof(Destroy)}] Entity is null");
-                return;
-            }
-
             if (!IsAlive())
             {
-                LogError($"[{nameof(Destroy)}] {this} is already destroyed");
+                LogError($"[{nameof(Destroy)}] {this} is not alive");
                 return;
             }
 
