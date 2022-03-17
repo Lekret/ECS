@@ -1,4 +1,5 @@
-﻿using EcsLib.Api;
+﻿using System.Linq;
+using EcsLib.Api;
 using UnityEngine;
 
 namespace Examples.Scripts
@@ -8,37 +9,43 @@ namespace Examples.Scripts
         public int Value;
     }
 
-    public class TestSystem : IEcsInitSystem, IEcsTickSystem
+    public struct Duration
+    {
+        public int Value;
+    }
+
+    public class TestSystem : IEcsTickSystem
     {
         private readonly EcsFilter _filter;
-        private readonly EcsFilter _filterN;
 
         public TestSystem(EcsManager manager)
         {
             _filter = EcsFilter.Create()
                 .Inc<Health>()
-                .Exc<GameObject>()
+                .Inc<Duration>()
                 .End();
-            _filterN = EcsFilter.Create()
-                .Inc<Health>()
-                .End();
-        }
-    
-        public void Init()
-        {
-            Entity.Create()
-                .Set(new GameObject("Entity").transform)
-                .Set(new Health { Value = 25 });
-            Entity.Create()
-                .Set(new GameObject("Singleton").transform)
-                .Set(new Health());
-            Entity.Create()
-                .Set(new Health { Value = 23 });
+
+            foreach (var _ in Enumerable.Range(0, 10000))
+            {
+                Entity.Create()
+                    .Set(new Health
+                    {
+                        Value = 100
+                    })
+                    .Set(new Duration
+                    {
+                        Value = 25
+                    });
+            }
         }
 
         public void Tick()
         {
-            
+            foreach (var entity in _filter)
+            {
+                Debug.Log(entity.Remove<Health>());
+                Debug.LogError("YES " + entity.Get<Health>());
+            }
         }
     }
 }
