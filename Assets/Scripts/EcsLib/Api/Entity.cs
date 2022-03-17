@@ -4,7 +4,7 @@ using EcsLib.Internal;
 
 namespace EcsLib.Api
 {
-    public struct Entity : IEquatable<Entity>
+    public readonly struct Entity : IEquatable<Entity>
     {
         public const int NULL_ID = -1;
         public static readonly Entity Null = new Entity(null, NULL_ID);
