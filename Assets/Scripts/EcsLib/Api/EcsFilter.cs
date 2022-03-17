@@ -67,13 +67,13 @@ namespace EcsLib.Api
         {
             for (var i = 0; i < _excluded.Length; i++)
             {
-                if (entity.HasComponent(_excluded[i]))
+                if (entity.Has(_excluded[i]))
                     return false;
             }
 
             for (var i = 0; i < _included.Length; i++)
             {
-                if (!entity.HasComponent(_included[i]))
+                if (!entity.Has(_included[i]))
                     return false;
             }
 

@@ -86,13 +86,13 @@ namespace EcsLib.Api
                 return default;
             }
 
-            if (!Has<T>())
+            if (!HasComponent<T>())
             {
                 LogError($"[{nameof(Get)}<{typeof(T)}>] {this} don't have component");
                 return default;
             }
 
-            return GetComponent<T>();
+            return _owner.Components.GetComponent<T>(_id);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -104,7 +104,7 @@ namespace EcsLib.Api
                 return this;
             }
 
-            SetComponent(value);
+            _owner.Components.SetComponent(this, value);
             _owner.OnComponentChanged(this, ComponentMeta<T>.Index);
             return this;
         }
@@ -118,7 +118,8 @@ namespace EcsLib.Api
                 return this;
             }
 
-            if (RemoveComponent<T>())
+            var removed = _owner.Components.RemoveComponent<T>(this);
+            if (removed)
             {
                 _owner.OnComponentChanged(this, ComponentMeta<T>.Index);
             }
@@ -128,13 +129,13 @@ namespace EcsLib.Api
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Has<T>()
         {
-            return IsAlive() && GetFlag<T>();
+            return IsAlive() && HasComponent<T>();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal bool HasComponent(int componentIndex)
+        internal bool Has(int componentIndex)
         {
-            return IsAlive() && GetFlag(componentIndex);
+            return IsAlive() && HasComponent(componentIndex);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -150,31 +151,13 @@ namespace EcsLib.Api
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void SetComponent<T>(T value)
-        {
-            _owner.Components.SetComponent(this, value);
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private bool RemoveComponent<T>()
-        {
-            return _owner.Components.RemoveComponent<T>(this);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private T GetComponent<T>()
-        {
-            return _owner.Components.GetComponent<T>(_id);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private bool GetFlag<T>()
+        private bool HasComponent<T>()
         {
             return _owner.Components.GetFlag<T>(_id);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private bool GetFlag(int componentIndex)
+        private bool HasComponent(int componentIndex)
         {
             return _owner.Components.GetFlag(componentIndex, _id);
         }
