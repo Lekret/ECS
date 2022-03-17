@@ -5,60 +5,49 @@ namespace EcsLib.Internal
 {
     internal sealed class EcsWorld
     {
-        private readonly Queue<Entity> _destroyedEntities = new Queue<Entity>();
         private readonly IDGenerator _idGenerator = new IDGenerator();
-        private readonly List<Entity> _entities;
+        private readonly Dictionary<int, Entity> _entities;
 
         internal int MaxEntityId => _idGenerator.CurrentId;
-        internal IEnumerable<Entity> Entities => _entities;
+        internal IEnumerable<Entity> Entities => _entities.Values;
 
         internal EcsWorld(int initialEntityCapacity)
         {
-            _entities = new List<Entity>(initialEntityCapacity);
+            _entities = new Dictionary<int, Entity>(initialEntityCapacity);
         }
-        
+
         internal Entity CreateEntity(EcsManager owner)
         {
-            Entity entity;
-            if (_destroyedEntities.Count > 0)
-            {
-                entity = _destroyedEntities.Dequeue();
-                entity.Resurrect();
-            }
-            else
-            {
-                entity = new Entity(owner, _idGenerator.Next());
-                _entities.Add(entity);
-            }
-            
+            var id = _idGenerator.Next();
+            var entity = new Entity(owner, id);
+            _entities.Add(id, entity);
             return entity;
         }
 
         internal Entity GetEntityById(int id)
         {
-            if (id < 0 || id >= _entities.Count)
-            {
-                LogError($"Id is out of bounds ({id})");
-                return Entity.Null;
-            }
-
-            var entity = _entities[id];
-            if (entity.IsDestroyed())
-                return Entity.Null;
-            return entity;
+            if (_entities.TryGetValue(id, out var entity))
+                return entity;
+            return Entity.Null;
         }
-        
+
+        internal bool IsAlive(Entity entity)
+        {
+            if (entity == Entity.Null)
+                return false;
+            var original = GetEntityById(entity.GetId());
+            return original != Entity.Null;
+        }
+
         internal void OnEntityDestroyed(Entity entity)
         {
-            _destroyedEntities.Enqueue(entity);
+            _entities.Remove(entity.GetId());
         }
-
+        
         internal void DestroyAll()
         {
-            foreach (var entity in _entities)
+            foreach (var entity in _entities.Values)
             {
-                if (entity.IsDestroyed())
-                    continue;
                 entity.Destroy();
             }
             _entities.Clear();

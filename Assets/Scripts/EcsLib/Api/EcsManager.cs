@@ -1,4 +1,3 @@
-using EcsLib.Api.Invariants;
 using EcsLib.Internal;
 
 namespace EcsLib.Api
@@ -21,7 +20,6 @@ namespace EcsLib.Api
 
         private bool _isDestroyed;
         private readonly EcsAccessor _accessor;
-        private readonly EcsInvariance _invariance;
         private readonly EcsWorld _world;
         
         internal readonly EcsComponents Components;
@@ -32,8 +30,7 @@ namespace EcsLib.Api
         {
             _world = new EcsWorld(config.InitialEntityCapacity);
             _accessor = new EcsAccessor(_world);
-            _invariance = new EcsInvariance();
-            Components = new EcsComponents(_world, _invariance, config.InitialComponentsCapacity);
+            Components = new EcsComponents(_world, config.InitialComponentsCapacity);
 
             if (Instance == null)
                 Instance = this;
@@ -60,8 +57,6 @@ namespace EcsLib.Api
 
         public EcsFilterBuilder Filter()
         {
-            if (CheckDestroyed())
-                return EcsFilterBuilder.Null;
             return _accessor.CreateFilterBuilder();
         }
         
@@ -98,15 +93,10 @@ namespace EcsLib.Api
             }
             return false;
         }
-
-        public void Invariant(IEcsAddInvariant invariant)
+        
+        internal bool IsAlive(Entity entity)
         {
-            _invariance.AddInvariant(invariant);
-        }
-
-        public void Invariant(IEcsRemoveInvariant invariant)
-        {
-            _invariance.AddInvariant(invariant);
+            return _world.IsAlive(entity);
         }
     }
 }

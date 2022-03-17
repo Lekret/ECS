@@ -9,14 +9,12 @@ namespace EcsLib.Internal
     internal sealed class EcsComponents
     {
         private readonly EcsWorld _world;
-        private readonly EcsInvariance _invariance;
         private readonly List<Array> _rawComponents;
         private readonly List<bool[]> _flags;
 
-        internal EcsComponents(EcsWorld world, EcsInvariance invariance, int capacity)
+        internal EcsComponents(EcsWorld world, int capacity)
         {
             _world = world;
-            _invariance = invariance;
             _rawComponents = new List<Array>(capacity);
             _flags = new List<bool[]>(capacity);
         }
@@ -54,28 +52,24 @@ namespace EcsLib.Internal
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal bool SetComponent<T>(Entity entity, T value)
+        internal void SetComponent<T>(Entity entity, T value)
         {
             var componentIndex = ComponentMeta<T>.Index;
-            if (_invariance.CanAddComponent(entity, componentIndex))
-            {
-                var id = entity.GetId();
-                GetRawPool<T>()[id] = value;
-                GetFlags(componentIndex)[id] = true;
-                return true;
-            }
-            return false;
+            var id = entity.GetId();
+            GetRawPool<T>()[id] = value;
+            GetFlags(componentIndex)[id] = true;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal bool RemoveComponent<T>(Entity entity)
         {
             var componentIndex = ComponentMeta<T>.Index;
-            if (_invariance.CanRemoveComponent(entity, componentIndex))
+            var id = entity.GetId();
+            ref var hasComponent = ref GetFlags(componentIndex)[id];
+            if (hasComponent)
             {
-                var id = entity.GetId();
                 GetRawPool<T>()[id] = default;
-                GetFlags(componentIndex)[id] = false;
+                hasComponent = false;
                 return true;
             }
             return false;

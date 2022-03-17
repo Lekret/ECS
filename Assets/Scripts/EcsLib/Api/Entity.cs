@@ -4,13 +4,13 @@ using EcsLib.Internal;
 
 namespace EcsLib.Api
 {
-    public sealed class Entity : IEquatable<Entity>
+    public struct Entity : IEquatable<Entity>
     {
         private const int NULL_ID = -1;
         public static readonly Entity Null = new Entity(null, NULL_ID);
+        
         private readonly EcsManager _owner;
         private readonly int _id;
-        private bool _isDestroyed;
 
         internal Entity(EcsManager owner, int id)
         {
@@ -20,9 +20,19 @@ namespace EcsLib.Api
 
         public bool Equals(Entity other)
         {
-            return other != null && _id == other._id && _owner == other._owner;
+            return _id == other._id && _owner == other._owner;
         }
         
+        public static bool operator ==(Entity left, Entity right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Entity left, Entity right)
+        {
+            return !(left == right);
+        }
+
         public override string ToString()
         {
             return $"Entity({_id})";
@@ -37,11 +47,11 @@ namespace EcsLib.Api
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public bool IsDestroyed()
+        public bool IsAlive()
         {
-            return _isDestroyed;
+            return _owner.IsAlive(this);
         }
-
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool IsNull()
         {
@@ -82,7 +92,7 @@ namespace EcsLib.Api
                 return default;
             }
 
-            if (IsDestroyed())
+            if (!IsAlive())
             {
                 LogError($"[{nameof(Get)}<{typeof(T)}>] {this} is destroyed");
                 return default;
@@ -106,20 +116,14 @@ namespace EcsLib.Api
                 return this;
             }
 
-            if (IsDestroyed())
+            if (!IsAlive())
             {
                 LogError($"[{nameof(Set)}<{typeof(T)}>] {this} is destroyed");
                 return this;
             }
 
-            if (SetComponent(value))
-            {
-                _owner.OnComponentChanged(this, ComponentMeta<T>.Index);
-            }
-            else
-            {
-                LogError($"[{nameof(SetComponent)}<{typeof(T)}>] {this} Can't add component by invariant");
-            }
+            SetComponent(value);
+            _owner.OnComponentChanged(this, ComponentMeta<T>.Index);
             return this;
         }
 
@@ -132,25 +136,16 @@ namespace EcsLib.Api
                 return this;
             }
 
-            if (IsDestroyed())
+            if (!IsAlive())
             {
                 LogError($"[{nameof(Remove)}<{typeof(T)}>] {this} is destroyed");
                 return this;
             }
 
-            var flag = GetFlag<T>();
-            if (flag)
+            if (RemoveComponent<T>())
             {
-                if (RemoveComponent<T>())
-                {
-                    _owner.OnComponentChanged(this, ComponentMeta<T>.Index);
-                }
-                else
-                {
-                    LogError($"[{nameof(RemoveComponent)}<{typeof(T)}>] {this} Can't remove component by invariant");
-                }
+                _owner.OnComponentChanged(this, ComponentMeta<T>.Index);
             }
-
             return this;
         }
 
@@ -158,14 +153,14 @@ namespace EcsLib.Api
         public bool Has<T>()
         {
             if (IsNull()) return false;
-            if (IsDestroyed()) return false;
+            if (!IsAlive()) return false;
             return GetFlag<T>();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal bool HasComponent(int componentIndex)
         {
-            if (IsDestroyed())
+            if (!IsAlive())
                 return false;
             return GetFlag(componentIndex);
         }
@@ -179,26 +174,19 @@ namespace EcsLib.Api
                 return;
             }
 
-            if (IsDestroyed())
+            if (!IsAlive())
             {
                 LogError($"[{nameof(Destroy)}] {this} is already destroyed");
                 return;
             }
 
-            _isDestroyed = true;
             _owner.OnEntityDestroyed(this);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal void Resurrect()
+        private void SetComponent<T>(T value)
         {
-            _isDestroyed = false;
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private bool SetComponent<T>(T value)
-        {
-            return _owner.Components.SetComponent(this, value);
+            _owner.Components.SetComponent(this, value);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

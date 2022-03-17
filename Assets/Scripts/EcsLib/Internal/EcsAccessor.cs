@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using EcsLib.Api;
 
 namespace EcsLib.Internal
@@ -40,14 +39,14 @@ namespace EcsLib.Internal
             }
         }
 
-        internal EcsFilter InternalBuildFilter(IReadOnlyCollection<int> included, IReadOnlyCollection<int> excluded)
+        internal EcsFilter InternalBuildFilter(int[] included, int[] excluded)
         {
             if (TryGetExistingFilter(included, excluded, out var filter))
                 return filter;
             return CreateNewFilter(included, excluded);
         }
 
-        private bool TryGetExistingFilter(IReadOnlyCollection<int> included, IReadOnlyCollection<int> excluded, out EcsFilter filter)
+        private bool TryGetExistingFilter(int[] included, int[] excluded, out EcsFilter filter)
         {
             foreach (var filters in _typeToFilter)
             {
@@ -64,22 +63,20 @@ namespace EcsLib.Internal
             return false;
         }
         
-        private EcsFilter CreateNewFilter(IEnumerable<int> included, IEnumerable<int> excluded)
+        private EcsFilter CreateNewFilter(int[] included, int[] excluded)
         {
-            var filter = new EcsFilter(included.ToArray(), excluded.ToArray());
+            var filter = new EcsFilter(included, excluded);
             IncreaseFiltersRegistry();
             RegisterFilter(filter, included);
             RegisterFilter(filter, excluded);
             foreach (var entity in _world.Entities)
             {
-                if (entity.IsDestroyed()) 
-                    continue;
                 filter.HandleEntity(entity);
             }
             return filter;
         }
 
-        private void RegisterFilter(EcsFilter filter, IEnumerable<int> componentIndices)
+        private void RegisterFilter(EcsFilter filter, int[] componentIndices)
         {
             foreach (var index in componentIndices)
             {
