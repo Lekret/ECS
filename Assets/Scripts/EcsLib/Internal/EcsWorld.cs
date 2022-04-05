@@ -49,10 +49,5 @@ namespace EcsLib.Internal
             }
             _entities.Clear();
         }
-
-        private static void LogError(string message)
-        {
-            EcsError.Handle(message);
-        }
     }
 }
