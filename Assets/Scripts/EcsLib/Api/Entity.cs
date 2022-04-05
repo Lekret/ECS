@@ -96,14 +96,15 @@ namespace EcsLib.Api
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Entity Set<T>(T value)
         {
-            if (!IsAlive())
+            if (IsAlive())
+            {
+                _owner.Components.SetComponent(this, value);
+                _owner.OnComponentChanged(this, ComponentMeta<T>.Index);
+            }
+            else
             {
                 LogError($"Cannot set {typeof(T)} for non alive entity: {this}");
-                return this;
             }
-
-            _owner.Components.SetComponent(this, value);
-            _owner.OnComponentChanged(this, ComponentMeta<T>.Index);
             return this;
         }
 
@@ -118,9 +119,7 @@ namespace EcsLib.Api
 
             var removed = _owner.Components.RemoveComponent<T>(this);
             if (removed)
-            {
                 _owner.OnComponentChanged(this, ComponentMeta<T>.Index);
-            }
             return this;
         }
 
@@ -139,13 +138,10 @@ namespace EcsLib.Api
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Destroy()
         {
-            if (!IsAlive())
-            {
+            if (IsAlive())
+                _owner.OnEntityDestroyed(this);
+            else
                 LogError($"Cannot destroy non alive entity: {this}");
-                return;
-            }
-
-            _owner.OnEntityDestroyed(this);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
