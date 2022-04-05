@@ -28,7 +28,7 @@ namespace EcsLib.Internal
         {
             if (_entities.TryGetValue(id, out var entity))
                 return entity;
-            return Entity.Null();
+            return Entity.Null;
         }
 
         internal bool IsAlive(Entity entity)

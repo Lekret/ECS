@@ -7,6 +7,7 @@ namespace EcsLib.Api
     public readonly struct Entity : IEquatable<Entity>
     {
         public const int NULL_ID = -1;
+        public static readonly Entity Null = new Entity(null, NULL_ID);
 
         private readonly EcsManager _owner;
         private readonly int _id;
@@ -15,12 +16,6 @@ namespace EcsLib.Api
         {
             _owner = owner;
             _id = id;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Entity Null()
-        {
-            return new Entity(null, NULL_ID);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -92,17 +87,9 @@ namespace EcsLib.Api
         public T Get<T>()
         {
             if (!IsAlive())
-            {
-                LogError($"[{nameof(Get)}<{typeof(T)}>] {this} is not alive");
-                return default;
-            }
-
+                throw new Exception($"Cannot get component from non alive entity: {this}");
             if (!HasComponent<T>())
-            {
-                LogError($"[{nameof(Get)}<{typeof(T)}>] {this} don't have component");
-                return default;
-            }
-
+                throw new Exception($"Cannot get component from entity: {this}");
             return _owner.Components.GetComponent<T>(_id);
         }
 
@@ -111,7 +98,7 @@ namespace EcsLib.Api
         {
             if (!IsAlive())
             {
-                LogError($"[{nameof(Set)}<{typeof(T)}>] {this} is not alive");
+                LogError($"Cannot set {typeof(T)} for non alive entity: {this}");
                 return this;
             }
 
@@ -125,7 +112,7 @@ namespace EcsLib.Api
         {
             if (!IsAlive())
             {
-                LogError($"[{nameof(Remove)}<{typeof(T)}>] {this} is not alive");
+                LogError($"Cannot remove {typeof(T)} from non alive entity: {this}");
                 return this;
             }
 
@@ -154,7 +141,7 @@ namespace EcsLib.Api
         {
             if (!IsAlive())
             {
-                LogError($"[{nameof(Destroy)}] {this} is not alive");
+                LogError($"Cannot destroy non alive entity: {this}");
                 return;
             }
 
