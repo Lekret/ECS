@@ -10,8 +10,7 @@ namespace Examples.Scripts
         private void Awake()
         {
             _systems = new EcsSystems();
-            var manager = new EcsManager();
-            _systems.Add(new TestSystem(manager));
+            _systems.Add(new TestSystem());
         }
 
         private void Start()

@@ -18,7 +18,7 @@ namespace Examples.Scripts
     {
         private readonly EcsFilter _filter;
 
-        public TestSystem(EcsManager manager)
+        public TestSystem()
         {
             _filter = EcsFilter.Create()
                 .Inc<Health>()
