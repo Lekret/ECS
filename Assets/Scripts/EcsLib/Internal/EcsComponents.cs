@@ -79,36 +79,37 @@ namespace EcsLib.Internal
         private T[] GetRawPool<T>()
         {
             var componentIndex = ComponentMeta<T>.Index;
-            return GetUpdatedArray<T>(_rawComponents, componentIndex);
+            return GetArrayForComponent<T>(_rawComponents, componentIndex);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private bool[] GetFlags(int componentIndex)
         {
-            return GetUpdatedArray<bool>(_flags, componentIndex);
+            return GetArrayForComponent<bool>(_flags, componentIndex);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private T[] GetUpdatedArray<T>(IList list, int componentIndex)
+        private T[] GetArrayForComponent<T>(IList listOfArrays, int componentIndex)
         {
-            while (list.Count < ComponentMeta.Count)
+            while (listOfArrays.Count < ComponentMeta.Count)
             {
-                list.Add(null);
+                listOfArrays.Add(null);
             }
 
             var requiredLength = _world.MaxEntityId + 1;
-            if (list[componentIndex] == null)
+            var array = (T[]) listOfArrays[componentIndex];
+            if (array == null)
             {
-                var newArray = new T[requiredLength];
-                list[componentIndex] = newArray;
-                return newArray;
+                array = new T[requiredLength];
+                listOfArrays[componentIndex] = array;
             }
-
-            var array = (T[]) list[componentIndex];
-            if (array.Length < requiredLength)
+            else
             {
-                Array.Resize(ref array, requiredLength);
-                list[componentIndex] = array;
+                if (array.Length < requiredLength)
+                {
+                    Array.Resize(ref array, requiredLength);
+                    listOfArrays[componentIndex] = array;
+                }
             }
             
             return array;
