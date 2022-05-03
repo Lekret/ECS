@@ -5,50 +5,36 @@ namespace ECSimplicity
 {
     public struct EcsFilterBuilder
     {
-        private static readonly Queue<List<int>> ListPool = new Queue<List<int>>();
-        private readonly List<int> _included;
-        private readonly List<int> _excluded;
+        private static readonly Queue<EcsIndices> IndicesPool = new Queue<EcsIndices>();
         private readonly EcsAccessor _accessor;
+        private readonly EcsIndices _indices;
         private bool _filterIsEnd;
 
         internal EcsFilterBuilder(EcsAccessor accessor)
         {
             _accessor = accessor;
-            _included = GetBuffer();
-            _excluded = GetBuffer();
             _filterIsEnd = false;
+            _indices = GetIndices();
         }
 
-        private static List<int> GetBuffer()
+        private static EcsIndices GetIndices()
         {
-            if (ListPool.Count > 0)
-                return ListPool.Dequeue();
-            return new List<int>();
+            if (IndicesPool.Count > 0)
+                return IndicesPool.Dequeue();
+            return new EcsIndices();
         }
 
-        private static void ReleaseList(List<int> list)
+        private static void ReleaseList(EcsIndices indices)
         {
-            list.Clear();
-            ListPool.Enqueue(list);
+            indices.Clear();
+            IndicesPool.Enqueue(indices);
         }
 
         public EcsFilterBuilder Inc<T>()
         {
             if (CheckFilterEnd())
                 return this;
-            var index = ComponentMeta<T>.Index;
-            if (_excluded.Contains(index))
-            {
-                LogError($"Can't include excluded type: {typeof(T)}");
-            }
-            else if (_included.Contains(index))
-            {
-                LogError($"Type is already included: {typeof(T)}");
-            }
-            else
-            {
-                _included.Add(index);
-            }
+            _indices.Inc<T>();
             return this;
         }
 
@@ -56,28 +42,15 @@ namespace ECSimplicity
         {
             if (CheckFilterEnd())
                 return this;
-            var index = ComponentMeta<T>.Index;
-            if (_included.Contains(index))
-            {
-                LogError($"Can't exclude included type: {typeof(T)}");
-            }
-            else if (_excluded.Contains(index))
-            {
-                LogError($"Type is already excluded: {typeof(T)}");
-            }
-            else
-            {
-                _excluded.Add(index);
-            }
+            _indices.Exc<T>();
             return this;
         }
         
         public EcsFilter End()
         {
-            var filter = _accessor.InternalBuildFilter(_included, _excluded);
+            var filter = _accessor.InternalBuildFilter(_indices.Included, _indices.Excluded);
+            ReleaseList(_indices);
             _filterIsEnd = true;
-            ReleaseList(_included);
-            ReleaseList(_excluded);
             return filter;
         }
 
