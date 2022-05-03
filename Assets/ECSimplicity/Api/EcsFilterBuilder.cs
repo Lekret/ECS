@@ -38,15 +38,16 @@ namespace ECSimplicity
             var index = ComponentMeta<T>.Index;
             if (_excluded.Contains(index))
             {
-                LogError($"Can't include already excluded type {typeof(T)}");
-                return this;
+                LogError($"Can't include excluded type: {typeof(T)}");
             }
-            if (_included.Contains(index))
+            else if (_included.Contains(index))
             {
-                LogError($"Can't included already included type {typeof(T)}");
-                return this;
+                LogError($"Type is already included: {typeof(T)}");
             }
-            _included.Add(index);
+            else
+            {
+                _included.Add(index);
+            }
             return this;
         }
 
@@ -57,15 +58,16 @@ namespace ECSimplicity
             var index = ComponentMeta<T>.Index;
             if (_included.Contains(index))
             {
-                LogError($"Can't exclude already included type {typeof(T)}");
-                return this;
+                LogError($"Can't exclude included type: {typeof(T)}");
             }
-            if (_excluded.Contains(index))
+            else if (_excluded.Contains(index))
             {
-                LogError($"Can't exclude already excluded type {typeof(T)}");
-                return this;
+                LogError($"Type is already excluded: {typeof(T)}");
             }
-            _excluded.Add(index);
+            else
+            {
+                _excluded.Add(index);
+            }
             return this;
         }
         
