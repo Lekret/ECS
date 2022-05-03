@@ -28,6 +28,7 @@ namespace ECSimplicity
 
         private static void ReleaseList(List<int> list)
         {
+            list.Clear();
             ListPool.Enqueue(list);
         }
 
