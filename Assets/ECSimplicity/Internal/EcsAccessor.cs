@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using EcsLib.Api;
 
-namespace EcsLib.Internal
+namespace ECSimplicity.Internal
 {
     internal sealed class EcsAccessor
     {
@@ -39,14 +38,14 @@ namespace EcsLib.Internal
             }
         }
 
-        internal EcsFilter InternalBuildFilter(int[] included, int[] excluded)
+        internal EcsFilter InternalBuildFilter(List<int> included, List<int> excluded)
         {
             if (TryGetExistingFilter(included, excluded, out var filter))
                 return filter;
-            return CreateNewFilter(included, excluded);
+            return CreateNewFilter(included.ToArray(), excluded.ToArray());
         }
 
-        private bool TryGetExistingFilter(int[] included, int[] excluded, out EcsFilter filter)
+        private bool TryGetExistingFilter(List<int> included, List<int> excluded, out EcsFilter filter)
         {
             foreach (var filters in _typeToFilter)
             {

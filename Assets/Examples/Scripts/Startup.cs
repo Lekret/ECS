@@ -1,4 +1,4 @@
-﻿using EcsLib.Api;
+﻿using ECSimplicity;
 using UnityEngine;
 
 namespace Examples.Scripts
@@ -11,7 +11,7 @@ namespace Examples.Scripts
         {
             var manager = new EcsManager();
             _systems = new EcsSystems();
-            _systems.Add(new TestSystem());
+            _systems.Add(new TestSystem(manager));
         }
 
         private void Start()

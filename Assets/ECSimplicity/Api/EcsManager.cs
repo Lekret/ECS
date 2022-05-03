@@ -1,6 +1,6 @@
-using EcsLib.Internal;
+using ECSimplicity.Internal;
 
-namespace EcsLib.Api
+namespace ECSimplicity
 {
     public struct EcsConfig
     {
@@ -16,12 +16,10 @@ namespace EcsLib.Api
     
     public sealed class EcsManager
     {
-        public static EcsManager Instance { get; set; }
-
-        private bool _isDestroyed;
         private readonly EcsAccessor _accessor;
         private readonly EcsWorld _world;
-        
+        private bool _isDestroyed;
+
         internal readonly EcsComponents Components;
         
         public EcsManager() : this(EcsConfig.Default) { }
@@ -31,9 +29,6 @@ namespace EcsLib.Api
             _world = new EcsWorld(config.InitialEntityCapacity);
             _accessor = new EcsAccessor(_world);
             Components = new EcsComponents(_world, config.InitialComponentsCapacity);
-
-            if (Instance == null)
-                Instance = this;
         }
 
         public bool IsDestroyed()
@@ -41,17 +36,17 @@ namespace EcsLib.Api
             return _isDestroyed;
         }
 
-        public Entity CreateEntity()
+        public Entity Entity()
         {
             if (CheckDestroyed())
-                return Entity.Null;
+                return ECSimplicity.Entity.Null;
             return _world.CreateEntity(this);
         }
 
         public Entity GetEntityById(int id)
         {
             if (CheckDestroyed())
-                return Entity.Null;
+                return ECSimplicity.Entity.Null;
             return _world.GetEntityById(id);
         }
 

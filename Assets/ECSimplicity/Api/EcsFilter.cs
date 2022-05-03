@@ -1,9 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using EcsLib.Internal;
 
-namespace EcsLib.Api
+namespace ECSimplicity
 {
     public sealed class EcsFilter : IEnumerable<Entity>
     {
@@ -17,17 +16,12 @@ namespace EcsLib.Api
             _excluded = excluded;
         }
 
-        public event Action<Entity> EntityAdded;
+        public IEnumerable<int> Indices => _included;
+        public IEnumerable<int> Excluded => _excluded;
+        public event Action<Entity> EntityAddedOrChanged;
         public event Action<Entity> EntityRemoved;
         public int Count => _entities.Count;
 
-        public static EcsFilterBuilder Create(EcsManager manager = null)
-        {
-            if (manager == null)
-                manager = EcsManager.Instance;
-            return manager.Filter();
-        }
-        
         public List<Entity> GetEntities(List<Entity> buffer)
         {
             buffer.AddRange(_entities);
@@ -37,7 +31,7 @@ namespace EcsLib.Api
         public EcsCollector ToCollector()
         {
             var collector = new EcsCollector();
-            EntityAdded += collector.AddEntity;
+            EntityAddedOrChanged += collector.AddEntity;
             EntityRemoved += collector.RemoveEntity;
             return collector;
         }
@@ -82,10 +76,8 @@ namespace EcsLib.Api
         
         private void AddEntity(Entity entity)
         {
-            if (_entities.Add(entity))
-            {
-                EntityAdded?.Invoke(entity);
-            }
+            _entities.Add(entity);
+            EntityAddedOrChanged?.Invoke(entity);
         }
         
         internal void RemoveEntity(Entity entity)

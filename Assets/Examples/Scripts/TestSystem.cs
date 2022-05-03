@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using EcsLib.Api;
+using ECSimplicity;
 using UnityEngine;
 
 namespace Examples.Scripts
@@ -18,16 +18,16 @@ namespace Examples.Scripts
     {
         private readonly EcsFilter _filter;
 
-        public TestSystem()
+        public TestSystem(EcsManager manager)
         {
-            _filter = EcsFilter.Create()
+            _filter = manager.Filter()
                 .Inc<Health>()
                 .Inc<Duration>()
                 .End();
 
             foreach (var _ in Enumerable.Range(0, 10000))
             {
-                Entity.Create()
+                manager.Entity()
                     .Set(new Health
                     {
                         Value = 100

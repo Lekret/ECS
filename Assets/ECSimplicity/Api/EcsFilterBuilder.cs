@@ -1,25 +1,25 @@
 ﻿using System.Collections.Generic;
-using EcsLib.Internal;
+using ECSimplicity.Internal;
 
-namespace EcsLib.Api
+namespace ECSimplicity
 {
     public struct EcsFilterBuilder
     {
         private static readonly Queue<List<int>> ListPool = new Queue<List<int>>();
-        private readonly List<int> _includedIndices;
-        private readonly List<int> _excludedIndices;
+        private readonly List<int> _included;
+        private readonly List<int> _excluded;
         private readonly EcsAccessor _accessor;
         private bool _filterIsEnd;
 
         internal EcsFilterBuilder(EcsAccessor accessor)
         {
             _accessor = accessor;
-            _includedIndices = GetList();
-            _excludedIndices = GetList();
+            _included = GetBuffer();
+            _excluded = GetBuffer();
             _filterIsEnd = false;
         }
 
-        private static List<int> GetList()
+        private static List<int> GetBuffer()
         {
             if (ListPool.Count > 0)
                 return ListPool.Dequeue();
@@ -36,12 +36,17 @@ namespace EcsLib.Api
             if (CheckFilterEnd())
                 return this;
             var index = ComponentMeta<T>.Index;
-            if (_excludedIndices.Contains(index))
+            if (_excluded.Contains(index))
             {
-                EcsError.Handle($"Can't include already excluded type {typeof(T)}");
+                LogError($"Can't include already excluded type {typeof(T)}");
                 return this;
             }
-            _includedIndices.Add(index);
+            if (_included.Contains(index))
+            {
+                LogError($"Can't included already included type {typeof(T)}");
+                return this;
+            }
+            _included.Add(index);
             return this;
         }
 
@@ -50,21 +55,26 @@ namespace EcsLib.Api
             if (CheckFilterEnd())
                 return this;
             var index = ComponentMeta<T>.Index;
-            if (_includedIndices.Contains(index))
+            if (_included.Contains(index))
             {
-                EcsError.Handle($"Can't exclude already included type {typeof(T)}");
+                LogError($"Can't exclude already included type {typeof(T)}");
                 return this;
             }
-            _excludedIndices.Add(index);
+            if (_excluded.Contains(index))
+            {
+                LogError($"Can't exclude already excluded type {typeof(T)}");
+                return this;
+            }
+            _excluded.Add(index);
             return this;
         }
         
         public EcsFilter End()
         {
-            var filter = _accessor.InternalBuildFilter(_includedIndices.ToArray(), _excludedIndices.ToArray());
+            var filter = _accessor.InternalBuildFilter(_included, _excluded);
             _filterIsEnd = true;
-            ReleaseList(_includedIndices);
-            ReleaseList(_excludedIndices);
+            ReleaseList(_included);
+            ReleaseList(_excluded);
             return filter;
         }
 

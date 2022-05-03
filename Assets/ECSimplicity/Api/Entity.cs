@@ -1,13 +1,13 @@
 using System;
 using System.Runtime.CompilerServices;
-using EcsLib.Internal;
+using ECSimplicity.Internal;
 
-namespace EcsLib.Api
+namespace ECSimplicity
 {
     public readonly struct Entity : IEquatable<Entity>
     {
-        public const int NULL_ID = -1;
-        public static readonly Entity Null = new Entity(null, NULL_ID);
+        public const int NullId = -1;
+        public static readonly Entity Null = new Entity(null, NullId);
 
         private readonly EcsManager _owner;
         private readonly int _id;
@@ -16,14 +16,6 @@ namespace EcsLib.Api
         {
             _owner = owner;
             _id = id;
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Entity Create(EcsManager ecsManager = null)
-        {
-            if (ecsManager == null)
-                ecsManager = EcsManager.Instance;
-            return ecsManager.CreateEntity();
         }
 
         public bool Equals(Entity other)
@@ -49,7 +41,7 @@ namespace EcsLib.Api
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool IsNull()
         {
-            return _id == NULL_ID;
+            return _id == NullId;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -94,7 +86,7 @@ namespace EcsLib.Api
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Entity Set<T>(T value)
+        public Entity Set<T>(T value = default)
         {
             if (IsAlive())
             {

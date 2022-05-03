@@ -2,9 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using EcsLib.Api;
 
-namespace EcsLib.Internal
+namespace ECSimplicity.Internal
 {
     internal sealed class EcsComponents
     {

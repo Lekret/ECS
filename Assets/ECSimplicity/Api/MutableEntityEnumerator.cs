@@ -1,8 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using EcsLib.Api;
 
-namespace EcsLib.Internal
+namespace ECSimplicity
 {
     public struct MutableEntityEnumerator : IEnumerator<Entity>
     {

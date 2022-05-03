@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace EcsLib.Api
+namespace ECSimplicity
 {
     public interface IEcsSystem { }
     public interface IEcsInitSystem : IEcsSystem { void Init(); }

@@ -1,8 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using EcsLib.Internal;
 
-namespace EcsLib.Api
+namespace ECSimplicity
 {
     public sealed class EcsCollector : IEnumerable<Entity>
     {

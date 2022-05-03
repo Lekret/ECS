@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using EcsLib.Api;
 
-namespace EcsLib.Internal
+namespace ECSimplicity.Internal
 {
     internal sealed class EcsWorld
     {
