@@ -6,15 +6,13 @@ namespace ECSimplicity
     public interface IEcsInitSystem : IEcsSystem { void Init(); }
     public interface IEcsTickSystem : IEcsSystem { void Tick(); }
     public interface IEcsFixedTickSystem : IEcsSystem { void FixedTick(); }
-    public interface IEcsCleanupSystem : IEcsSystem { void Cleanup(); }
     public interface IEcsDestroySystem : IEcsSystem { void Destroy(); }
 
-    public class EcsSystems : IEcsInitSystem, IEcsTickSystem, IEcsFixedTickSystem, IEcsCleanupSystem, IEcsDestroySystem
+    public class EcsSystems : IEcsInitSystem, IEcsTickSystem, IEcsFixedTickSystem, IEcsDestroySystem
     {
         private readonly List<IEcsInitSystem> _initSystems = new List<IEcsInitSystem>();
         private readonly List<IEcsTickSystem> _tickSystems = new List<IEcsTickSystem>();
         private readonly List<IEcsFixedTickSystem> _fixedTickSystems = new List<IEcsFixedTickSystem>();
-        private readonly List<IEcsCleanupSystem> _cleanupSystems = new List<IEcsCleanupSystem>();
         private readonly List<IEcsDestroySystem> _destroySystems = new List<IEcsDestroySystem>();
 
         public EcsSystems Add(IEcsSystem system)
@@ -25,8 +23,6 @@ namespace ECSimplicity
                 _tickSystems.Add(tickSystem);
             if (system is IEcsFixedTickSystem fixedTickSystem)
                 _fixedTickSystems.Add(fixedTickSystem);
-            if (system is IEcsCleanupSystem cleanupSystem)
-                _cleanupSystems.Add(cleanupSystem);
             if (system is IEcsDestroySystem destroySystem) 
                 _destroySystems.Add(destroySystem);
             return this;
@@ -53,14 +49,6 @@ namespace ECSimplicity
             for (var i = 0; i < _fixedTickSystems.Count; i++)
             {
                 _fixedTickSystems[i].FixedTick();
-            }
-        }
-        
-        public void Cleanup()
-        {
-            for (var i = 0; i < _cleanupSystems.Count; i++)
-            {
-                _cleanupSystems[i].Cleanup();
             }
         }
 
