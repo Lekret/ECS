@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace ECSimplicity.Internal
 {
-    public class EcsIndices
+    internal class EcsIndices
     {
         private readonly List<int> _included = new List<int>();
         private readonly List<int> _excluded = new List<int>();
@@ -12,13 +12,13 @@ namespace ECSimplicity.Internal
         public void Inc<T>()
         {
             var index = ComponentMeta<T>.Index;
-            if (_excluded.Contains(index))
-            {
-                LogError($"Can't include excluded type: {typeof(T)}");
-            } 
-            else if (_included.Contains(index))
+            if (_included.Contains(index))
             {
                 LogError($"Type is already included: {typeof(T)}");
+            }
+            else if (_excluded.Contains(index))
+            {
+                LogError($"Can't include excluded type: {typeof(T)}");
             }
             else
             {
@@ -29,13 +29,13 @@ namespace ECSimplicity.Internal
         public void Exc<T>()
         {
             var index = ComponentMeta<T>.Index;
-            if (_included.Contains(index))
-            {
-                LogError($"Can't exclude included type: {typeof(T)}");
-            }
-            else if (_excluded.Contains(index))
+            if (_excluded.Contains(index))
             {
                 LogError($"Type is already excluded: {typeof(T)}");
+            }
+            else if (_included.Contains(index))
+            {
+                LogError($"Can't exclude included type: {typeof(T)}");
             }
             else
             {

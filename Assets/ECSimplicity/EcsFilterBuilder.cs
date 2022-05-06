@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-using ECSimplicity.Internal;
+﻿using ECSimplicity.Internal;
 
 namespace ECSimplicity
 {
     public struct EcsFilterBuilder
     {
-        private static readonly Queue<EcsIndices> IndicesPool = new Queue<EcsIndices>();
         private readonly EcsAccessor _accessor;
         private readonly EcsIndices _indices;
         private bool _filterIsEnd;
@@ -14,20 +12,7 @@ namespace ECSimplicity
         {
             _accessor = accessor;
             _filterIsEnd = false;
-            _indices = GetIndices();
-        }
-
-        private static EcsIndices GetIndices()
-        {
-            if (IndicesPool.Count > 0)
-                return IndicesPool.Dequeue();
-            return new EcsIndices();
-        }
-
-        private static void ReleaseList(EcsIndices indices)
-        {
-            indices.Clear();
-            IndicesPool.Enqueue(indices);
+            _indices = IndicesPool.Get();
         }
 
         public EcsFilterBuilder Inc<T>()
@@ -49,7 +34,7 @@ namespace ECSimplicity
         public EcsFilter End()
         {
             var filter = _accessor.InternalBuildFilter(_indices.Included, _indices.Excluded);
-            ReleaseList(_indices);
+            IndicesPool.Release(_indices);
             _filterIsEnd = true;
             return filter;
         }
