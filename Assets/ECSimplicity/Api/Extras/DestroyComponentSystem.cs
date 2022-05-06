@@ -4,9 +4,9 @@
     {
         private readonly EcsFilter _filter;
 
-        public DestroyComponentSystem(EcsManager manager)
+        public DestroyComponentSystem(EcsAdmin admin)
         {
-            _filter = manager.Filter().Inc<T>().End();
+            _filter = admin.Filter().Inc<T>().End();
         }
 
         public void Tick()

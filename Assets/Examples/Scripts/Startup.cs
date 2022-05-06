@@ -9,7 +9,7 @@ namespace Examples.Scripts
 
         private void Awake()
         {
-            var manager = new EcsManager();
+            var manager = new EcsAdmin();
             _systems = new EcsSystems();
             _systems.Add(new TestSystem(manager));
         }

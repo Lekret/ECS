@@ -9,10 +9,10 @@ namespace ECSimplicity
         public const int NullId = -1;
         public static readonly Entity Null = new Entity(null, NullId);
 
-        private readonly EcsManager _owner;
+        private readonly EcsAdmin _owner;
         private readonly int _id;
 
-        internal Entity(EcsManager owner, int id)
+        internal Entity(EcsAdmin owner, int id)
         {
             _owner = owner;
             _id = id;
@@ -51,7 +51,7 @@ namespace ECSimplicity
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public EcsManager GetOwner()
+        public EcsAdmin GetOwner()
         {
             return _owner;
         }

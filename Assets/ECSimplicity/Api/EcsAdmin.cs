@@ -14,7 +14,7 @@ namespace ECSimplicity
         public int InitialEntityCapacity;
     }
     
-    public sealed class EcsManager
+    public sealed class EcsAdmin
     {
         private readonly EcsAccessor _accessor;
         private readonly EcsWorld _world;
@@ -22,9 +22,9 @@ namespace ECSimplicity
 
         internal readonly EcsComponents Components;
         
-        public EcsManager() : this(EcsConfig.Default) { }
+        public EcsAdmin() : this(EcsConfig.Default) { }
         
-        public EcsManager(EcsConfig config)
+        public EcsAdmin(EcsConfig config)
         {
             _world = new EcsWorld(config.InitialEntityCapacity);
             _accessor = new EcsAccessor(_world);
@@ -88,7 +88,7 @@ namespace ECSimplicity
         {
             if (_isDestroyed)
             {
-                EcsError.Handle($"{nameof(EcsManager)} is already disposed");
+                EcsError.Handle($"{nameof(EcsAdmin)} is already disposed");
                 return true;
             }
             return false;

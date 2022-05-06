@@ -18,16 +18,16 @@ namespace Examples.Scripts
     {
         private readonly EcsFilter _filter;
 
-        public TestSystem(EcsManager manager)
+        public TestSystem(EcsAdmin admin)
         {
-            _filter = manager.Filter()
+            _filter = admin.Filter()
                 .Inc<Health>()
                 .Inc<Duration>()
                 .End();
 
             foreach (var _ in Enumerable.Range(0, 10000))
             {
-                manager.Entity()
+                admin.Entity()
                     .Set(new Health
                     {
                         Value = 100
