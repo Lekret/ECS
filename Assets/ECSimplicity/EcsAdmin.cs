@@ -52,7 +52,10 @@ namespace ECSimplicity
 
         public EcsFilterBuilder Filter()
         {
-            return _accessor.CreateFilterBuilder();
+            var builder = _accessor.CreateFilterBuilder();
+            if (CheckDestroyed())
+                builder.End();
+            return builder;
         }
 
         public void Destroy()
