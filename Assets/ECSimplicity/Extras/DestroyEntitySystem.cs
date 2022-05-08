@@ -1,4 +1,4 @@
-﻿namespace ECSimplicity.Api.Extras
+﻿namespace ECSimplicity.Extras
 {
     public class DestroyEntitySystem<T> : IEcsTickSystem
     {
