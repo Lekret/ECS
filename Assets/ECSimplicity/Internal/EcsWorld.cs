@@ -38,6 +38,7 @@ namespace ECSimplicity.Internal
         internal void OnEntityDestroyed(Entity entity)
         {
             _entities.Remove(entity.Id);
+            _idGenerator.ReleaseId(entity.Id);
         }
         
         internal void DestroyAll()

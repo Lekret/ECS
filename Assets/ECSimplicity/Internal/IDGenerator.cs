@@ -1,16 +1,26 @@
+using System.Collections.Generic;
+
 namespace ECSimplicity.Internal
 {
     internal sealed class IDGenerator
     {
+        private readonly HashSet<int> _takenIds = new HashSet<int>();
         private int _currentId;
         internal int CurrentId => _currentId;
         
         internal int Next()
         {
-            _currentId++;
-            if (_currentId == int.MaxValue)
-                _currentId = 0;
+            while (_takenIds.Contains(_currentId))
+            {
+                _currentId++;
+            }
+            _takenIds.Add(_currentId);
             return _currentId;
+        }
+
+        internal void ReleaseId(int id)
+        {
+            _takenIds.Remove(id);
         }
     }
 }
