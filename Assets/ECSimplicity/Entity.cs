@@ -47,7 +47,7 @@ namespace ECSimplicity
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool IsAlive()
         {
-            return Owner.IsAlive(this);
+            return !IsNull() && Owner.IsAlive(this);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
