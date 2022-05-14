@@ -32,12 +32,12 @@ namespace ECSimplicity.Internal
 
         internal bool IsAlive(Entity entity)
         {
-            return !entity.IsNull() && _entities.ContainsKey(entity.GetId());
+            return !entity.IsNull() && _entities.ContainsKey(entity.Id);
         }
 
         internal void OnEntityDestroyed(Entity entity)
         {
-            _entities.Remove(entity.GetId());
+            _entities.Remove(entity.Id);
         }
         
         internal void DestroyAll()

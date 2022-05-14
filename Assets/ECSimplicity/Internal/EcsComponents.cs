@@ -21,7 +21,7 @@ namespace ECSimplicity.Internal
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal void OnEntityDestroyed(Entity entity)
         {
-            var entityId = entity.GetId();
+            var entityId = entity.Id;
             foreach (var pool in _rawComponents)
             {
                 pool.SetValue(default, entityId);
@@ -54,7 +54,7 @@ namespace ECSimplicity.Internal
         internal void SetComponent<T>(Entity entity, T value)
         {
             var componentIndex = ComponentMeta<T>.Index;
-            var id = entity.GetId();
+            var id = entity.Id;
             GetRawPool<T>()[id] = value;
             GetFlags(componentIndex)[id] = true;
         }
@@ -63,7 +63,7 @@ namespace ECSimplicity.Internal
         internal bool RemoveComponent<T>(Entity entity)
         {
             var componentIndex = ComponentMeta<T>.Index;
-            var id = entity.GetId();
+            var id = entity.Id;
             ref var hasComponent = ref GetFlags(componentIndex)[id];
             if (hasComponent)
             {

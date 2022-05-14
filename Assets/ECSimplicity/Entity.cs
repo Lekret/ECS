@@ -9,18 +9,18 @@ namespace ECSimplicity
         public const int NullId = -1;
         public static readonly Entity Null = new Entity(null, NullId);
 
-        private readonly EcsAdmin _owner;
-        private readonly int _id;
+        public readonly EcsAdmin Owner;
+        public readonly int Id;
 
         internal Entity(EcsAdmin owner, int id)
         {
-            _owner = owner;
-            _id = id;
+            Owner = owner;
+            Id = id;
         }
 
         public bool Equals(Entity other)
         {
-            return _id == other._id && _owner == other._owner;
+            return Id == other.Id && Owner == other.Owner;
         }
         
         public static bool operator ==(Entity left, Entity right)
@@ -35,33 +35,21 @@ namespace ECSimplicity
 
         public override string ToString()
         {
-            return $"Entity({_id})";
+            return $"Entity({Id})";
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool IsNull()
         {
-            return _id == NullId;
+            return Id == NullId;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool IsAlive()
         {
-            return _owner.IsAlive(this);
+            return Owner.IsAlive(this);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public EcsAdmin GetOwner()
-        {
-            return _owner;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public int GetId()
-        {
-            return _id;
-        }
-        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool TryGet<T>(out T value)
         {
@@ -82,7 +70,7 @@ namespace ECSimplicity
                 throw new Exception($"Cannot get component from non alive entity: {this}");
             if (!HasComponent<T>())
                 throw new Exception($"Cannot get component from entity: {this}");
-            return _owner.Components.GetComponent<T>(_id);
+            return Owner.Components.GetComponent<T>(Id);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -90,8 +78,8 @@ namespace ECSimplicity
         {
             if (IsAlive())
             {
-                _owner.Components.SetComponent(this, value);
-                _owner.OnComponentChanged(this, ComponentMeta<T>.Index);
+                Owner.Components.SetComponent(this, value);
+                Owner.OnComponentChanged(this, ComponentMeta<T>.Index);
             }
             else
             {
@@ -109,9 +97,9 @@ namespace ECSimplicity
                 return this;
             }
 
-            var removed = _owner.Components.RemoveComponent<T>(this);
+            var removed = Owner.Components.RemoveComponent<T>(this);
             if (removed)
-                _owner.OnComponentChanged(this, ComponentMeta<T>.Index);
+                Owner.OnComponentChanged(this, ComponentMeta<T>.Index);
             return this;
         }
 
@@ -131,7 +119,7 @@ namespace ECSimplicity
         public void Destroy()
         {
             if (IsAlive())
-                _owner.OnEntityDestroyed(this);
+                Owner.OnEntityDestroyed(this);
             else
                 LogError($"Cannot destroy non alive entity: {this}");
         }
@@ -139,13 +127,13 @@ namespace ECSimplicity
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private bool HasComponent<T>()
         {
-            return _owner.Components.GetFlag<T>(_id);
+            return Owner.Components.GetFlag<T>(Id);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private bool HasComponent(int componentIndex)
         {
-            return _owner.Components.GetFlag(componentIndex, _id);
+            return Owner.Components.GetFlag(componentIndex, Id);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
