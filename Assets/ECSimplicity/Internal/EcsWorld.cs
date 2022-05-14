@@ -18,7 +18,7 @@ namespace ECSimplicity.Internal
         internal Entity CreateEntity(EcsAdmin owner)
         {
             var id = _idGenerator.Next();
-            var entity = new Entity(owner, id);
+            var entity = new Entity(id, owner);
             _entities.Add(id, entity);
             return entity;
         }

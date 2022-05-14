@@ -7,15 +7,15 @@ namespace ECSimplicity
     public readonly struct Entity : IEquatable<Entity>
     {
         public const int NullId = -1;
-        public static readonly Entity Null = new Entity(null, NullId);
+        public static readonly Entity Null = new Entity(NullId, null);
 
-        public readonly EcsAdmin Owner;
         public readonly int Id;
+        public readonly EcsAdmin Owner;
 
-        internal Entity(EcsAdmin owner, int id)
+        internal Entity(int id, EcsAdmin owner)
         {
-            Owner = owner;
             Id = id;
+            Owner = owner;
         }
 
         public bool Equals(Entity other)
