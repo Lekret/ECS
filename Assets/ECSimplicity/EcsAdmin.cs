@@ -18,7 +18,6 @@ namespace ECSimplicity
     {
         private readonly EcsAccessor _accessor;
         private readonly EcsWorld _world;
-        private bool _isDestroyed;
 
         internal readonly EcsComponents Components;
         
@@ -31,39 +30,25 @@ namespace ECSimplicity
             Components = new EcsComponents(_world, config.InitialComponentsCapacity);
         }
 
-        public bool IsDestroyed()
-        {
-            return _isDestroyed;
-        }
-
         public Entity CreateEntity()
         {
-            if (CheckDestroyed())
-                return Entity.Null;
             return _world.CreateEntity(this);
         }
 
         public Entity GetEntityById(int id)
         {
-            if (CheckDestroyed())
-                return Entity.Null;
             return _world.GetEntityById(id);
         }
 
         public EcsFilterBuilder Filter()
         {
             var builder = _accessor.CreateFilterBuilder();
-            if (CheckDestroyed())
-                builder.End();
             return builder;
         }
 
-        public void Destroy()
+        public void DestroyAllEntities()
         {
-            if (CheckDestroyed())
-                return;
             _world.DestroyAll();
-            _isDestroyed = true;
         }
         
         public bool IsAlive(Entity entity)
@@ -73,28 +58,14 @@ namespace ECSimplicity
 
         internal void OnComponentChanged(Entity entity, int componentIndex)
         {
-            if (CheckDestroyed())
-                return;
             _accessor.OnComponentChanged(entity, componentIndex);
         }
         
         internal void OnEntityDestroyed(Entity entity)
         {
-            if (CheckDestroyed())
-                return;
             Components.OnEntityDestroyed(entity);
             _world.OnEntityDestroyed(entity);
             _accessor.OnEntityDestroyed(entity);
-        }
-
-        private bool CheckDestroyed()
-        {
-            if (_isDestroyed)
-            {
-                EcsError.Handle($"{nameof(EcsAdmin)} is already disposed");
-                return true;
-            }
-            return false;
         }
     }
 }
