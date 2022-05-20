@@ -27,7 +27,7 @@ namespace Examples.Scripts
 
             foreach (var _ in Enumerable.Range(0, 10000))
             {
-                admin.Entity()
+                admin.CreateEntity()
                     .Set(new Health
                     {
                         Value = 100

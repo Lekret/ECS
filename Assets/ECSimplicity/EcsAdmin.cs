@@ -36,17 +36,17 @@ namespace ECSimplicity
             return _isDestroyed;
         }
 
-        public Entity Entity()
+        public Entity CreateEntity()
         {
             if (CheckDestroyed())
-                return ECSimplicity.Entity.Null;
+                return Entity.Null;
             return _world.CreateEntity(this);
         }
 
         public Entity GetEntityById(int id)
         {
             if (CheckDestroyed())
-                return ECSimplicity.Entity.Null;
+                return Entity.Null;
             return _world.GetEntityById(id);
         }
 
