@@ -42,8 +42,7 @@ namespace ECSimplicity
 
         public EcsFilterBuilder Filter()
         {
-            var builder = _accessor.CreateFilterBuilder();
-            return builder;
+            return _accessor.CreateFilterBuilder();
         }
 
         public void DestroyAllEntities()
