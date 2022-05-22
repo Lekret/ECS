@@ -33,7 +33,7 @@ namespace ECSimplicity
         
         public EcsFilter End()
         {
-            var filter = _accessor.InternalBuildFilter(_indices.Included, _indices.Excluded);
+            var filter = _accessor.GetFilter(_indices.Included, _indices.Excluded);
             IndicesPool.Release(_indices);
             _filterIsEnd = true;
             return filter;

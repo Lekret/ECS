@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ECSimplicity.Internal
 {
@@ -38,14 +39,14 @@ namespace ECSimplicity.Internal
             }
         }
 
-        internal EcsFilter InternalBuildFilter(List<int> included, List<int> excluded)
+        internal EcsFilter GetFilter(IReadOnlyList<int> included, IReadOnlyList<int> excluded)
         {
             if (TryGetExistingFilter(included, excluded, out var filter))
                 return filter;
             return CreateNewFilter(included.ToArray(), excluded.ToArray());
         }
 
-        private bool TryGetExistingFilter(List<int> included, List<int> excluded, out EcsFilter filter)
+        private bool TryGetExistingFilter(IReadOnlyCollection<int> included, IReadOnlyCollection<int> excluded, out EcsFilter filter)
         {
             foreach (var filters in _typeToFilter)
             {
