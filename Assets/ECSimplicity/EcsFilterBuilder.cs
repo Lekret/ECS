@@ -1,4 +1,5 @@
-﻿using ECSimplicity.Internal;
+﻿using System;
+using ECSimplicity.Internal;
 
 namespace ECSimplicity
 {
@@ -17,38 +18,31 @@ namespace ECSimplicity
 
         public EcsFilterBuilder Inc<T>()
         {
-            if (CheckFilterEnd())
-                return this;
+            ThrowIfEnd();
             _indices.Inc<T>();
             return this;
         }
 
         public EcsFilterBuilder Exc<T>()
         {
-            if (CheckFilterEnd())
-                return this;
+            ThrowIfEnd();
             _indices.Exc<T>();
             return this;
         }
         
         public EcsFilter End()
         {
+            ThrowIfEnd();
             var filter = _accessor.GetFilter(_indices.Included, _indices.Excluded);
             IndicesPool.Release(_indices);
             _filterIsEnd = true;
             return filter;
         }
 
-        private bool CheckFilterEnd()
+        private void ThrowIfEnd()
         {
             if (_filterIsEnd)
-                LogError($"{nameof(EcsFilterBuilder)} is already end");
-            return _filterIsEnd;
-        }
-
-        private static void LogError(string message)
-        {
-            EcsError.Handle(message);
+                throw new Exception($"{nameof(EcsFilterBuilder)} is already end");
         }
     }
 }
