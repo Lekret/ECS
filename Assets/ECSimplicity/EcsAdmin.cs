@@ -1,3 +1,4 @@
+using System;
 using ECSimplicity.Internal;
 
 namespace ECSimplicity
@@ -18,8 +19,7 @@ namespace ECSimplicity
     {
         private readonly EcsAccessor _accessor;
         private readonly EcsWorld _world;
-
-        internal readonly EcsComponents Components;
+        private readonly EcsComponents _components;
         
         public EcsAdmin() : this(EcsConfig.Default) { }
         
@@ -27,7 +27,7 @@ namespace ECSimplicity
         {
             _world = new EcsWorld(config.InitialEntityCapacity);
             _accessor = new EcsAccessor(_world);
-            Components = new EcsComponents(_world, config.InitialComponentsCapacity);
+            _components = new EcsComponents(_world, config.InitialComponentsCapacity);
         }
 
         public Entity CreateEntity()
@@ -55,16 +55,97 @@ namespace ECSimplicity
             return _world.IsAlive(entity);
         }
 
-        internal void OnComponentChanged(Entity entity, int componentIndex)
+        public bool TryGet<T>(Entity entity, out T value)
+        {
+            if (Has<T>(entity))
+            {
+                value = Get<T>(entity);
+                return true;
+            }
+            
+            value = default;
+            return false;
+        }
+
+        public T Get<T>(Entity entity)
+        {
+            if (!IsAlive(entity))
+                throw new Exception($"Cannot get component from non alive entity: {entity}");
+            if (!HasComponent<T>(entity))
+                throw new Exception($"Cannot get component from entity: {entity}");
+            return _components.GetComponent<T>(entity.Id);
+        }
+
+        public void Set<T>(Entity entity, T value = default)
+        {
+            if (IsAlive(entity))
+            {
+                _components.SetComponent(entity, value);
+                OnComponentChanged(entity, ComponentMeta<T>.Index);
+            }
+            else
+            {
+                LogError($"Cannot set {typeof(T)} for non alive entity: {entity}");
+            }
+        }
+
+        public void Remove<T>(Entity entity)
+        {
+            if (IsAlive(entity))
+            {
+                var removed = _components.RemoveComponent<T>(entity);
+                if (removed)
+                    OnComponentChanged(entity, ComponentMeta<T>.Index);
+            }
+            else
+            {
+                LogError($"Cannot remove {typeof(T)} from non alive entity: {entity}");
+            }
+        }
+
+        public bool Has<T>(Entity entity)
+        {
+            return IsAlive(entity) && HasComponent<T>(entity);
+        }
+
+        public void Destroy(Entity entity)
+        {
+            if (IsAlive(entity))
+                OnEntityDestroyed(entity);
+            else
+                LogError($"Cannot destroy non alive entity: {entity}");
+        }
+        
+        internal bool Has(Entity entity, int componentIndex)
+        {
+            return IsAlive(entity) && HasComponent(entity, componentIndex);
+        }
+
+        private bool HasComponent<T>(Entity entity)
+        {
+            return _components.GetFlag<T>(entity.Id);
+        }
+
+        private bool HasComponent(Entity entity, int componentIndex)
+        {
+            return _components.GetFlag(componentIndex, entity.Id);
+        }
+
+        private void OnComponentChanged(Entity entity, int componentIndex)
         {
             _accessor.OnComponentChanged(entity, componentIndex);
         }
-        
-        internal void OnEntityDestroyed(Entity entity)
+
+        private void OnEntityDestroyed(Entity entity)
         {
-            Components.OnEntityDestroyed(entity);
+            _components.OnEntityDestroyed(entity);
             _world.OnEntityDestroyed(entity);
             _accessor.OnEntityDestroyed(entity);
+        }
+        
+        private static void LogError(string message)
+        {
+            EcsError.Handle(message);
         }
     }
 }
