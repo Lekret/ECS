@@ -5,6 +5,7 @@ namespace ECSimplicity
 {
     public struct EcsFilterBuilder
     {
+        private static readonly Pool<EcsIndices> IndicesPool = new Pool<EcsIndices>();
         private readonly EcsAccessor _accessor;
         private readonly EcsIndices _indices;
         private bool _filterIsEnd;

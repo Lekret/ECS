@@ -1,28 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
+using ECSimplicity.Internal;
 
 namespace ECSimplicity
 {
     public struct MutableEntityEnumerator : IEnumerator<Entity>
     {
-        private static readonly Stack<List<Entity>> Pools = new Stack<List<Entity>>();
+        private static readonly Pool<List<Entity>> BufferPool = new Pool<List<Entity>>(b => b.Clear());
         private readonly List<Entity> _entities;
         private List<Entity>.Enumerator _enumerator;
 
         internal static MutableEntityEnumerator Create(IEnumerable<Entity> collection)
         {
-            var buffer = GetBuffer();
+            var buffer = BufferPool.Get();
             buffer.AddRange(collection);
             return new MutableEntityEnumerator(buffer);
-        }
-
-        private static List<Entity> GetBuffer()
-        {
-            if (Pools.Count == 0)
-                return new List<Entity>();
-            var buffer = Pools.Pop();
-            buffer.Clear();
-            return buffer;
         }
 
         private MutableEntityEnumerator(List<Entity> entities)
@@ -40,7 +32,7 @@ namespace ECSimplicity
             
         public void Dispose()
         {
-            Pools.Push(_entities);
+            BufferPool.Release(_entities);
         }
     }
 }
