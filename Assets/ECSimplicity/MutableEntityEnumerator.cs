@@ -6,7 +6,7 @@ namespace ECSimplicity
 {
     public struct MutableEntityEnumerator : IEnumerator<Entity>
     {
-        private static readonly Pool<List<Entity>> BufferPool = new Pool<List<Entity>>(b => b.Clear());
+        private static readonly Pool<List<Entity>> BufferPool = Pool<List<Entity>>.Instance;
         private readonly List<Entity> _entities;
         private List<Entity>.Enumerator _enumerator;
 
@@ -32,6 +32,7 @@ namespace ECSimplicity
             
         public void Dispose()
         {
+            _entities.Clear();
             BufferPool.Release(_entities);
         }
     }

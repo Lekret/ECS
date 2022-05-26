@@ -5,7 +5,7 @@ namespace ECSimplicity
 {
     public struct EcsFilterBuilder
     {
-        private static readonly Pool<EcsIndices> IndicesPool = new Pool<EcsIndices>();
+        private static readonly Pool<EcsIndices> IndicesPool = Pool<EcsIndices>.Instance;
         private readonly EcsAccessor _accessor;
         private readonly EcsIndices _indices;
         private bool _filterIsEnd;
@@ -35,6 +35,7 @@ namespace ECSimplicity
         {
             ThrowIfEnd();
             var filter = _accessor.GetFilter(_indices.Included, _indices.Excluded);
+            _indices.Clear();
             IndicesPool.Release(_indices);
             _filterIsEnd = true;
             return filter;

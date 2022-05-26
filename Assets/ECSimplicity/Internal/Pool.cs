@@ -1,17 +1,13 @@
-using System;
 using System.Collections.Generic;
 
 namespace ECSimplicity.Internal
 {
     internal class Pool<T> where T : new()
     {
+        internal static readonly Pool<T> Instance = new Pool<T>();
         private readonly Queue<T> _pool = new Queue<T>();
-        private readonly Action<T> _beforeRelease;
-
-        internal Pool(Action<T> beforeRelease = null)
-        {
-            _beforeRelease = beforeRelease;
-        }
+        
+        private Pool() { }
 
         internal T Get()
         {
@@ -22,7 +18,6 @@ namespace ECSimplicity.Internal
 
         internal void Release(T item)
         {
-            _beforeRelease?.Invoke(item);
             _pool.Enqueue(item);
         }
     }
