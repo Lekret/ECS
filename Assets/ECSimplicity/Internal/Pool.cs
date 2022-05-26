@@ -9,7 +9,7 @@ namespace ECSimplicity.Internal
         
         private Pool() { }
 
-        internal T Get()
+        internal T Spawn()
         {
             if (_pool.Count > 0)
                 return _pool.Dequeue();

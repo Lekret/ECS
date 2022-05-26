@@ -12,7 +12,7 @@ namespace ECSimplicity
 
         internal static MutableEntityEnumerator Create(IEnumerable<Entity> collection)
         {
-            var buffer = BufferPool.Get();
+            var buffer = BufferPool.Spawn();
             buffer.AddRange(collection);
             return new MutableEntityEnumerator(buffer);
         }

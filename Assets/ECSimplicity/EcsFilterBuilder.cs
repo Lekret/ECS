@@ -14,7 +14,7 @@ namespace ECSimplicity
         {
             _accessor = accessor;
             _filterIsEnd = false;
-            _indices = IndicesPool.Get();
+            _indices = IndicesPool.Spawn();
         }
 
         public EcsFilterBuilder Inc<T>()
