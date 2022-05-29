@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace ECSimplicity
+namespace PlainEcs
 {
     public sealed class EcsFilter : IEnumerable<Entity>
     {

@@ -1,7 +1,7 @@
 ﻿using System;
-using ECSimplicity.Internal;
+using PlainEcs.Internal;
 
-namespace ECSimplicity
+namespace PlainEcs
 {
     public struct EcsFilterBuilder
     {

@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.CompilerServices;
 
-namespace ECSimplicity
+namespace PlainEcs
 {
     public readonly struct Entity : IEquatable<Entity>
     {

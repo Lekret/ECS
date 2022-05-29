@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ECSimplicity.Internal
+namespace PlainEcs.Internal
 {
     internal sealed class EcsAccessor
     {

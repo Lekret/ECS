@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace ECSimplicity
+namespace PlainEcs
 {
     public static class EcsError
     {

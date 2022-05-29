@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using ECSimplicity.Internal;
+using PlainEcs.Internal;
 
-namespace ECSimplicity
+namespace PlainEcs
 {
     public struct MutableEntityEnumerator : IEnumerator<Entity>
     {

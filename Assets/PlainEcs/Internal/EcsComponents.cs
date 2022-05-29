@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-namespace ECSimplicity.Internal
+namespace PlainEcs.Internal
 {
     internal sealed class EcsComponents
     {

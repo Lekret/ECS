@@ -1,4 +1,4 @@
-namespace ECSimplicity.Internal
+namespace PlainEcs.Internal
 {
     internal class ComponentMeta
     {

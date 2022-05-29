@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace ECSimplicity.Internal
+namespace PlainEcs.Internal
 {
     internal class EcsIndices
     {

@@ -1,10 +1,10 @@
-﻿namespace ECSimplicity.Extras
+﻿namespace PlainEcs.Extras
 {
-    public class DestroyComponentSystem<T> : IEcsTickSystem
+    public class DestroyEntitySystem<T> : IEcsTickSystem
     {
         private readonly EcsFilter _filter;
 
-        public DestroyComponentSystem(EcsAdmin admin)
+        public DestroyEntitySystem(EcsAdmin admin)
         {
             _filter = admin.Filter().Inc<T>().End();
         }
@@ -13,7 +13,7 @@
         {
             foreach (var entity in _filter)
             {
-                entity.Remove<T>();
+                entity.Destroy();
             }
         }
     }

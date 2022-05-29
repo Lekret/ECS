@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using ECSimplicity;
-using UnityEngine;
+﻿using PlainEcs;
 
 namespace Examples.Scripts
 {
@@ -9,42 +7,31 @@ namespace Examples.Scripts
         public int Value;
     }
 
-    public struct Duration
+    public class TestSystem : IEcsInitSystem, IEcsTickSystem
     {
-        public int Value;
-    }
-
-    public class TestSystem : IEcsTickSystem
-    {
+        private readonly EcsAdmin _admin;
         private readonly EcsFilter _filter;
 
         public TestSystem(EcsAdmin admin)
         {
+            _admin = admin;
             _filter = admin.Filter()
                 .Inc<Health>()
-                .Inc<Duration>()
                 .End();
-
-            foreach (var _ in Enumerable.Range(0, 10000))
-            {
-                admin.CreateEntity()
-                    .Set(new Health
-                    {
-                        Value = 100
-                    })
-                    .Set(new Duration
-                    {
-                        Value = 25
-                    });
-            }
+        }
+        
+        public void Init()
+        {
+            _admin.CreateEntity().Set(new Health {Value = 100});
         }
 
         public void Tick()
         {
             foreach (var entity in _filter)
             {
-                Debug.Log(entity.Remove<Health>());
-                Debug.LogError("YES " + entity.Get<Health>());
+                var health = entity.Get<Health>();
+                health.Value += 5;
+                entity.Set(health);
             }
         }
     }
