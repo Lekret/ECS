@@ -1,0 +1,17 @@
+{
+  "name": "com.lekret.lk-ecs",
+  "version": "1.0.0",
+  "displayName": "PlainEcs",
+  "description": "",
+  "unity": "2019.2",
+  "dependencies": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Lekret/LkEcs.git"
+  },
+  "author": {
+    "name": "Lekret",
+    "url": "https://github.com/Lekret"
+  }
+}
