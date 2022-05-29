@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace PlainEcs.Internal
+namespace LkEcs.Internal
 {
     internal sealed class EcsWorld
     {

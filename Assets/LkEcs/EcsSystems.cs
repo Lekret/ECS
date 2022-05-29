@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace PlainEcs
+namespace LkEcs
 {
     public interface IEcsSystem { }
     public interface IEcsInitSystem : IEcsSystem { void Init(); }

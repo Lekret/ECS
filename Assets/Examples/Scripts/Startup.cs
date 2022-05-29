@@ -1,4 +1,4 @@
-﻿using PlainEcs;
+﻿using LkEcs;
 using UnityEngine;
 
 namespace Examples.Scripts

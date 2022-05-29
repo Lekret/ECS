@@ -1,4 +1,4 @@
-namespace PlainEcs.Internal
+namespace LkEcs.Internal
 {
     internal class ComponentMeta
     {

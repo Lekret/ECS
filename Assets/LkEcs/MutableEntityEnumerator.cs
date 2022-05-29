@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using PlainEcs.Internal;
+using LkEcs.Internal;
 
-namespace PlainEcs
+namespace LkEcs
 {
     public struct MutableEntityEnumerator : IEnumerator<Entity>
     {

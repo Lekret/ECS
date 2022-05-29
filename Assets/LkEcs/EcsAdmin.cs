@@ -1,7 +1,7 @@
 using System;
-using PlainEcs.Internal;
+using LkEcs.Internal;
 
-namespace PlainEcs
+namespace LkEcs
 {
     public struct EcsConfig
     {

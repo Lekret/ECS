@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace PlainEcs.Internal
+namespace LkEcs.Internal
 {
     internal class Pool<T> where T : new()
     {

@@ -1,4 +1,4 @@
-﻿using PlainEcs;
+﻿using LkEcs;
 
 namespace Examples.Scripts
 {

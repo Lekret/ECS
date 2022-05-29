@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace PlainEcs
+namespace LkEcs
 {
     public sealed class EcsFilter : IEnumerable<Entity>
     {
