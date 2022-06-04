@@ -1,7 +1,7 @@
 {
   "name": "com.lekret.lk-ecs",
   "version": "1.0.0",
-  "displayName": "PlainEcs",
+  "displayName": "LkEcs",
   "description": "",
   "unity": "2019.2",
   "dependencies": {
