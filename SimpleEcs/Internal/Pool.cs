@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace SimpleEcs.Internal
 {
     internal class Pool<T> where T : new()

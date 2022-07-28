@@ -1,4 +1,5 @@
-﻿using SimpleEcs.Internal;
+﻿using System;
+using SimpleEcs.Internal;
 
 namespace SimpleEcs
 {

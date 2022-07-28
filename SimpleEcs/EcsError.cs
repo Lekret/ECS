@@ -1,4 +1,6 @@
-﻿namespace SimpleEcs
+﻿using System;
+
+namespace SimpleEcs
 {
     public static class EcsError
     {
