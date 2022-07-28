@@ -1,14 +1,14 @@
 {
-  "name": "com.lekret.lk-ecs",
+  "name": "com.lekret.simple-ecs",
   "version": "1.0.0",
-  "displayName": "LkEcs",
+  "displayName": "SimpleEcs",
   "description": "",
   "unity": "2019.2",
   "dependencies": {
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Lekret/LkEcs.git"
+    "url": "https://github.com/Lekret/SimpleEcs.git"
   },
   "author": {
     "name": "Lekret",
