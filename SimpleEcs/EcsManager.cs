@@ -1,6 +1,5 @@
 using System;
 using SimpleEcs.Internal;
-using UnityEngine;
 
 namespace SimpleEcs
 {

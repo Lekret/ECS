@@ -41,28 +41,18 @@ namespace SimpleEcs.Internal
 
         internal EcsFilter GetFilter(List<int> included, List<int> excluded)
         {
-            if (TryGetExistingFilter(included, excluded, out var filter))
-                return filter;
-            return CreateNewFilter(included.ToArray(), excluded.ToArray());
-        }
-
-        private bool TryGetExistingFilter(List<int> included, List<int> excluded, out EcsFilter result)
-        {
             foreach (var filters in _typeToFilter)
             {
                 foreach (var filter in filters)
                 {
                     if (filter.MatchesIndices(included, excluded))
-                    {
-                        result = filter;
-                        return true;
-                    }
+                        return filter;
                 }
             }
-            result = null;
-            return false;
+            
+            return CreateNewFilter(included.ToArray(), excluded.ToArray());
         }
-        
+
         private EcsFilter CreateNewFilter(int[] included, int[] excluded)
         {
             var filter = new EcsFilter(included, excluded);

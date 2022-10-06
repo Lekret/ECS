@@ -71,9 +71,10 @@ namespace SimpleEcs
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void Set<T>(T value = default)
+        public Entity Set<T>(T value = default)
         {
             Owner.Set(this, value);
+            return this;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
