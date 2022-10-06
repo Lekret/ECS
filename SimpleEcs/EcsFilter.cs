@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SimpleEcs
 {
@@ -21,6 +22,13 @@ namespace SimpleEcs
         public event Action<Entity> EntityAddedOrChanged;
         public event Action<Entity> EntityRemoved;
         public int Count => _entities.Count;
+
+        public Entity Single()
+        {
+            if (_entities.Count == 0) 
+                return Entity.Null;
+            return _entities.First();
+        }
 
         public List<Entity> GetEntities(List<Entity> buffer)
         {
