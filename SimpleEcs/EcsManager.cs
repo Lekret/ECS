@@ -40,9 +40,9 @@ namespace SimpleEcs
             return _world.GetEntityById(id);
         }
 
-        public EcsFilterBuilder Filter<T>()
+        public EcsFilterBuilder Filter()
         {
-            return _accessor.CreateFilterBuilder().Inc<T>();
+            return _accessor.CreateFilterBuilder();
         }
 
         public void DestroyAllEntities()
