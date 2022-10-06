@@ -23,7 +23,7 @@ namespace SimpleEcs
         public event Action<Entity> EntityRemoved;
         public int Count => _entities.Count;
 
-        public Entity Single()
+        public Entity GetSingle()
         {
             if (_entities.Count == 0) 
                 return Entity.Null;
