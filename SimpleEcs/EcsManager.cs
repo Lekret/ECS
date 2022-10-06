@@ -85,7 +85,7 @@ namespace SimpleEcs
             }
             else
             {
-                LogError($"Cannot set {typeof(T)} for non alive entity: {entity}");
+                Error($"Cannot set {typeof(T)} for non alive entity: {entity}");
             }
         }
 
@@ -99,7 +99,7 @@ namespace SimpleEcs
             }
             else
             {
-                LogError($"Cannot remove {typeof(T)} from non alive entity: {entity}");
+                Error($"Cannot remove {typeof(T)} from non alive entity: {entity}");
             }
         }
 
@@ -113,7 +113,7 @@ namespace SimpleEcs
             if (IsAlive(entity))
                 OnEntityDestroyed(entity);
             else
-                LogError($"Cannot destroy non alive entity: {entity}");
+                Error($"Cannot destroy non alive entity: {entity}");
         }
         
         internal bool Has(Entity entity, int componentIndex)
@@ -143,7 +143,7 @@ namespace SimpleEcs
             _accessor.OnEntityDestroyed(entity);
         }
         
-        private static void LogError(string message)
+        private static void Error(string message)
         {
             EcsError.Handle(message);
         }

@@ -14,11 +14,11 @@ namespace SimpleEcs.Internal
             var index = ComponentMeta<T>.Index;
             if (_included.Contains(index))
             {
-                LogError($"Type is already included: {typeof(T)}");
+                Error($"Type is already included: {typeof(T)}");
             }
             else if (_excluded.Contains(index))
             {
-                LogError($"Can't include excluded type: {typeof(T)}");
+                Error($"Can't include excluded type: {typeof(T)}");
             }
             else
             {
@@ -31,11 +31,11 @@ namespace SimpleEcs.Internal
             var index = ComponentMeta<T>.Index;
             if (_excluded.Contains(index))
             {
-                LogError($"Type is already excluded: {typeof(T)}");
+                Error($"Type is already excluded: {typeof(T)}");
             }
             else if (_included.Contains(index))
             {
-                LogError($"Can't exclude included type: {typeof(T)}");
+                Error($"Can't exclude included type: {typeof(T)}");
             }
             else
             {
@@ -49,7 +49,7 @@ namespace SimpleEcs.Internal
             _excluded.Clear();
         }
         
-        private static void LogError(string message)
+        private static void Error(string message)
         {
             EcsError.Handle(message);
         }
