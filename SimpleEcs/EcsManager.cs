@@ -1,5 +1,6 @@
 using System;
 using SimpleEcs.Internal;
+using UnityEngine;
 
 namespace SimpleEcs
 {
@@ -40,9 +41,9 @@ namespace SimpleEcs
             return _world.GetEntityById(id);
         }
 
-        public EcsFilterBuilder Filter()
+        public EcsFilterBuilder Filter<T>()
         {
-            return _accessor.CreateFilterBuilder();
+            return _accessor.CreateFilterBuilder().Inc<T>();
         }
 
         public void DestroyAllEntities()
@@ -85,7 +86,7 @@ namespace SimpleEcs
             }
             else
             {
-                Error($"Cannot set {typeof(T)} for non alive entity: {entity}");
+                throw new Exception($"Cannot set {typeof(T)} for non alive entity: {entity}");
             }
         }
 
@@ -97,10 +98,6 @@ namespace SimpleEcs
                 if (removed)
                     OnComponentChanged(entity, ComponentMeta<T>.Index);
             }
-            else
-            {
-                Error($"Cannot remove {typeof(T)} from non alive entity: {entity}");
-            }
         }
 
         public bool Has<T>(Entity entity)
@@ -111,9 +108,9 @@ namespace SimpleEcs
         public void Destroy(Entity entity)
         {
             if (IsAlive(entity))
+            {
                 OnEntityDestroyed(entity);
-            else
-                Error($"Cannot destroy non alive entity: {entity}");
+            }
         }
         
         internal bool Has(Entity entity, int componentIndex)
@@ -141,11 +138,6 @@ namespace SimpleEcs
             _components.OnEntityDestroyed(entity);
             _world.OnEntityDestroyed(entity);
             _accessor.OnEntityDestroyed(entity);
-        }
-        
-        private static void Error(string message)
-        {
-            EcsError.Handle(message);
         }
     }
 }

@@ -39,27 +39,27 @@ namespace SimpleEcs.Internal
             }
         }
 
-        internal EcsFilter GetFilter(IReadOnlyList<int> included, IReadOnlyList<int> excluded)
+        internal EcsFilter GetFilter(List<int> included, List<int> excluded)
         {
             if (TryGetExistingFilter(included, excluded, out var filter))
                 return filter;
             return CreateNewFilter(included.ToArray(), excluded.ToArray());
         }
 
-        private bool TryGetExistingFilter(IReadOnlyCollection<int> included, IReadOnlyCollection<int> excluded, out EcsFilter filter)
+        private bool TryGetExistingFilter(List<int> included, List<int> excluded, out EcsFilter result)
         {
             foreach (var filters in _typeToFilter)
             {
-                foreach (var f in filters)
+                foreach (var filter in filters)
                 {
-                    if (f.MatchesIndices(included, excluded))
+                    if (filter.MatchesIndices(included, excluded))
                     {
-                        filter = f;
+                        result = filter;
                         return true;
                     }
                 }
             }
-            filter = null;
+            result = null;
             return false;
         }
         

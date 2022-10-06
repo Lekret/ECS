@@ -55,8 +55,8 @@ namespace SimpleEcs.Internal
         {
             var componentIndex = ComponentMeta<T>.Index;
             var id = entity.Id;
-            GetRawPool<T>()[id] = value;
             GetFlags(componentIndex)[id] = true;
+            GetRawPool<T>()[id] = value;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

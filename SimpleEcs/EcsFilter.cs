@@ -88,21 +88,21 @@ namespace SimpleEcs
             }
         }
 
-        public bool MatchesIndices(IReadOnlyCollection<int> included, IReadOnlyCollection<int> excluded)
+        internal bool MatchesIndices(List<int> included, List<int> excluded)
         {
             if (included.Count != _included.Length) return false;
             if (excluded.Count != _excluded.Length) return false;
             return IndicesEquals(_included, included) && IndicesEquals(_excluded, excluded);
         }
 
-        private static bool IndicesEquals(IReadOnlyCollection<int> left, IReadOnlyCollection<int> right)
+        private static bool IndicesEquals(int[] selfIndices, List<int> otherIndices)
         {
-            for (var i = 0; i < left.Count; i++)
+            for (var i = 0; i < selfIndices.Length; i++)
             {
                 var contains = false;
-                for (var k = 0; k < right.Count; k++)
+                for (var k = 0; k < otherIndices.Count; k++)
                 {
-                    if (i == k)
+                    if (selfIndices[i] == otherIndices[k])
                     {
                         contains = true;
                         break;
