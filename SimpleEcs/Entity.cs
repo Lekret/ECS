@@ -9,9 +9,9 @@ namespace SimpleEcs
         public static readonly Entity Null = new Entity(NullId, null);
 
         public readonly int Id;
-        public readonly EcsAdmin Owner;
+        public readonly EcsManager Owner;
 
-        internal Entity(int id, EcsAdmin owner)
+        internal Entity(int id, EcsManager owner)
         {
             Id = id;
             Owner = owner;

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace SimpleEcs.Internal
 {
-    internal sealed class IDGenerator
+    internal sealed class IdGenerator
     {
         private readonly HashSet<int> _takenIds = new HashSet<int>();
         private int _currentId;

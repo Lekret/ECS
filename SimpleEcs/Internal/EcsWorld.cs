@@ -4,7 +4,7 @@ namespace SimpleEcs.Internal
 {
     internal sealed class EcsWorld
     {
-        private readonly IDGenerator _idGenerator = new IDGenerator();
+        private readonly IdGenerator _idGenerator = new IdGenerator();
         private readonly Dictionary<int, Entity> _entities;
 
         internal int MaxEntityId => _idGenerator.CurrentId;
@@ -15,7 +15,7 @@ namespace SimpleEcs.Internal
             _entities = new Dictionary<int, Entity>(initialEntityCapacity);
         }
 
-        internal Entity CreateEntity(EcsAdmin owner)
+        internal Entity CreateEntity(EcsManager owner)
         {
             var id = _idGenerator.Next();
             var entity = new Entity(id, owner);
