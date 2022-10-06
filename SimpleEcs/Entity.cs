@@ -6,21 +6,26 @@ namespace SimpleEcs
     public readonly struct Entity : IEquatable<Entity>
     {
         public const int NullId = -1;
-        public static readonly Entity Null = new Entity(NullId, null);
+        public const int NullVersion = -1;
+        public static readonly Entity Null = new Entity(NullId, NullVersion, null);
 
         public readonly int Id;
+        public readonly int Version;
         public readonly EcsManager Owner;
 
-        internal Entity(int id, EcsManager owner)
+        internal Entity(int id, int version, EcsManager owner)
         {
             Id = id;
+            Version = version;
             Owner = owner;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(Entity other)
         {
-            return Id == other.Id && Owner == other.Owner;
+            return Id == other.Id && 
+                   Version == other.Version && 
+                   Owner == other.Owner;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -44,7 +49,7 @@ namespace SimpleEcs
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool IsNull()
         {
-            return Id == NullId;
+            return Owner == null || Id == NullId || Version == NullVersion;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

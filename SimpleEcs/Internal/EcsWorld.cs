@@ -4,10 +4,17 @@ namespace SimpleEcs.Internal
 {
     internal sealed class EcsWorld
     {
-        private readonly IdGenerator _idGenerator = new IdGenerator();
+        private struct RecycledEntity
+        {
+            public int Id;
+            public int Version;
+        }
+        
+        private readonly Queue<RecycledEntity> _recycledEntities = new Queue<RecycledEntity>();
         private readonly Dictionary<int, Entity> _entities;
-
-        internal int MaxEntityId => _idGenerator.CurrentId;
+        private int _currentId;
+        
+        internal int MaxEntityId => _currentId - _recycledEntities.Count;
         internal IEnumerable<Entity> Entities => _entities.Values;
 
         internal EcsWorld(int initialEntityCapacity)
@@ -17,9 +24,18 @@ namespace SimpleEcs.Internal
 
         internal Entity CreateEntity(EcsManager owner)
         {
-            var id = _idGenerator.Next();
-            var entity = new Entity(id, owner);
-            _entities.Add(id, entity);
+            Entity entity;
+            if (_recycledEntities.Count > 0)
+            {
+                var recycledEntity = _recycledEntities.Dequeue();
+                entity = new Entity(recycledEntity.Id, recycledEntity.Version + 1, owner);
+            }
+            else
+            {
+                _currentId++;
+                entity = new Entity(_currentId, 0, owner);
+            }
+            _entities.Add(entity.Id, entity);
             return entity;
         }
 
@@ -32,13 +48,18 @@ namespace SimpleEcs.Internal
 
         internal bool IsAlive(Entity entity)
         {
-            return _entities.ContainsKey(entity.Id);
+            return _entities.TryGetValue(entity.Id, out var existingEntity) && 
+                   entity.Version == existingEntity.Version;
         }
 
         internal void OnEntityDestroyed(Entity entity)
         {
             _entities.Remove(entity.Id);
-            _idGenerator.ReleaseId(entity.Id);
+            _recycledEntities.Enqueue(new RecycledEntity
+            {
+                Id = entity.Id,
+                Version = entity.Version
+            });
         }
         
         internal void DestroyAll()
