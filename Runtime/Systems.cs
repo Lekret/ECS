@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SimpleEcs
+namespace Lekret.Ecs
 {
 	public class Systems : 
 		IInitSystem, 

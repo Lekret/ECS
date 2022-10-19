@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace SimpleEcs
+namespace Lekret.Ecs
 {
     public sealed class Collector : IEnumerable<Entity>
     {

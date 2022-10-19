@@ -1,7 +1,7 @@
 using System;
-using SimpleEcs.Internal;
+using Lekret.Ecs.Internal;
 
-namespace SimpleEcs
+namespace Lekret.Ecs
 {
     public struct EcsConfig
     {

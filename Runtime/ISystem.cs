@@ -1,4 +1,4 @@
-﻿namespace SimpleEcs
+﻿namespace Lekret.Ecs
 {
     public interface ISystem { }
 

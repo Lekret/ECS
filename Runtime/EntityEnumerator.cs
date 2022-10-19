@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using SimpleEcs.Internal;
+using Lekret.Ecs.Internal;
 
-namespace SimpleEcs
+namespace Lekret.Ecs
 {
     public struct EntityEnumerator : IEnumerator<Entity>
     {

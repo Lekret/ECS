@@ -1,5 +1,5 @@
 {
-  "name": "com.lekret.simple-ecs",
+  "name": "com.lekret.ecs",
   "version": "1.0.0",
   "displayName": "SimpleEcs",
   "description": "",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Lekret/SimpleEcs.git"
+    "url": "https://github.com/Lekret/Ecs.git"
   },
   "author": {
     "name": "Lekret",

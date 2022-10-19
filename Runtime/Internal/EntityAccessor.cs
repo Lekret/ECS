@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SimpleEcs.Internal
+namespace Lekret.Ecs.Internal
 {
     internal sealed class EntityAccessor
     {
