@@ -15,7 +15,7 @@ namespace Lekret.Ecs
 		protected List<ILateUpdateSystem> LateUpdateSystems = new List<ILateUpdateSystem>();
 		protected List<IDestroySystem> DestroySystems = new List<IDestroySystem>();
 
-		public virtual Systems Add(ISystem system)
+		public virtual EcsSystems Add(ISystem system)
 		{
 			if (system is IInitSystem initSystem)
 			{
