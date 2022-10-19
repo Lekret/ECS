@@ -72,7 +72,7 @@ namespace Lekret.Ecs
             if (!IsAlive(entity))
                 throw new Exception($"Cannot get component from non alive entity: {entity}");
             if (!HasComponent<T>(entity))
-                throw new Exception($"Cannot get component from entity: {entity}");
+                throw new Exception($"Entity do not have a component {typeof(T)}: {entity}");
             return _components.GetComponent<T>(entity.Id);
         }
 
@@ -97,6 +97,10 @@ namespace Lekret.Ecs
                 if (removed)
                     OnComponentChanged(entity, ComponentMeta<T>.Index);
             }
+            else
+            {
+                throw new Exception($"Cannot remove {typeof(T)} for non alive entity: {entity}");
+            }
         }
 
         public bool Has<T>(Entity entity)
@@ -109,6 +113,10 @@ namespace Lekret.Ecs
             if (IsAlive(entity))
             {
                 OnEntityDestroyed(entity);
+            }
+            else
+            {
+                throw new Exception($"Entity is not alive: {entity}");
             }
         }
         
