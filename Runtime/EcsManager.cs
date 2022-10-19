@@ -40,9 +40,14 @@ namespace Lekret.Ecs
             return _world.GetEntityById(id);
         }
 
-        public FilterBuilder Filter()
+        public FilterBuilder Inc<T>()
         {
-            return _accessor.CreateFilterBuilder();
+            return _accessor.CreateFilterBuilder().Inc<T>();
+        }
+        
+        public FilterBuilder Exc<T>()
+        {
+            return _accessor.CreateFilterBuilder().Exc<T>();
         }
 
         public void DestroyAllEntities()
