@@ -17,11 +17,11 @@ namespace SimpleEcs
             _excluded = excluded;
         }
 
+        public int Count => _entities.Count;
         public IEnumerable<int> Indices => _included;
         public IEnumerable<int> Excluded => _excluded;
         public event Action<Entity> EntityAdded;
         public event Action<Entity> EntityRemoved;
-        public int Count => _entities.Count;
 
         public Entity GetSingle()
         {
