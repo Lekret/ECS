@@ -2,7 +2,7 @@
 
 namespace Lekret.Ecs
 {
-	public class Systems : 
+	public class EcsSystems : 
 		IInitSystem, 
 		IUpdateSystem, 
 		IFixedUpdateSystem,
