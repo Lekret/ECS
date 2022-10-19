@@ -35,7 +35,7 @@ namespace SimpleEcs
             return _world.CreateEntity(this);
         }
 
-        public Entity GetEntityById(int id)
+        public Entity GetEntity(int id)
         {
             return _world.GetEntityById(id);
         }
