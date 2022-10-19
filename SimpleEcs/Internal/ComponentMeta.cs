@@ -1,8 +1,10 @@
+using System.Threading;
+
 namespace SimpleEcs.Internal
 {
     internal class ComponentMeta
     {
-        internal static int Count { get; private protected set; }
+        internal static int Count;
     }
     
     internal class ComponentMeta<T> : ComponentMeta
@@ -12,7 +14,7 @@ namespace SimpleEcs.Internal
         static ComponentMeta()
         {
             Index = Count;
-            Count++;
+            Interlocked.Increment(ref Count);
         }
     }
 }
