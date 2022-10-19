@@ -1,5 +1,6 @@
 {
-    "name": "Ecs",
+    "name": "Lekret.Ecs",
+    "rootNamespace": "",
     "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
