@@ -1,2 +1,2 @@
 Paste in Unity manifest.json:
-```"com.lekret.simple-ecs": "https://github.com/Lekret/SimpleEcs.git"```
+```"com.lekret.ecs": "https://github.com/Lekret/Ecs.git"```
