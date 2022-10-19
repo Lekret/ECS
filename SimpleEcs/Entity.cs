@@ -3,17 +3,18 @@ using System.Runtime.CompilerServices;
 
 namespace SimpleEcs
 {
+    [Serializable]
     public readonly struct Entity : IEquatable<Entity>
     {
         public const int NullId = -1;
-        public const int NullVersion = -1;
+        public const short NullVersion = -1;
         public static readonly Entity Null = new Entity(NullId, NullVersion, null);
 
         public readonly int Id;
-        public readonly int Version;
+        public readonly short Version;
         public readonly EcsManager Owner;
 
-        internal Entity(int id, int version, EcsManager owner)
+        internal Entity(int id, short version, EcsManager owner)
         {
             Id = id;
             Version = version;

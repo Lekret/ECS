@@ -17,17 +17,17 @@ namespace SimpleEcs
     
     public sealed class EcsManager
     {
-        private readonly EcsAccessor _accessor;
-        private readonly EcsWorld _world;
-        private readonly EcsComponents _components;
+        private readonly EntityAccessor _accessor;
+        private readonly World _world;
+        private readonly Components _components;
         
         public EcsManager() : this(EcsConfig.Default) { }
         
         public EcsManager(EcsConfig config)
         {
-            _world = new EcsWorld(config.InitialEntityCapacity);
-            _accessor = new EcsAccessor(_world);
-            _components = new EcsComponents(_world, config.InitialComponentsCapacity);
+            _world = new World(config.InitialEntityCapacity);
+            _accessor = new EntityAccessor(_world);
+            _components = new Components(_world, config.InitialComponentsCapacity);
         }
 
         public Entity CreateEntity()
@@ -40,7 +40,7 @@ namespace SimpleEcs
             return _world.GetEntityById(id);
         }
 
-        public EcsFilterBuilder Filter()
+        public FilterBuilder Filter()
         {
             return _accessor.CreateFilterBuilder();
         }
