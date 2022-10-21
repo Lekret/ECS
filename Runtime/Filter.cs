@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Lekret.Ecs
 {
@@ -25,9 +24,12 @@ namespace Lekret.Ecs
 
         public Entity GetSingle()
         {
-            if (_entities.Count == 0) 
-                return Entity.Null;
-            return _entities.First();
+            var enumerator = _entities.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                return enumerator.Current;
+            }
+            return Entity.Null;
         }
 
         public List<Entity> GetEntities(List<Entity> buffer)
