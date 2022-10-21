@@ -41,6 +41,11 @@ namespace Lekret.Ecs
             return filter;
         }
 
+        public Collector ToCollector()
+        {
+            return End().ToCollector();
+        }
+
         private void ThrowIfEnd()
         {
             if (_filterIsEnd)
