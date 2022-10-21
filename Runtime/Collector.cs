@@ -9,7 +9,7 @@ namespace Lekret.Ecs
         
         public int Count => _entities.Count;
         
-        public void ClearEntities()
+        public void Clear()
         {
             _entities.Clear();
         }
