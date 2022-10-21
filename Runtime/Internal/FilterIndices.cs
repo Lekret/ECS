@@ -10,7 +10,7 @@ namespace Lekret.Ecs.Internal
         public List<int> Included => _included;
         public List<int> Excluded => _excluded;
 
-        public void Inc<T>()
+        internal void Inc<T>()
         {
             var index = ComponentMeta<T>.Index;
             if (_included.Contains(index))
@@ -22,7 +22,7 @@ namespace Lekret.Ecs.Internal
             _included.Add(index);
         }
 
-        public void Exc<T>()
+        internal void Exc<T>()
         {
             var index = ComponentMeta<T>.Index;
             if (_excluded.Contains(index))
@@ -34,7 +34,7 @@ namespace Lekret.Ecs.Internal
             _excluded.Add(index);
         }
         
-        public void Clear()
+        internal void Clear()
         {
             _included.Clear();
             _excluded.Clear();
