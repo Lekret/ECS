@@ -18,29 +18,19 @@ namespace Lekret.Ecs
 		public virtual EcsSystems Add(ISystem system)
 		{
 			if (system is IInitSystem initSystem)
-			{
 				InitSystems.Add(initSystem);
-			}
 
 			if (system is IFixedUpdateSystem fixedUpdateSystem)
-			{
 				FixedUpdateSystems.Add(fixedUpdateSystem);
-			}
 
 			if (system is IUpdateSystem updateSystem)
-			{
 				UpdateSystem.Add(updateSystem);
-			}
 
 			if (system is ILateUpdateSystem lateUpdateSystem)
-			{
 				LateUpdateSystems.Add(lateUpdateSystem);
-			}
 
 			if (system is IDestroySystem destroySystem)
-			{
 				DestroySystems.Add(destroySystem);
-			}
 
 			return this;
 		}
