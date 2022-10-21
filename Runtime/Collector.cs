@@ -27,5 +27,10 @@ namespace Lekret.Ecs
         {
             _entities.Add(entity);
         }
+
+        public void RemoveEntity(Entity entity)
+        {
+            _entities.Remove(entity);
+        }
     }
 }
