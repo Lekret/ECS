@@ -8,13 +8,13 @@ namespace Lekret.Ecs
         private static readonly Pool<FilterIndices> IndicesPool = Pool<FilterIndices>.Instance;
         private readonly EntityAccessor _accessor;
         private readonly FilterIndices _indices;
-        private bool _filterIsEnd;
+        private bool _isEnd;
 
         internal FilterBuilder(EntityAccessor accessor)
         {
             _accessor = accessor;
-            _filterIsEnd = false;
             _indices = IndicesPool.Spawn();
+            _isEnd = false;
         }
 
         public FilterBuilder Inc<T>()
@@ -37,7 +37,7 @@ namespace Lekret.Ecs
             var filter = _accessor.GetFilter(_indices.Included, _indices.Excluded);
             _indices.Clear();
             IndicesPool.Release(_indices);
-            _filterIsEnd = true;
+            _isEnd = true;
             return filter;
         }
 
@@ -48,7 +48,7 @@ namespace Lekret.Ecs
 
         private void ThrowIfEnd()
         {
-            if (_filterIsEnd)
+            if (_isEnd)
                 throw new Exception($"{nameof(FilterBuilder)} is already end");
         }
     }
