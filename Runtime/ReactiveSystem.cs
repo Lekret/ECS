@@ -5,7 +5,6 @@ namespace Lekret.Ecs
 {
     public abstract class ReactiveSystem : IUpdateSystem
     {
-        private static readonly Pool<List<Entity>> BufferPool = Pool<List<Entity>>.Instance;
         private readonly Collector _collector;
 
         protected ReactiveSystem(EcsManager manager)
@@ -24,7 +23,7 @@ namespace Lekret.Ecs
             if (_collector.Count == 0)
                 return;
 
-            var buffer = BufferPool.Spawn();
+            var buffer = SpawnBuffer();
             
             foreach (var e in _collector)
             {
@@ -45,13 +44,23 @@ namespace Lekret.Ecs
                 finally
                 {
                     buffer.Clear();
-                    BufferPool.Release(buffer);
+                    ReleaseBuffer(buffer);
                 }
             }
             else
             {
-                BufferPool.Release(buffer);
+                ReleaseBuffer(buffer);
             }
+        }
+
+        private List<Entity> SpawnBuffer()
+        {
+            return Pool<List<Entity>>.Spawn();
+        }
+
+        private void ReleaseBuffer(List<Entity> buffer)
+        {
+            Pool<List<Entity>>.Release(buffer);
         }
     }
 }

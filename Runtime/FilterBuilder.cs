@@ -5,7 +5,6 @@ namespace Lekret.Ecs
 {
     public struct FilterBuilder
     {
-        private static readonly Pool<FilterIndices> IndicesPool = Pool<FilterIndices>.Instance;
         private readonly EntityAccessor _accessor;
         private readonly FilterIndices _indices;
         private bool _isEnd;
@@ -13,7 +12,7 @@ namespace Lekret.Ecs
         internal FilterBuilder(EntityAccessor accessor)
         {
             _accessor = accessor;
-            _indices = IndicesPool.Spawn();
+            _indices = Pool<FilterIndices>.Spawn();
             _isEnd = false;
         }
 
@@ -36,7 +35,7 @@ namespace Lekret.Ecs
             ThrowIfEnd();
             var filter = _accessor.GetFilter(_indices.Included, _indices.Excluded);
             _indices.Clear();
-            IndicesPool.Release(_indices);
+            Pool<FilterIndices>.Release(_indices);
             _isEnd = true;
             return filter;
         }

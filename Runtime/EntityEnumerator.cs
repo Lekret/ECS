@@ -6,13 +6,12 @@ namespace Lekret.Ecs
 {
     public struct EntityEnumerator : IEnumerator<Entity>
     {
-        private static readonly Pool<List<Entity>> BufferPool = Pool<List<Entity>>.Instance;
         private readonly List<Entity> _entities;
         private List<Entity>.Enumerator _enumerator;
 
         internal static EntityEnumerator Create(IEnumerable<Entity> collection)
         {
-            var buffer = BufferPool.Spawn();
+            var buffer = Pool<List<Entity>>.Spawn();
             buffer.AddRange(collection);
             return new EntityEnumerator(buffer);
         }
@@ -33,7 +32,7 @@ namespace Lekret.Ecs
         public void Dispose()
         {
             _entities.Clear();
-            BufferPool.Release(_entities);
+            Pool<List<Entity>>.Release(_entities);
         }
     }
 }
