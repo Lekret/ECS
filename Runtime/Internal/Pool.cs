@@ -3,12 +3,10 @@ using System.Collections.Generic;
 
 namespace Lekret.Ecs.Internal
 {
-    internal class Pool<T> where T : new()
+    internal static class Pool<T> where T : new()
     {
         [ThreadStatic]
         private static Queue<T> PoolThreadStatic;
-
-        private Pool() { }
         
         internal static T Spawn()
         {
