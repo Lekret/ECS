@@ -18,7 +18,7 @@ namespace Lekret.Ecs
             if (filters.Length != filterEvents.Length)
                 throw new Exception($"Filters ({filters.Length}) and filter events ({filterEvents.Length}) must be equal");
 
-            ObserveFilter(filterEvents, AddEntity);
+            ObserveFilter(filterEvents, e => _entities.Add(e));
         }
 
         public int Count => _entities.Count;
@@ -61,11 +61,6 @@ namespace Lekret.Ecs
                         break;
                 }
             }
-        }
-
-        private void AddEntity(Entity entity)
-        {
-            _entities.Add(entity);
         }
     }
     
