@@ -9,9 +9,7 @@ namespace Lekret.Ecs
     {
         private readonly HashSet<Entity> _entities;
         private readonly Filter[] _filters;
-
-        public Collector(Filter filter, FilterEvent filterEvent) : this(new[] {filter}, new[] {filterEvent}) { }
-
+        
         public Collector(Filter[] filters, FilterEvent[] filterEvents)
         {
             _filters = filters;
