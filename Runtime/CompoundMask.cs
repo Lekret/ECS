@@ -36,9 +36,9 @@ namespace Lekret.Ecs
         }
 
         public bool Matches(Entity entity) =>
-            entity.HasAll(_allOfIndices)
-            && entity.HasAny(_anyOfIndices)
-            && !entity.HasAny(_noneOfIndices);
+            (_allOfIndices.Length == 0 || entity.HasAll(_allOfIndices)) &&
+            (_anyOfIndices.Length == 0 || entity.HasAny(_anyOfIndices)) &&
+            (_noneOfIndices.Length == 0 || !entity.HasAny(_noneOfIndices));
 
         public override bool Equals(object obj)
         {
