@@ -16,7 +16,7 @@ namespace Lekret.Ecs
 
         private CompoundMask() { }
 
-        public int[] Indices => _indices ?? (_indices = MergeIndices(_allOfIndices, _anyOfIndices, _noneOfIndices));
+        public int[] Indices => _indices ?? (_indices = MergeIndices());
         public int[] AllOfIndices => _allOfIndices;
         public int[] AnyOfIndices => _anyOfIndices;
         public int[] NoneOfIndices => _noneOfIndices;
@@ -78,18 +78,15 @@ namespace Lekret.Ecs
             return true;
         }
 
-        private static int[] MergeIndices(int[] allOfIndices, int[] anyOfIndices, int[] noneOfIndices)
+        private int[] MergeIndices()
         {
             var buffer = GetMergeBuffer();
-            if (allOfIndices != null)
-                buffer.AddRange(allOfIndices);
-            if (anyOfIndices != null)
-                buffer.AddRange(anyOfIndices);
-            if (noneOfIndices != null) 
-                buffer.AddRange(noneOfIndices);
-            var mergedIndices = DistinctIndices(buffer);
+            buffer.AddRange(_allOfIndices);
+            buffer.AddRange(_anyOfIndices);
+            buffer.AddRange(_noneOfIndices);
+            var indices = DistinctIndices(buffer);
             buffer.Clear();
-            return mergedIndices;
+            return indices;
         }
 
         private static int[] DistinctIndices(IEnumerable<int> indices)
