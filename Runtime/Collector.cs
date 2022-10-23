@@ -5,20 +5,24 @@ using SimpleEcs.Runtime;
 
 namespace Lekret.Ecs
 {
-    public sealed class Collector : IEnumerable<Entity>
+    public sealed class Collector : IEnumerable<Entity>, IDisposable
     {
         private readonly HashSet<Entity> _entities;
         private readonly Filter[] _filters;
-        
+        private readonly FilterEvent[] _filterEvents;
+        private readonly Action<Entity> _cachedAdd;
+
         public Collector(Filter[] filters, FilterEvent[] filterEvents)
         {
             _filters = filters;
             _entities = new HashSet<Entity>();
+            _filterEvents = filterEvents;
 
             if (filters.Length != filterEvents.Length)
                 throw new Exception($"Filters ({filters.Length}) and filter events ({filterEvents.Length}) must be equal");
 
-            ObserveFilter(filterEvents, e => _entities.Add(e));
+            _cachedAdd = e => _entities.Add(e);
+            ObserveFilter();
         }
 
         public int Count => _entities.Count;
@@ -36,28 +40,40 @@ namespace Lekret.Ecs
         IEnumerator<Entity> IEnumerable<Entity>.GetEnumerator() => GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-
-        private void ObserveFilter(FilterEvent[] filterEvents, Action<Entity> addEntity)
+        
+        public void Dispose()
         {
             for (var i = 0; i < _filters.Length; i++)
             {
                 var filter = _filters[i];
-                var filterEvent = filterEvents[i];
+                filter.EntityAdded -= _cachedAdd;
+                filter.EntityRemoved -= _cachedAdd;
+            }
+            
+            Clear();
+        }
+
+        private void ObserveFilter()
+        {
+            for (var i = 0; i < _filters.Length; i++)
+            {
+                var filter = _filters[i];
+                var filterEvent = _filterEvents[i];
                 switch (filterEvent)
                 {
                     case FilterEvent.Set:
-                        filter.EntityAdded -= addEntity;
-                        filter.EntityAdded += addEntity;
+                        filter.EntityAdded -= _cachedAdd;
+                        filter.EntityAdded += _cachedAdd;
                         break;
                     case FilterEvent.Removed:
-                        filter.EntityRemoved -= addEntity;
-                        filter.EntityRemoved += addEntity;
+                        filter.EntityRemoved -= _cachedAdd;
+                        filter.EntityRemoved += _cachedAdd;
                         break;
                     case FilterEvent.SetOrRemoved:
-                        filter.EntityAdded -= addEntity;
-                        filter.EntityAdded += addEntity;
-                        filter.EntityRemoved -= addEntity;
-                        filter.EntityRemoved += addEntity;
+                        filter.EntityAdded -= _cachedAdd;
+                        filter.EntityAdded += _cachedAdd;
+                        filter.EntityRemoved -= _cachedAdd;
+                        filter.EntityRemoved += _cachedAdd;
                         break;
                 }
             }
