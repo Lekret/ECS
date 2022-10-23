@@ -98,7 +98,6 @@ namespace Lekret.Ecs
             }
             var uniqueIndices = new int[buffer.Count];
             buffer.CopyTo(uniqueIndices);
-            Array.Sort(uniqueIndices);
             buffer.Clear();
             return uniqueIndices;
         }
