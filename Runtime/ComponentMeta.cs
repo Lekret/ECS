@@ -2,14 +2,14 @@ using System.Threading;
 
 namespace Lekret.Ecs.Internal
 {
-    internal class ComponentMeta
+    public class ComponentMeta
     {
         internal static int Count;
     }
     
-    internal class ComponentMeta<T> : ComponentMeta
+    public class ComponentMeta<T> : ComponentMeta
     {
-        internal static readonly int Index;
+        public static readonly int Index;
 
         static ComponentMeta()
         {
