@@ -7,25 +7,22 @@ namespace Lekret.Ecs
     public sealed class Filter : IEnumerable<Entity>
     {
         private readonly HashSet<Entity> _entities = new HashSet<Entity>();
-        private readonly int[] _included;
-        private readonly int[] _excluded;
+        private readonly IMask _mask;
 
-        internal Filter(int[] included, int[] excluded)
+        public Filter(IMask mask)
         {
-            _included = included;
-            _excluded = excluded;
+            _mask = mask;
         }
 
+        public IMask Mask => _mask;
         public int Count => _entities.Count;
-        public IEnumerable<int> Indices => _included;
-        public IEnumerable<int> Excluded => _excluded;
         public event Action<Entity> EntityAdded;
         public event Action<Entity> EntityRemoved;
 
         public Entity GetSingle()
         {
             var enumerator = _entities.GetEnumerator();
-            while (enumerator.MoveNext())
+            if (enumerator.MoveNext())
             {
                 return enumerator.Current;
             }
@@ -36,14 +33,6 @@ namespace Lekret.Ecs
         {
             buffer.AddRange(_entities);
             return buffer;
-        }
-
-        public Collector ToCollector()
-        {
-            var collector = new Collector();
-            EntityAdded += collector.AddEntity;
-            EntityRemoved += collector.RemoveEntity;
-            return collector;
         }
 
         public EntityEnumerator GetEnumerator()
@@ -57,7 +46,7 @@ namespace Lekret.Ecs
 
         internal void HandleEntity(Entity entity)
         {
-            if (CanAdd(entity))
+            if (_mask.Matches(entity))
             {
                 AddEntity(entity);
             }
@@ -67,23 +56,6 @@ namespace Lekret.Ecs
             }
         }
 
-        private bool CanAdd(Entity entity)
-        {
-            for (var i = 0; i < _excluded.Length; i++)
-            {
-                if (entity.Has(_excluded[i]))
-                    return false;
-            }
-
-            for (var i = 0; i < _included.Length; i++)
-            {
-                if (!entity.Has(_included[i]))
-                    return false;
-            }
-
-            return true;
-        }
-        
         private void AddEntity(Entity entity)
         {
             _entities.Add(entity);
@@ -96,32 +68,6 @@ namespace Lekret.Ecs
             {
                 EntityRemoved?.Invoke(entity);
             }
-        }
-
-        internal bool MatchesIndices(List<int> included, List<int> excluded)
-        {
-            if (included.Count != _included.Length) return false;
-            if (excluded.Count != _excluded.Length) return false;
-            return IndicesEquals(_included, included) && IndicesEquals(_excluded, excluded);
-        }
-
-        private static bool IndicesEquals(int[] selfIndices, List<int> otherIndices)
-        {
-            for (var i = 0; i < selfIndices.Length; i++)
-            {
-                var contains = false;
-                for (var k = 0; k < otherIndices.Count; k++)
-                {
-                    if (selfIndices[i] == otherIndices[k])
-                    {
-                        contains = true;
-                        break;
-                    }
-                }
-                if (!contains)
-                    return false;
-            }
-            return true;
         }
     }
 }

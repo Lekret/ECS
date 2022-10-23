@@ -2,6 +2,6 @@
 {
     public interface IRemoveListener<T>
     {
-        void OnRemove(Entity entity, T value);
+        void OnRemoved(Entity entity, T value);
     }
 }

@@ -1,18 +1,19 @@
 ﻿using System.Collections.Generic;
+using SimpleEcs.Runtime;
 
 namespace Lekret.Ecs.Extensions
 {
-    public class SetEventSystem<T> : ReactiveSystem
+    public class SetSelfEventSystem<T> : ReactiveSystem
     {
         private readonly List<ISetListener<T>> _listenerBuffer = new List<ISetListener<T>>();
 
-        public SetEventSystem(EcsManager manager) : base(manager)
+        public SetSelfEventSystem(EcsManager manager) : base(manager)
         {
         }
 
         protected override Collector GetCollector(EcsManager manager)
         {
-            return manager.Inc<T>().ToCollector();
+            return manager.Collector(Mask.With<T>().Set());
         }
 
         protected override bool Filter(Entity entity)

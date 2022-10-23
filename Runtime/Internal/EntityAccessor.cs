@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Lekret.Ecs.Internal
 {
@@ -13,9 +12,17 @@ namespace Lekret.Ecs.Internal
             _world = world;
         }
 
-        internal FilterBuilder CreateFilterBuilder()
+        internal Filter GetFilter(IMask mask)
         {
-            return new FilterBuilder(this);
+            foreach (var filters in _typeToFilter)
+            {
+                foreach (var filter in filters)
+                {
+                    if (filter.Mask.Equals(mask))
+                        return filter;
+                }
+            }
+            return CreateNewFilter(mask);
         }
         
         internal void OnComponentChanged(Entity entity, int componentIndex)
@@ -39,26 +46,11 @@ namespace Lekret.Ecs.Internal
             }
         }
 
-        internal Filter GetFilter(List<int> included, List<int> excluded)
+        private Filter CreateNewFilter(IMask mask)
         {
-            foreach (var filters in _typeToFilter)
-            {
-                foreach (var filter in filters)
-                {
-                    if (filter.MatchesIndices(included, excluded))
-                        return filter;
-                }
-            }
-            
-            return CreateNewFilter(included.ToArray(), excluded.ToArray());
-        }
-
-        private Filter CreateNewFilter(int[] included, int[] excluded)
-        {
-            var filter = new Filter(included, excluded);
+            var filter = new Filter(mask);
             IncreaseFiltersRegistry();
-            RegisterFilter(filter, included);
-            RegisterFilter(filter, excluded);
+            RegisterFilter(filter);
             foreach (var entity in _world.Entities)
             {
                 filter.HandleEntity(entity);
@@ -66,9 +58,9 @@ namespace Lekret.Ecs.Internal
             return filter;
         }
 
-        private void RegisterFilter(Filter filter, int[] componentIndices)
+        private void RegisterFilter(Filter filter)
         {
-            foreach (var index in componentIndices)
+            foreach (var index in filter.Mask.Indices)
             {
                 _typeToFilter[index].Add(filter);
             }

@@ -6,7 +6,7 @@
 
         public RemoveComponentSystem(EcsManager manager)
         {
-            _filter = manager.Inc<T>().End();
+            _filter = manager.Filter(Mask.With<T>());
         }
         
         public void Update()

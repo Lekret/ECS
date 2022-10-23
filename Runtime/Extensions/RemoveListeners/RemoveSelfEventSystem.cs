@@ -1,18 +1,19 @@
 ﻿using System.Collections.Generic;
+using SimpleEcs.Runtime;
 
 namespace Lekret.Ecs.Extensions
 {
-    public class RemoveEventSystem<T> : ReactiveSystem
+    public class RemoveSelfEventSystem<T> : ReactiveSystem
     {
         private readonly List<IRemoveListener<T>> _listenerBuffer = new List<IRemoveListener<T>>();
 
-        public RemoveEventSystem(EcsManager manager) : base(manager)
+        public RemoveSelfEventSystem(EcsManager manager) : base(manager)
         {
         }
 
         protected override Collector GetCollector(EcsManager manager)
         {
-            return manager.Exc<T>().ToCollector();
+            return manager.Collector(Mask.With<T>().Removed());
         }
 
         protected override bool Filter(Entity entity)
@@ -30,7 +31,7 @@ namespace Lekret.Ecs.Extensions
                 
                 foreach (var listener in _listenerBuffer)
                 {
-                    listener.OnRemove(entity, value);
+                    listener.OnRemoved(entity, value);
                 }
             }
         }

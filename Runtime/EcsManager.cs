@@ -1,5 +1,6 @@
 using System;
 using Lekret.Ecs.Internal;
+using SimpleEcs.Runtime;
 
 namespace Lekret.Ecs
 {
@@ -40,14 +41,14 @@ namespace Lekret.Ecs
             return _world.GetEntityById(id);
         }
 
-        public FilterBuilder Inc<T>()
+        public Filter Filter(IMask mask)
         {
-            return _accessor.CreateFilterBuilder().Inc<T>();
+            return _accessor.GetFilter(mask);
         }
-        
-        public FilterBuilder Exc<T>()
+
+        public Filter Filter(MaskBuilder maskBuilder)
         {
-            return _accessor.CreateFilterBuilder().Exc<T>();
+            return Filter(Mask.AllOf(maskBuilder));
         }
 
         public void DestroyAllEntities()
@@ -124,12 +125,32 @@ namespace Lekret.Ecs
                 throw new Exception($"Entity is not alive: {entity}");
             }
         }
-        
+
         internal bool Has(Entity entity, int componentIndex)
         {
             return IsAlive(entity) && HasComponent(entity, componentIndex);
         }
 
+        internal bool HasAny(Entity entity, int[] indices)
+        {
+            for (var i = 0; i < indices.Length; i++)
+            {
+                if (_components.GetFlag(entity.Id, indices[i]))
+                    return true;
+            }
+            return false;
+        }
+        
+        public bool HasAll(Entity entity, int[] indices)
+        {
+            for (var i = 0; i < indices.Length; i++)
+            {
+                if (!_components.GetFlag(entity.Id, indices[i]))
+                    return false;
+            }
+            return true;
+        }
+        
         private bool HasComponent<T>(Entity entity)
         {
             return _components.GetFlag<T>(entity.Id);

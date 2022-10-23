@@ -98,15 +98,21 @@ namespace Lekret.Ecs
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal bool HasAny(int[] indices)
+        {
+            return Owner.HasAny(this, indices);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal bool HasAll(int[] indices)
+        {
+            return Owner.HasAll(this, indices);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Destroy()
         {
             Owner.Destroy(this);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private bool HasComponent<T>()
-        {
-            return Owner.Has<T>(this);
         }
     }
 }
