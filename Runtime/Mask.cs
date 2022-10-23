@@ -86,15 +86,15 @@ namespace Lekret.Ecs
 
         public override bool Equals(object obj)
         {
-            var matcher = obj as Mask;
-            if (matcher == null)
+            var mask = obj as Mask;
+            if (mask == null)
                 return false;
 
-            if (!IndicesEqual(matcher._allOfIndices, _allOfIndices))
+            if (!IndicesEqual(mask._allOfIndices, _allOfIndices))
                 return false;
-            if (!IndicesEqual(matcher._anyOfIndices, _anyOfIndices))
+            if (!IndicesEqual(mask._anyOfIndices, _anyOfIndices))
                 return false;
-            if (!IndicesEqual(matcher._noneOfIndices, _noneOfIndices))
+            if (!IndicesEqual(mask._noneOfIndices, _noneOfIndices))
                 return false;
             return true;
         }
@@ -126,21 +126,6 @@ namespace Lekret.Ecs
             var mergedIndices = DistinctIndices(buffer);
             buffer.Clear();
             return mergedIndices;
-        }
-
-        private static int[] MergeIndices(IMask[] matchers)
-        {
-            var indices = new int[matchers.Length];
-            for (var i = 0; i < matchers.Length; i++)
-            {
-                var matcher = matchers[i];
-                if (matcher.Indices.Length != 1)
-                    throw new Exception("matcher.Indices.Length should be 1");
-
-                indices[i] = matcher.Indices[0];
-            }
-
-            return indices;
         }
 
         private static int[] DistinctIndices(IEnumerable<int> indices)
