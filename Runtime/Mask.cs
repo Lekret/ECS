@@ -8,18 +8,14 @@ namespace Lekret.Ecs
     {
         int[] Indices { get; }
         bool Matches(Entity entity);
-    }
-
-    public interface INoneOfMask : IMask
-    {
         int[] AllOfIndices { get; }
         int[] AnyOfIndices { get; }
         int[] NoneOfIndices { get; }
     }
-    
-    public interface IAnyOfMask : INoneOfMask
+
+    public interface IAnyOfMask : IMask
     {
-        INoneOfMask NoneOf(MaskBuilder maskBuilder);
+        IMask NoneOf(MaskBuilder maskBuilder);
     }
     
     public interface IAllOfMask : IAnyOfMask
@@ -59,7 +55,7 @@ namespace Lekret.Ecs
             return new Mask {_allOfIndices = DistinctIndices(indices)};
         }
         
-        public static INoneOfMask AnyOf(MaskBuilder maskBuilder)
+        public static IMask AnyOf(MaskBuilder maskBuilder)
         {
             return AnyOf(maskBuilder.Indices);
         }
@@ -76,7 +72,7 @@ namespace Lekret.Ecs
             return this;
         }
 
-        public INoneOfMask NoneOf(MaskBuilder maskBuilder)
+        public IMask NoneOf(MaskBuilder maskBuilder)
         {
             _noneOfIndices = DistinctIndices(maskBuilder.Indices);
             _indices = null;
