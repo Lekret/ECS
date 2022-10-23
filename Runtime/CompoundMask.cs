@@ -73,9 +73,7 @@ namespace Lekret.Ecs
             for (var i = 0; i < left.Length; i++)
             {
                 if (left[i] != right[i])
-                {
                     return false;
-                }
             }
             return true;
         }
