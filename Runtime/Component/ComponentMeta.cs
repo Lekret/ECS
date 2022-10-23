@@ -7,7 +7,7 @@ namespace Lekret.Ecs.Internal
         internal static int Count;
     }
     
-    public class ComponentMeta<T> : ComponentMeta
+    public sealed class ComponentMeta<T> : ComponentMeta
     {
         public static readonly int Index;
 

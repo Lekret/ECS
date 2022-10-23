@@ -4,7 +4,7 @@ using SimpleEcs.Runtime;
 
 namespace Lekret.Ecs
 {
-    public class CompoundMask
+    public sealed class CompoundMask
     {
         [ThreadStatic] private static List<int> MergeBuffer;
         [ThreadStatic] private static HashSet<int> DistinctBuffer;

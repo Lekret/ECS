@@ -3,7 +3,7 @@ using Lekret.Ecs.Internal;
 
 namespace SimpleEcs.Runtime
 {
-    public class MaskBuilder
+    public sealed class MaskBuilder
     {
         private readonly List<int> _indices = new List<int>();
 
