@@ -1,23 +1,36 @@
+using System;
 using System.Collections.Generic;
 
 namespace Lekret.Ecs.Internal
 {
     internal class Pool<T> where T : new()
     {
-        private static readonly Queue<T> _pool = new Queue<T>();
+        [ThreadStatic]
+        private static Queue<T> PoolThreadStatic;
 
         private Pool() { }
-
+        
         internal static T Spawn()
         {
-            if (_pool.Count > 0)
-                return _pool.Dequeue();
+            var pool = GetPool();
+            if (pool.Count > 0)
+                return pool.Dequeue();
             return new T();
         }
 
         internal static void Release(T item)
         {
-            _pool.Enqueue(item);
+            var pool = GetPool();
+            pool.Enqueue(item);
+        }
+
+        private static Queue<T> GetPool()
+        {
+            if (PoolThreadStatic == null)
+            {
+                PoolThreadStatic = new Queue<T>();
+            }
+            return PoolThreadStatic;
         }
     }
 }
