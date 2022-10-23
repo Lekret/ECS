@@ -6,7 +6,7 @@ namespace Lekret.Ecs.Internal
     internal static class Pool<T> where T : new()
     {
         [ThreadStatic]
-        private static Queue<T> PoolThreadStatic;
+        private static Queue<T> Queue;
         
         internal static T Spawn()
         {
@@ -24,11 +24,11 @@ namespace Lekret.Ecs.Internal
 
         private static Queue<T> GetPool()
         {
-            if (PoolThreadStatic == null)
+            if (Queue == null)
             {
-                PoolThreadStatic = new Queue<T>();
+                Queue = new Queue<T>();
             }
-            return PoolThreadStatic;
+            return Queue;
         }
     }
 }
