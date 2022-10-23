@@ -7,15 +7,15 @@ namespace Lekret.Ecs
     public sealed class Filter : IEnumerable<Entity>
     {
         private readonly HashSet<Entity> _entities = new HashSet<Entity>();
-        private readonly IMask _mask;
+        private readonly CompoundMask _mask;
 
-        public Filter(IMask mask)
+        public Filter(CompoundMask mask)
         {
             _mask = mask;
         }
 
-        public IMask Mask => _mask;
         public int Count => _entities.Count;
+        public CompoundMask Mask => _mask;
         public event Action<Entity> EntityAdded;
         public event Action<Entity> EntityRemoved;
 

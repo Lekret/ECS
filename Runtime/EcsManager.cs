@@ -41,7 +41,7 @@ namespace Lekret.Ecs
             return _world.GetEntityById(id);
         }
 
-        public Filter Filter(IMask mask)
+        public Filter Filter(CompoundMask mask)
         {
             return _accessor.GetFilter(mask);
         }

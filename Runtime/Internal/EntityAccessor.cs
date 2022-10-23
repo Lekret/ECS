@@ -12,7 +12,7 @@ namespace Lekret.Ecs.Internal
             _world = world;
         }
 
-        internal Filter GetFilter(IMask mask)
+        internal Filter GetFilter(CompoundMask mask)
         {
             foreach (var filters in _typeToFilter)
             {
@@ -46,7 +46,7 @@ namespace Lekret.Ecs.Internal
             }
         }
 
-        private Filter CreateNewFilter(IMask mask)
+        private Filter CreateNewFilter(CompoundMask mask)
         {
             var filter = new Filter(mask);
             IncreaseFiltersRegistry();

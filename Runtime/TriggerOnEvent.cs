@@ -4,10 +4,10 @@ namespace SimpleEcs.Runtime
 {
     public struct TriggerOnEvent
     {
-        public readonly IMask Mask;
+        public readonly CompoundMask Mask;
         public readonly FilterEvent FilterEvent;
 
-        public TriggerOnEvent(IMask mask, FilterEvent filterEvent)
+        public TriggerOnEvent(CompoundMask mask, FilterEvent filterEvent)
         {
             Mask = mask;
             FilterEvent = filterEvent;
@@ -16,17 +16,17 @@ namespace SimpleEcs.Runtime
     
     public static class TriggerOnEventExtensions
     {
-        public static TriggerOnEvent Set(this IMask mask)
+        public static TriggerOnEvent Set(this CompoundMask mask)
         {
             return new TriggerOnEvent(mask, FilterEvent.Set);
         }
 
-        public static TriggerOnEvent Removed(this IMask mask)
+        public static TriggerOnEvent Removed(this CompoundMask mask)
         {
             return new TriggerOnEvent(mask, FilterEvent.Removed);
         }
 
-        public static TriggerOnEvent SetOrRemoved(this IMask mask)
+        public static TriggerOnEvent SetOrRemoved(this CompoundMask mask)
         {
             return new TriggerOnEvent(mask, FilterEvent.SetOrRemoved);
         }
