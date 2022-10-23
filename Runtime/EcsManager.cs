@@ -35,8 +35,13 @@ namespace Lekret.Ecs
         {
             return _world.CreateEntity(this);
         }
+        
+        public Entity? GetOrCreateEntityWithId(int id)
+        {
+            return _world.GetOrCreateEntityWithId(this, id);
+        }
 
-        public Entity GetEntity(int id)
+        public Entity GetEntityById(int id)
         {
             return _world.GetEntityById(id);
         }

@@ -32,13 +32,25 @@ namespace Lekret.Ecs.Internal
             }
             else
             {
-                _currentId++;
+                while (_entities.ContainsKey(_currentId))
+                {
+                    _currentId++;
+                }
                 entity = new Entity(_currentId, 0, owner);
             }
             _entities.Add(entity.Id, entity);
             return entity;
         }
-
+        
+        internal Entity GetOrCreateEntityWithId(EcsManager owner, int id)
+        {
+            if (_entities.TryGetValue(id, out var entity))
+                return entity;
+            entity = new Entity(id, 0, owner);
+            _entities.Add(id, entity);
+            return entity;
+        }
+        
         internal Entity GetEntityById(int id)
         {
             if (_entities.TryGetValue(id, out var entity))
