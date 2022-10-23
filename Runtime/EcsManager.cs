@@ -131,16 +131,16 @@ namespace Lekret.Ecs
             }
         }
 
-        internal bool Has(Entity entity, int componentIndex)
+        public bool Has(Entity entity, int componentIndex)
         {
             return IsAlive(entity) && HasComponent(entity, componentIndex);
         }
 
-        internal bool HasAny(Entity entity, int[] indices)
+        public bool HasAny(Entity entity, int[] indices)
         {
             for (var i = 0; i < indices.Length; i++)
             {
-                if (_components.GetFlag(entity.Id, indices[i]))
+                if (_components.GetFlag(indices[i], entity.Id))
                     return true;
             }
             return false;
@@ -150,7 +150,7 @@ namespace Lekret.Ecs
         {
             for (var i = 0; i < indices.Length; i++)
             {
-                if (!_components.GetFlag(entity.Id, indices[i]))
+                if (!_components.GetFlag(indices[i], entity.Id))
                     return false;
             }
             return true;
