@@ -2,16 +2,16 @@ using System.Threading;
 
 namespace Lekret.Ecs.Internal
 {
-    public class ComponentMeta
+    public class Component
     {
         internal static int Count;
     }
     
-    public sealed class ComponentMeta<T> : ComponentMeta
+    public sealed class Component<T> : Component
     {
         public static readonly int Index;
 
-        static ComponentMeta()
+        static Component()
         {
             Index = Count;
             Interlocked.Increment(ref Count);

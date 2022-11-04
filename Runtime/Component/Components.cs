@@ -22,13 +22,14 @@ namespace Lekret.Ecs.Internal
         internal void OnEntityDestroyed(Entity entity)
         {
             var entityId = entity.Id;
-            foreach (var pool in _rawComponents)
+            for (var i = 0; i < _rawComponents.Count; i++)
             {
-                pool.SetValue(default, entityId);
+                _rawComponents[i].SetValue(default, entityId);
             }
-            foreach (var pool in _flags)
+
+            for (var i = 0; i < _flags.Count; i++)
             {
-                pool[entityId] = false;
+                _flags[i][entityId] = false;
             }
         }
 
@@ -41,7 +42,7 @@ namespace Lekret.Ecs.Internal
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal bool GetFlag<T>(int entityId)
         {
-            return GetFlag(ComponentMeta<T>.Index, entityId);
+            return GetFlag(Component<T>.Index, entityId);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -53,7 +54,7 @@ namespace Lekret.Ecs.Internal
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal void SetComponent<T>(Entity entity, T value)
         {
-            var componentIndex = ComponentMeta<T>.Index;
+            var componentIndex = Component<T>.Index;
             var id = entity.Id;
             GetRawPool<T>()[id] = value;
             GetFlags(componentIndex)[id] = true;
@@ -62,7 +63,7 @@ namespace Lekret.Ecs.Internal
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal bool RemoveComponent<T>(Entity entity)
         {
-            var componentIndex = ComponentMeta<T>.Index;
+            var componentIndex = Component<T>.Index;
             var id = entity.Id;
             ref var hasComponent = ref GetFlags(componentIndex)[id];
             if (hasComponent)
@@ -77,7 +78,7 @@ namespace Lekret.Ecs.Internal
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private T[] GetRawPool<T>()
         {
-            var componentIndex = ComponentMeta<T>.Index;
+            var componentIndex = Component<T>.Index;
             return GetArrayForComponent<T>(_rawComponents, componentIndex);
         }
 
@@ -90,7 +91,7 @@ namespace Lekret.Ecs.Internal
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private T[] GetArrayForComponent<T>(IList listOfArrays, int componentIndex)
         {
-            while (listOfArrays.Count < ComponentMeta.Count)
+            while (listOfArrays.Count < Component.Count)
             {
                 listOfArrays.Add(null);
             }

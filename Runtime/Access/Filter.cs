@@ -56,18 +56,18 @@ namespace Lekret.Ecs
             }
         }
 
-        private void AddEntity(Entity entity)
-        {
-            _entities.Add(entity);
-            EntityAdded?.Invoke(entity);
-        }
-        
         internal void RemoveEntity(Entity entity)
         {
             if (_entities.Remove(entity))
             {
                 EntityRemoved?.Invoke(entity);
             }
+        }
+        
+        private void AddEntity(Entity entity)
+        {
+            _entities.Add(entity);
+            EntityAdded?.Invoke(entity);
         }
     }
 }

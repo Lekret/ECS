@@ -14,14 +14,17 @@ namespace Lekret.Ecs.Internal
 
         internal Filter GetFilter(CompoundMask mask)
         {
-            foreach (var filters in _typeToFilter)
+            for (var i = 0; i < _typeToFilter.Count; i++)
             {
-                foreach (var filter in filters)
+                var filters = _typeToFilter[i];
+                for (var k = 0; k < filters.Count; k++)
                 {
+                    var filter = filters[k];
                     if (filter.Mask.Equals(mask))
                         return filter;
                 }
             }
+
             return CreateNewFilter(mask);
         }
         
@@ -29,19 +32,20 @@ namespace Lekret.Ecs.Internal
         {
             IncreaseFiltersRegistry();
             var filters = _typeToFilter[componentIndex];
-            foreach (var filter in filters)
+            for (var i = 0; i < filters.Count; i++)
             {
-                filter.HandleEntity(entity);
+                filters[i].HandleEntity(entity);
             }
         }
 
         internal void OnEntityDestroyed(Entity entity)
         {
-            foreach (var filters in _typeToFilter)
+            for (var i = 0; i < _typeToFilter.Count; i++)
             {
-                foreach (var filter in filters)
+                var filters = _typeToFilter[i];
+                for (var k = 0; k < filters.Count; k++)
                 {
-                    filter.RemoveEntity(entity);
+                    filters[k].RemoveEntity(entity);
                 }
             }
         }
@@ -60,15 +64,16 @@ namespace Lekret.Ecs.Internal
 
         private void RegisterFilter(Filter filter)
         {
-            foreach (var index in filter.Mask.Indices)
+            var indices = filter.Mask.Indices;
+            for (var i = 0; i < indices.Length; i++)
             {
-                _typeToFilter[index].Add(filter);
+                _typeToFilter[indices[i]].Add(filter);
             }
         }
 
         private void IncreaseFiltersRegistry()
         {
-            while (_typeToFilter.Count < ComponentMeta.Count)
+            while (_typeToFilter.Count < Component.Count)
             {
                 _typeToFilter.Add(new List<Filter>());
             }

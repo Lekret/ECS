@@ -12,27 +12,31 @@ namespace SimpleEcs.Runtime
             _manager = manager;
         }
 
-        public EcsSystemsExtended NotifyOnSet<T>()
+        public EcsSystemsExtended NotifySet<T>(EventTarget eventTarget)
         {
-            Add(new SetSelfEventSystem<T>(_manager));
+            switch (eventTarget)
+            {
+                case EventTarget.Self:
+                    Add(new SelfSetEventSystem<T>(_manager));
+                    break;
+                case EventTarget.Any:
+                    Add(new AnySetEventSystem<T>(_manager));
+                    break;
+            }
             return this;
         }
 
-        public EcsSystemsExtended NotifyAllOnSet<T>()
+        public EcsSystemsExtended NotifyRemove<T>(EventTarget eventTarget)
         {
-            Add(new SetAllEventSystem<T>(_manager));
-            return this;
-        }
-        
-        public EcsSystemsExtended NotifyOnRemove<T>()
-        {
-            Add(new RemoveSelfEventSystem<T>(_manager));
-            return this;
-        }
-        
-        public EcsSystemsExtended NotifyAllOnRemove<T>()
-        {
-            Add(new RemoveAllEventSystem<T>(_manager));
+            switch (eventTarget)
+            {
+                case EventTarget.Self:
+                    Add(new SelfRemoveEventSystem<T>(_manager));
+                    break;
+                case EventTarget.Any:
+                    Add(new AnyRemoveEventSystem<T>(_manager));
+                    break;
+            }
             return this;
         }
 

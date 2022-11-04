@@ -3,11 +3,11 @@ using SimpleEcs.Runtime;
 
 namespace Lekret.Ecs.Extensions
 {
-    public class RemoveSelfEventSystem<T> : ReactiveSystem
+    public class SelfRemoveEventSystem<T> : ReactiveSystem
     {
         private readonly List<IRemoveListener<T>> _listenerBuffer = new List<IRemoveListener<T>>();
 
-        public RemoveSelfEventSystem(EcsManager manager) : base(manager)
+        public SelfRemoveEventSystem(EcsManager manager) : base(manager)
         {
         }
 
@@ -23,15 +23,16 @@ namespace Lekret.Ecs.Extensions
 
         protected override void Execute(List<Entity> entities)
         {
-            foreach (var entity in entities)
+            for (var i = 0; i < entities.Count; i++)
             {
+                var entity = entities[i];
                 _listenerBuffer.Clear();
                 _listenerBuffer.AddRange(entity.Get<RemoveListeners<T>>().Value);
                 var value = entity.Get<T>();
-                
-                foreach (var listener in _listenerBuffer)
+
+                for (var k = 0; k < _listenerBuffer.Count; k++)
                 {
-                    listener.OnRemoved(entity, value);
+                    _listenerBuffer[k].OnRemoved(entity, value);
                 }
             }
         }

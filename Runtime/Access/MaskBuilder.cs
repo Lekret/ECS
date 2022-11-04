@@ -11,7 +11,7 @@ namespace SimpleEcs.Runtime
 
         public MaskBuilder With<T>()
         {
-            _indices.Add(ComponentMeta<T>.Index);
+            _indices.Add(Component<T>.Index);
             return this;
         }
     }

@@ -92,7 +92,7 @@ namespace Lekret.Ecs
             if (IsAlive(entity))
             {
                 _components.SetComponent(entity, value);
-                OnComponentChanged(entity, ComponentMeta<T>.Index);
+                OnComponentChanged(entity, Component<T>.Index);
             }
             else
             {
@@ -106,7 +106,7 @@ namespace Lekret.Ecs
             {
                 var removed = _components.RemoveComponent<T>(entity);
                 if (removed)
-                    OnComponentChanged(entity, ComponentMeta<T>.Index);
+                    OnComponentChanged(entity, Component<T>.Index);
             }
             else
             {
