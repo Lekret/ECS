@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using SimpleEcs.Runtime;
 
 namespace Lekret.Ecs
 {

@@ -1,6 +1,4 @@
-﻿using Lekret.Ecs;
-
-namespace SimpleEcs.Runtime
+﻿namespace Lekret.Ecs
 {
     public struct TriggerOnEvent
     {

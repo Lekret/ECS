@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Lekret.Ecs.Internal
+namespace Lekret.Ecs
 {
     internal sealed class World
     {

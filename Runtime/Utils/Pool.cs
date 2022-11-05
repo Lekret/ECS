@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Lekret.Ecs.Internal
+namespace Lekret.Ecs
 {
     internal static class Pool<T> where T : new()
     {

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using Lekret.Ecs.Internal;
 
-namespace SimpleEcs.Runtime
+namespace Lekret.Ecs
 {
     public sealed class MaskBuilder
     {

@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Lekret.Ecs.Internal;
 
 namespace Lekret.Ecs
 {

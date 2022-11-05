@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-namespace Lekret.Ecs.Internal
+namespace Lekret.Ecs
 {
     internal sealed class Components
     {

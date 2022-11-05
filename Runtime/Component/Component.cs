@@ -1,6 +1,6 @@
 using System.Threading;
 
-namespace Lekret.Ecs.Internal
+namespace Lekret.Ecs
 {
     public class Component
     {

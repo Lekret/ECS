@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using Lekret.Ecs.Internal;
 
-namespace Lekret.Ecs
+namespace Lekret.Ecs.Extensions
 {
     public abstract class ReactiveSystem : IUpdateSystem
     {

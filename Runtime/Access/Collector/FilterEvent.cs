@@ -1,4 +1,4 @@
-﻿namespace SimpleEcs.Runtime
+﻿namespace Lekret.Ecs
 {
     public enum FilterEvent : byte
     {

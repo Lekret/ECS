@@ -1,6 +1,4 @@
 using System;
-using Lekret.Ecs.Internal;
-using SimpleEcs.Runtime;
 
 namespace Lekret.Ecs
 {

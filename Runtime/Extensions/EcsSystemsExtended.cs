@@ -1,7 +1,4 @@
-﻿using Lekret.Ecs;
-using Lekret.Ecs.Extensions;
-
-namespace SimpleEcs.Runtime
+﻿namespace Lekret.Ecs.Extensions
 {
     public class EcsSystemsExtended : EcsSystems
     {
