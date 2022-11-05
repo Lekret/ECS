@@ -38,19 +38,19 @@ namespace Lekret.Ecs
             return _accessor.GetFilter(mask);
         }
 
-        public List<Entity> GetEntities()
+        public List<Entity> Query()
         {
             return new List<Entity>(_world.Entities);
         }
         
-        public List<Entity> GetEntities(CompoundMask mask)
+        public List<Entity> Query(CompoundMask mask)
         {
             var buffer = new List<Entity>();
             _accessor.CollectEntities(mask, buffer);
             return buffer;
         }
 
-        public void GetEntities(CompoundMask mask, ICollection<Entity> buffer)
+        public void Query(CompoundMask mask, ICollection<Entity> buffer)
         {
             _accessor.CollectEntities(mask, buffer);
         }
