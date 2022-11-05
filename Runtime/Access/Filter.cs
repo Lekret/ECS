@@ -19,7 +19,7 @@ namespace Lekret.Ecs
         public event Action<Entity> EntityAdded;
         public event Action<Entity> EntityRemoved;
 
-        public Entity GetSingle()
+        public Entity GetFirst()
         {
             var enumerator = _entities.GetEnumerator();
             if (enumerator.MoveNext())
