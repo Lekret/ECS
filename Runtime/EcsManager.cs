@@ -43,16 +43,16 @@ namespace Lekret.Ecs
             return new List<Entity>(_world.Entities);
         }
         
-        public List<Entity> Query(CompoundMask mask)
+        public List<Entity> Query(MaskBuilder maskBuilder)
         {
             var buffer = new List<Entity>();
-            _accessor.CollectEntities(mask, buffer);
+            _accessor.CollectEntities(Mask.AllOf(maskBuilder), buffer);
             return buffer;
         }
 
-        public void Query(CompoundMask mask, ICollection<Entity> buffer)
+        public void Query(MaskBuilder maskBuilder, ICollection<Entity> buffer)
         {
-            _accessor.CollectEntities(mask, buffer);
+            _accessor.CollectEntities(Mask.AllOf(maskBuilder), buffer);
         }
 
         public Filter Filter(MaskBuilder maskBuilder)
