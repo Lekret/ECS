@@ -18,6 +18,11 @@ namespace Lekret.Ecs
             _components = new Components(_world, config.InitialComponentsCapacity);
         }
 
+        public List<Entity> GetEntities()
+        {
+            return new List<Entity>(_world.Entities);
+        }
+        
         public Entity CreateEntity()
         {
             return _world.CreateEntity(this);
@@ -38,11 +43,6 @@ namespace Lekret.Ecs
             return _accessor.GetFilter(mask);
         }
 
-        public List<Entity> Query()
-        {
-            return new List<Entity>(_world.Entities);
-        }
-        
         public List<Entity> Query(MaskBuilder maskBuilder)
         {
             var buffer = new List<Entity>();
