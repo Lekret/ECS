@@ -9,7 +9,7 @@ namespace Lekret.Ecs
         private readonly HashSet<Entity> _entities = new HashSet<Entity>();
         private readonly CompoundMask _mask;
 
-        public Filter(CompoundMask mask)
+        internal Filter(CompoundMask mask)
         {
             _mask = mask;
         }

@@ -1,19 +1,8 @@
 using System;
+using System.Collections.Generic;
 
 namespace Lekret.Ecs
 {
-    public struct EcsConfig
-    {
-        public static readonly EcsConfig Default = new EcsConfig
-        {
-            InitialComponentsCapacity = 128,
-            InitialEntityCapacity = 512,
-        };
-        
-        public int InitialComponentsCapacity;
-        public int InitialEntityCapacity;
-    }
-    
     public sealed class EcsManager
     {
         private readonly EntityAccessor _accessor;
@@ -47,6 +36,23 @@ namespace Lekret.Ecs
         public Filter Filter(CompoundMask mask)
         {
             return _accessor.GetFilter(mask);
+        }
+
+        public List<Entity> GetEntities()
+        {
+            return new List<Entity>(_world.Entities);
+        }
+        
+        public List<Entity> GetEntities(CompoundMask mask)
+        {
+            var buffer = new List<Entity>();
+            _accessor.CollectEntities(mask, buffer);
+            return buffer;
+        }
+
+        public void GetEntities(CompoundMask mask, ICollection<Entity> buffer)
+        {
+            _accessor.CollectEntities(mask, buffer);
         }
 
         public Filter Filter(MaskBuilder maskBuilder)

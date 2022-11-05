@@ -27,7 +27,16 @@ namespace Lekret.Ecs
 
             return CreateNewFilter(mask);
         }
-        
+
+        internal void CollectEntities(CompoundMask mask, ICollection<Entity> buffer)
+        {
+            foreach (var entity in _world.Entities)
+            {
+                if (mask.Matches(entity))
+                    buffer.Add(entity);
+            }
+        }
+
         internal void OnComponentChanged(Entity entity, int componentIndex)
         {
             IncreaseFiltersRegistry();
