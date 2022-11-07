@@ -7,13 +7,13 @@ namespace Lekret.Ecs
 		IUpdateSystem, 
 		IFixedUpdateSystem,
 		ILateUpdateSystem, 
-		IDestroySystem
+		ITerminateSystem
 	{
 		protected List<IInitSystem> InitSystems = new List<IInitSystem>();
 		protected List<IUpdateSystem> UpdateSystem = new List<IUpdateSystem>();
 		protected List<IFixedUpdateSystem> FixedUpdateSystems = new List<IFixedUpdateSystem>();
 		protected List<ILateUpdateSystem> LateUpdateSystems = new List<ILateUpdateSystem>();
-		protected List<IDestroySystem> DestroySystems = new List<IDestroySystem>();
+		protected List<ITerminateSystem> TerminateSystems = new List<ITerminateSystem>();
 
 		public virtual EcsSystems Add(ISystem system)
 		{
@@ -29,8 +29,8 @@ namespace Lekret.Ecs
 			if (system is ILateUpdateSystem lateUpdateSystem)
 				LateUpdateSystems.Add(lateUpdateSystem);
 
-			if (system is IDestroySystem destroySystem)
-				DestroySystems.Add(destroySystem);
+			if (system is ITerminateSystem terminateSystem)
+				TerminateSystems.Add(terminateSystem);
 
 			return this;
 		}
@@ -67,11 +67,11 @@ namespace Lekret.Ecs
 			}
 		}
 
-		public virtual void Destroy()
+		public virtual void Terminate()
 		{
-			for (var i = 0; i < DestroySystems.Count; i++)
+			for (var i = 0; i < TerminateSystems.Count; i++)
 			{
-				DestroySystems[i].Destroy();
+				TerminateSystems[i].Terminate();
 			}
 		}
 	}

@@ -22,8 +22,8 @@
         void LateUpdate();
     }
 
-    public interface IDestroySystem : ISystem
+    public interface ITerminateSystem : ISystem
     {
-        void Destroy();
+        void Terminate();
     }
 }
