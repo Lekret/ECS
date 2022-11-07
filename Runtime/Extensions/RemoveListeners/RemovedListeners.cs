@@ -2,8 +2,8 @@
 
 namespace Lekret.Ecs.Extensions
 {
-    public class RemoveListeners<T>
+    public class RemovedListeners<T>
     {
-        public List<IRemoveListener<T>> Value;
+        public List<IRemovedListener<T>> Value;
     }
 }

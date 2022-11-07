@@ -2,11 +2,11 @@
 
 namespace Lekret.Ecs.Extensions
 {
-    public class SelfRemoveEventSystem<T> : ReactiveSystem
+    public class SelfRemovedEventSystem<T> : ReactiveSystem
     {
-        private readonly List<IRemoveListener<T>> _listenerBuffer = new List<IRemoveListener<T>>();
+        private readonly List<IRemovedListener<T>> _listenerBuffer = new List<IRemovedListener<T>>();
 
-        public SelfRemoveEventSystem(EcsManager manager) : base(manager)
+        public SelfRemovedEventSystem(EcsManager manager) : base(manager)
         {
         }
 
@@ -17,7 +17,7 @@ namespace Lekret.Ecs.Extensions
 
         protected override bool Filter(Entity entity)
         {
-            return !entity.Has<T>() && entity.Has<RemoveListeners<T>>();
+            return !entity.Has<T>() && entity.Has<RemovedListeners<T>>();
         }
 
         protected override void Execute(List<Entity> entities)
@@ -26,7 +26,7 @@ namespace Lekret.Ecs.Extensions
             {
                 var entity = entities[i];
                 _listenerBuffer.Clear();
-                _listenerBuffer.AddRange(entity.Get<RemoveListeners<T>>().Value);
+                _listenerBuffer.AddRange(entity.Get<RemovedListeners<T>>().Value);
                 var value = entity.Get<T>();
 
                 for (var k = 0; k < _listenerBuffer.Count; k++)

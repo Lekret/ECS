@@ -2,14 +2,14 @@
 
 namespace Lekret.Ecs.Extensions
 {
-    public class AnyRemoveEventSystem<T> : ReactiveSystem
+    public class AnyRemovedEventSystem<T> : ReactiveSystem
     {
-        private readonly List<IRemoveListener<T>> _listenerBuffer = new List<IRemoveListener<T>>();
+        private readonly List<IRemovedListener<T>> _listenerBuffer = new List<IRemovedListener<T>>();
         private readonly Filter _listeners;
 
-        public AnyRemoveEventSystem(EcsManager manager) : base(manager)
+        public AnyRemovedEventSystem(EcsManager manager) : base(manager)
         {
-            _listeners = manager.Filter(Mask.With<RemoveListeners<T>>());
+            _listeners = manager.Filter(Mask.With<RemovedListeners<T>>());
         }
 
         protected override Collector GetCollector(EcsManager manager)
@@ -36,12 +36,12 @@ namespace Lekret.Ecs.Extensions
             }
         }
 
-        private List<IRemoveListener<T>> GetListeners()
+        private List<IRemovedListener<T>> GetListeners()
         {
             _listenerBuffer.Clear();
             foreach (var entity in _listeners)
             {
-                _listenerBuffer.AddRange(entity.Get<RemoveListeners<T>>().Value);
+                _listenerBuffer.AddRange(entity.Get<RemovedListeners<T>>().Value);
             }
             return _listenerBuffer;
         }

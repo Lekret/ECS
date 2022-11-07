@@ -23,15 +23,15 @@
             return this;
         }
 
-        public EcsSystemsExtended NotifyRemove<T>(EventTarget eventTarget)
+        public EcsSystemsExtended NotifyRemoved<T>(EventTarget eventTarget)
         {
             switch (eventTarget)
             {
                 case EventTarget.Self:
-                    Add(new SelfRemoveEventSystem<T>(_manager));
+                    Add(new SelfRemovedEventSystem<T>(_manager));
                     break;
                 case EventTarget.Any:
-                    Add(new AnyRemoveEventSystem<T>(_manager));
+                    Add(new AnyRemovedEventSystem<T>(_manager));
                     break;
             }
             return this;
