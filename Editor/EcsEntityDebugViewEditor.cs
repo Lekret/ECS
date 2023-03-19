@@ -22,7 +22,7 @@ namespace Lekret.Ecs.Editor
             entity.GetAll(_componentsBuffer);
             foreach (var component in _componentsBuffer)
             {
-                EditorGUILayout.LabelField($"Component: {component.GetType()}");
+                EditorGUILayout.LabelField(component?.ToString() ?? "Null");
             }
         }
     }
