@@ -18,7 +18,13 @@ namespace Lekret.Ecs
             _components = new Components(_world, config.InitialComponentsCapacity);
         }
 
-        public List<Entity> GetEntities()
+        public void GetEntities(List<Entity> buffer)
+        {
+            buffer.Clear();
+            buffer.AddRange(_world.Entities);
+        }
+
+        public List<Entity> GetEntitiesCopy()
         {
             return new List<Entity>(_world.Entities);
         }
