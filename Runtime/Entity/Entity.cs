@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 namespace Lekret.Ecs
@@ -24,11 +25,11 @@ namespace Lekret.Ecs
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(Entity other)
         {
-            return Id == other.Id && 
-                   Version == other.Version && 
+            return Id == other.Id &&
+                   Version == other.Version &&
                    Owner == other.Owner;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(Entity left, Entity right)
         {
@@ -46,7 +47,7 @@ namespace Lekret.Ecs
         {
             return $"Entity({Id})";
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool IsNull()
         {
@@ -69,6 +70,12 @@ namespace Lekret.Ecs
         public T Get<T>()
         {
             return Owner.Get<T>(this);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void GetAll(List<object> buffer)
+        {
+            Owner.GetComponents(this, buffer);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -102,13 +109,13 @@ namespace Lekret.Ecs
         {
             return Owner.HasAny(this, indices);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal bool HasAll(int[] indices)
         {
             return Owner.HasAll(this, indices);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Destroy()
         {

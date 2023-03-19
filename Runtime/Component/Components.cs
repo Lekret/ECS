@@ -76,6 +76,21 @@ namespace Lekret.Ecs
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal void GetComponents(Entity entity, List<object> buffer)
+        {
+            buffer.Clear();
+            for (var i = 0; i < Component.Count; i++)
+            {
+                var flags = GetArrayForComponent<bool>(_flags, i);
+                if (flags[entity.Id])
+                {
+                    var components = GetArrayForComponent<object>(_rawComponents, i);
+                    buffer.Add(components[entity.Id]);
+                }
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private T[] GetRawPool<T>()
         {
             var componentIndex = Component<T>.Index;

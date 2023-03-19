@@ -97,6 +97,11 @@ namespace Lekret.Ecs
             return _components.GetComponent<T>(entity.Id);
         }
 
+        public void GetComponents(Entity entity, List<object> buffer)
+        {
+            _components.GetComponents(entity, buffer);
+        }
+        
         public void Set<T>(Entity entity, T value = default)
         {
             if (IsAlive(entity))
