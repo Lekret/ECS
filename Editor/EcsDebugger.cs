@@ -12,7 +12,7 @@ namespace Lekret.Ecs.Editor
         private EcsManager _manager;
 
         public EcsManager Manager => _manager;
-        
+
         public static void Create(
             EcsManager manager,
             bool allowCopies = false,

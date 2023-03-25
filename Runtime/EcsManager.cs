@@ -142,7 +142,9 @@ namespace Lekret.Ecs
         {
             if (IsAlive(entity))
             {
-                OnEntityDestroyed(entity);
+                _components.OnEntityDestroyed(entity);
+                _world.OnEntityDestroyed(entity);
+                _accessor.OnEntityDestroyed(entity);
             }
             else
             {
@@ -190,13 +192,6 @@ namespace Lekret.Ecs
         private void OnComponentChanged(Entity entity, int componentIndex)
         {
             _accessor.OnComponentChanged(entity, componentIndex);
-        }
-
-        private void OnEntityDestroyed(Entity entity)
-        {
-            _components.OnEntityDestroyed(entity);
-            _world.OnEntityDestroyed(entity);
-            _accessor.OnEntityDestroyed(entity);
         }
     }
 }
