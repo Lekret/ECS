@@ -23,7 +23,7 @@ namespace Lekret.Ecs.Extensions
                 return;
 
             var buffer = SpawnBuffer();
-            
+
             foreach (var e in _collector)
             {
                 if (Filter(e))

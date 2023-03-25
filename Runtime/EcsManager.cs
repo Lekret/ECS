@@ -8,9 +8,11 @@ namespace Lekret.Ecs
         private readonly EntityAccessor _accessor;
         private readonly World _world;
         private readonly Components _components;
-        
-        public EcsManager() : this(EcsConfig.Default) { }
-        
+
+        public EcsManager() : this(EcsConfig.Default)
+        {
+        }
+
         public EcsManager(EcsConfig config)
         {
             _world = new World(config.InitialEntityCapacity);
@@ -18,6 +20,8 @@ namespace Lekret.Ecs
             _components = new Components(_world, config.InitialComponentsCapacity);
         }
 
+        public int EntitiesCount => _world.EntitiesCount;
+        
         public void GetEntities(List<Entity> buffer)
         {
             buffer.Clear();
@@ -28,12 +32,12 @@ namespace Lekret.Ecs
         {
             return new List<Entity>(_world.Entities);
         }
-        
+
         public Entity CreateEntity()
         {
             return _world.CreateEntity(this);
         }
-        
+
         public Entity? GetOrCreateEntityWithId(int id)
         {
             return _world.GetOrCreateEntityWithId(this, id);
@@ -70,7 +74,7 @@ namespace Lekret.Ecs
         {
             _world.DestroyAll();
         }
-        
+
         public bool IsAlive(Entity entity)
         {
             return _world.IsAlive(entity);
@@ -83,7 +87,7 @@ namespace Lekret.Ecs
                 value = Get<T>(entity);
                 return true;
             }
-            
+
             value = default;
             return false;
         }
@@ -101,7 +105,7 @@ namespace Lekret.Ecs
         {
             _components.GetComponents(entity, buffer);
         }
-        
+
         public void Set<T>(Entity entity, T value = default)
         {
             if (IsAlive(entity))
@@ -158,9 +162,10 @@ namespace Lekret.Ecs
                 if (_components.GetFlag(indices[i], entity.Id))
                     return true;
             }
+
             return false;
         }
-        
+
         public bool HasAll(Entity entity, int[] indices)
         {
             for (var i = 0; i < indices.Length; i++)
@@ -168,9 +173,10 @@ namespace Lekret.Ecs
                 if (!_components.GetFlag(indices[i], entity.Id))
                     return false;
             }
+
             return true;
         }
-        
+
         private bool HasComponent<T>(Entity entity)
         {
             return _components.GetFlag<T>(entity.Id);

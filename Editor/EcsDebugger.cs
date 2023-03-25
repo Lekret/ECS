@@ -10,6 +10,8 @@ namespace Lekret.Ecs.Editor
         private readonly Queue<EntityDebugView> _viewsToDelete = new();
         private Transform _transform;
         private EcsManager _manager;
+
+        public EcsManager Manager => _manager;
         
         public static void Create(
             EcsManager manager,

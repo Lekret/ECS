@@ -68,6 +68,7 @@ namespace Lekret.Ecs
             {
                 filter.HandleEntity(entity);
             }
+
             return filter;
         }
 

@@ -7,19 +7,21 @@ namespace Lekret.Ecs
     {
         [ThreadStatic] private static List<int> MergeBuffer;
         [ThreadStatic] private static HashSet<int> DistinctBuffer;
-        
+
         private int[] _indices;
         private int[] _allOfIndices = Array.Empty<int>();
         private int[] _anyOfIndices = Array.Empty<int>();
         private int[] _noneOfIndices = Array.Empty<int>();
 
-        private CompoundMask() { }
+        private CompoundMask()
+        {
+        }
 
         public int[] Indices => _indices ?? (_indices = MergeIndices());
         public int[] AllOfIndices => _allOfIndices;
         public int[] AnyOfIndices => _anyOfIndices;
         public int[] NoneOfIndices => _noneOfIndices;
-        
+
         public CompoundMask AnyOf(MaskBuilder maskBuilder)
         {
             _anyOfIndices = DistinctIndices(maskBuilder.Indices);
@@ -74,6 +76,7 @@ namespace Lekret.Ecs
                 if (left[i] != right[i])
                     return false;
             }
+
             return true;
         }
 
@@ -95,27 +98,30 @@ namespace Lekret.Ecs
             {
                 buffer.Add(index);
             }
+
             var uniqueIndices = new int[buffer.Count];
             buffer.CopyTo(uniqueIndices);
             buffer.Clear();
             return uniqueIndices;
         }
-        
+
         private static List<int> GetMergeBuffer()
         {
             if (MergeBuffer == null)
             {
                 MergeBuffer = new List<int>();
             }
+
             return MergeBuffer;
         }
-        
+
         private static HashSet<int> GetDistinctBuffer()
         {
             if (DistinctBuffer == null)
             {
                 DistinctBuffer = new HashSet<int>();
             }
+
             return DistinctBuffer;
         }
     }

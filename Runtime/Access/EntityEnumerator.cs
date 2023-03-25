@@ -23,11 +23,13 @@ namespace Lekret.Ecs
 
         public Entity Current => _enumerator.Current;
         object IEnumerator.Current => Current;
-            
+
         public bool MoveNext() => _enumerator.MoveNext();
-            
-        public void Reset() { }
-            
+
+        public void Reset()
+        {
+        }
+
         public void Dispose()
         {
             _entities.Clear();

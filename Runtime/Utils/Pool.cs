@@ -5,9 +5,8 @@ namespace Lekret.Ecs
 {
     internal static class Pool<T> where T : new()
     {
-        [ThreadStatic]
-        private static Queue<T> Queue;
-        
+        [ThreadStatic] private static Queue<T> Queue;
+
         internal static T Spawn()
         {
             var pool = GetPool();
@@ -28,6 +27,7 @@ namespace Lekret.Ecs
             {
                 Queue = new Queue<T>();
             }
+
             return Queue;
         }
     }

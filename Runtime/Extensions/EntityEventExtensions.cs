@@ -3,7 +3,7 @@
 namespace Lekret.Ecs.Extensions
 {
     public static class EntityEventExtensions
-    {        
+    {
         public static void ListenSet<T>(this Entity entity, ISetListener<T> listener)
         {
             if (entity.Has<SetListeners<T>>())
@@ -17,7 +17,7 @@ namespace Lekret.Ecs.Extensions
                 entity.Set(new SetListeners<T> {Value = listeners});
             }
         }
-        
+
         public static void UnlistenSet<T>(this Entity entity, ISetListener<T> listener)
         {
             if (entity.Has<SetListeners<T>>())
@@ -31,7 +31,7 @@ namespace Lekret.Ecs.Extensions
                 }
             }
         }
-        
+
         public static void ListenRemoved<T>(this Entity entity, IRemovedListener<T> listener)
         {
             if (entity.Has<RemovedListeners<T>>())
@@ -45,7 +45,7 @@ namespace Lekret.Ecs.Extensions
                 entity.Set(new RemovedListeners<T> {Value = listeners});
             }
         }
-        
+
         public static void UnlistenRemoved<T>(this Entity entity, IRemovedListener<T> listener)
         {
             if (entity.Has<RemovedListeners<T>>())

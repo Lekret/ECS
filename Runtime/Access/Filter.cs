@@ -26,6 +26,7 @@ namespace Lekret.Ecs
             {
                 return enumerator.Current;
             }
+
             return Entity.Null;
         }
 
@@ -39,9 +40,9 @@ namespace Lekret.Ecs
         {
             return EntityEnumerator.Create(_entities);
         }
-        
+
         IEnumerator<Entity> IEnumerable<Entity>.GetEnumerator() => GetEnumerator();
-        
+
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
         internal void HandleEntity(Entity entity)
@@ -63,7 +64,7 @@ namespace Lekret.Ecs
                 EntityRemoved?.Invoke(entity);
             }
         }
-        
+
         private void AddEntity(Entity entity)
         {
             _entities.Add(entity);

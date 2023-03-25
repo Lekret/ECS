@@ -43,6 +43,7 @@ namespace Lekret.Ecs.Extensions
             {
                 _listenerBuffer.AddRange(entity.Get<RemovedListeners<T>>().Value);
             }
+
             return _listenerBuffer;
         }
     }

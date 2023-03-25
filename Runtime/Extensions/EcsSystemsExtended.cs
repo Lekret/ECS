@@ -20,6 +20,7 @@
                     Add(new AnySetEventSystem<T>(_manager));
                     break;
             }
+
             return this;
         }
 
@@ -34,6 +35,7 @@
                     Add(new AnyRemovedEventSystem<T>(_manager));
                     break;
             }
+
             return this;
         }
 

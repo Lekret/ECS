@@ -9,13 +9,14 @@ namespace Lekret.Ecs
             public int Id;
             public short Version;
         }
-        
+
         private readonly Queue<RecycledEntity> _recycledEntities = new Queue<RecycledEntity>();
         private readonly Dictionary<int, Entity> _entities;
         private int _currentId;
-        
+
         internal int MaxEntityId => _currentId - _recycledEntities.Count;
         internal IEnumerable<Entity> Entities => _entities.Values;
+        internal int EntitiesCount => _entities.Values.Count;
 
         internal World(int initialEntityCapacity)
         {
@@ -36,12 +37,14 @@ namespace Lekret.Ecs
                 {
                     _currentId++;
                 }
+
                 entity = new Entity(_currentId, 0, owner);
             }
+
             _entities.Add(entity.Id, entity);
             return entity;
         }
-        
+
         internal Entity GetOrCreateEntityWithId(EcsManager owner, int id)
         {
             if (_entities.TryGetValue(id, out var entity))
@@ -50,7 +53,7 @@ namespace Lekret.Ecs
             _entities.Add(id, entity);
             return entity;
         }
-        
+
         internal Entity GetEntityById(int id)
         {
             if (_entities.TryGetValue(id, out var entity))
@@ -60,7 +63,7 @@ namespace Lekret.Ecs
 
         internal bool IsAlive(Entity entity)
         {
-            return _entities.TryGetValue(entity.Id, out var existingEntity) && 
+            return _entities.TryGetValue(entity.Id, out var existingEntity) &&
                    existingEntity.Version == entity.Version;
         }
 
@@ -73,13 +76,14 @@ namespace Lekret.Ecs
                 Version = entity.Version
             });
         }
-        
+
         internal void DestroyAll()
         {
             foreach (var entity in _entities.Values)
             {
                 entity.Destroy();
             }
+
             _entities.Clear();
         }
     }

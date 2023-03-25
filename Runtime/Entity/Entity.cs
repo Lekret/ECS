@@ -71,7 +71,7 @@ namespace Lekret.Ecs
         {
             return Owner.Get<T>(this);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void GetAll(List<object> buffer)
         {

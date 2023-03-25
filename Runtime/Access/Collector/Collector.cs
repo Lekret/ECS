@@ -18,7 +18,8 @@ namespace Lekret.Ecs
             _filterEvents = filterEvents;
 
             if (filters.Length != filterEvents.Length)
-                throw new Exception($"Filters ({filters.Length}) and filter events ({filterEvents.Length}) must be equal");
+                throw new Exception(
+                    $"Filters ({filters.Length}) and filter events ({filterEvents.Length}) must be equal");
 
             _cachedAdd = e => _entities.Add(e);
             ObserveFilter();
@@ -39,7 +40,7 @@ namespace Lekret.Ecs
         IEnumerator<Entity> IEnumerable<Entity>.GetEnumerator() => GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
-        
+
         public void Dispose()
         {
             for (var i = 0; i < _filters.Length; i++)
@@ -48,7 +49,7 @@ namespace Lekret.Ecs
                 filter.EntityAdded -= _cachedAdd;
                 filter.EntityRemoved -= _cachedAdd;
             }
-            
+
             Clear();
         }
 
@@ -78,11 +79,11 @@ namespace Lekret.Ecs
             }
         }
     }
-    
+
     public static class CollectorExtensions
     {
         public static Collector Collector(
-            this EcsManager manager, 
+            this EcsManager manager,
             params TriggerOnEvent[] triggers)
         {
             var filters = new Filter[triggers.Length];

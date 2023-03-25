@@ -6,7 +6,7 @@ namespace Lekret.Ecs
     {
         internal static int Count;
     }
-    
+
     public sealed class Component<T> : Component
     {
         public static readonly int Index;

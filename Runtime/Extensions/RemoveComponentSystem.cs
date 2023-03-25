@@ -8,7 +8,7 @@
         {
             _filter = manager.Filter(Mask.With<T>());
         }
-        
+
         public void Update()
         {
             foreach (var entity in _filter)

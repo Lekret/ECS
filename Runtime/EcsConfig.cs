@@ -7,7 +7,7 @@ namespace Lekret.Ecs
             InitialComponentsCapacity = 128,
             InitialEntityCapacity = 512,
         };
-        
+
         public int InitialComponentsCapacity;
         public int InitialEntityCapacity;
     }

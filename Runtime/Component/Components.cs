@@ -50,7 +50,7 @@ namespace Lekret.Ecs
         {
             return GetFlags(componentIndex)[entityId];
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal void SetComponent<T>(Entity entity, T value)
         {
@@ -72,6 +72,7 @@ namespace Lekret.Ecs
                 hasComponent = false;
                 return true;
             }
+
             return false;
         }
 
@@ -126,7 +127,7 @@ namespace Lekret.Ecs
                     listOfArrays[componentIndex] = array;
                 }
             }
-            
+
             return array;
         }
     }
