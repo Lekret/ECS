@@ -14,7 +14,7 @@ namespace Lekret.Ecs.Editor
 
         public override void OnInspectorGUI()
         {
-            EditorGUILayout.LabelField($"Entity count: {_target.Manager.EntitiesCount}");
+            EditorGUILayout.LabelField($"Entities count: {_target.Manager.EntitiesCount}");
         }
     }
 }
