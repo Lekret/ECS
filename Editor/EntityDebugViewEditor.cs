@@ -3,15 +3,15 @@ using UnityEditor;
 
 namespace Lekret.Ecs.Editor
 {
-    [CustomEditor(typeof(EcsEntityDebugView))]
-    public class EcsEntityDebugViewEditor : UnityEditor.Editor
+    [CustomEditor(typeof(EntityDebugView))]
+    public class EntityDebugViewEditor : UnityEditor.Editor
     {
-        private EcsEntityDebugView _target;
+        private EntityDebugView _target;
         private readonly List<object> _componentsBuffer = new();
 
         private void OnEnable()
         {
-            _target = (EcsEntityDebugView) target;
+            _target = (EntityDebugView) target;
         }
 
         public override void OnInspectorGUI()

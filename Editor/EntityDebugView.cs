@@ -2,7 +2,7 @@
 
 namespace Lekret.Ecs.Editor
 {
-    public class EcsEntityDebugView : MonoBehaviour
+    public class EntityDebugView : MonoBehaviour
     {
         public Entity Entity { get; set; }
     }

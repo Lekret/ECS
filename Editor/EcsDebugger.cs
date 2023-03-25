@@ -5,9 +5,9 @@ namespace Lekret.Ecs.Editor
 {
     public class EcsDebugger : MonoBehaviour
     {
-        private readonly Dictionary<Entity, EcsEntityDebugView> _entityViews = new();
+        private readonly Dictionary<Entity, EntityDebugView> _entityViews = new();
         private readonly List<Entity> _entitiesBuffer = new();
-        private readonly Queue<EcsEntityDebugView> _viewsToDelete = new();
+        private readonly Queue<EntityDebugView> _viewsToDelete = new();
         private Transform _transform;
         private EcsManager _manager;
         
@@ -62,7 +62,7 @@ namespace Lekret.Ecs.Editor
 
                 var entityView = new GameObject(entity.ToString());
                 entityView.transform.SetParent(_transform);
-                var entityDebugView = entityView.AddComponent<EcsEntityDebugView>();
+                var entityDebugView = entityView.AddComponent<EntityDebugView>();
                 entityDebugView.Entity = entity;
                 _entityViews.Add(entity, entityDebugView);
             }
