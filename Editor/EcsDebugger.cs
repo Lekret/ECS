@@ -12,15 +12,20 @@ namespace Lekret.Ecs.Editor
         private EcsManager _manager;
 
         public EcsManager Manager => _manager;
-        
-        public static void Create(EcsManager manager, bool allowCopies = false)
+
+        public static void Create(
+            EcsManager manager,
+            bool allowCopies = false, 
+            bool dontDestroyOnLoad = true)
         {
             if (!allowCopies && FindObjectOfType<EcsDebugger>())
                 return;
-            
-            var go = new GameObject("[Ecs Debugger]");
-            var debugger = go.AddComponent<EcsDebugger>();
+
+            var debuggerObject = new GameObject("[Ecs Debugger]");
+            var debugger = debuggerObject.AddComponent<EcsDebugger>();
             debugger._manager = manager;
+            if (dontDestroyOnLoad)
+                DontDestroyOnLoad(debuggerObject);
         }
 
         private void Awake()
