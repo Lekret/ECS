@@ -10,9 +10,7 @@ namespace Lekret.Ecs.Editor
         private readonly Queue<EcsEntityDebugView> _viewsToDelete = new();
         private Transform _transform;
         private EcsManager _manager;
-
-        public EcsManager Manager => _manager;
-
+        
         public static void Create(
             EcsManager manager,
             bool allowCopies = false,
@@ -35,7 +33,7 @@ namespace Lekret.Ecs.Editor
 
         private void LateUpdate()
         {
-            Manager.GetEntities(_entitiesBuffer);
+            _manager.GetEntities(_entitiesBuffer);
             DeleteViewsForDestroyedEntity();
             EnsureViewsForExistingEntity();
         }
