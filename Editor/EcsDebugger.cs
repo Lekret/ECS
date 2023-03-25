@@ -15,7 +15,7 @@ namespace Lekret.Ecs.Editor
 
         public static void Create(
             EcsManager manager,
-            bool allowCopies = false, 
+            bool allowCopies = false,
             bool dontDestroyOnLoad = true)
         {
             if (!allowCopies && FindObjectOfType<EcsDebugger>())
