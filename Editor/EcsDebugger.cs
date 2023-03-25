@@ -5,7 +5,6 @@ namespace Lekret.Ecs.Editor
 {
     public class EcsDebugger : MonoBehaviour
     {
-        private static EcsDebugger Instance;
         private readonly Dictionary<Entity, EcsEntityDebugView> _entityViews = new();
         private readonly List<Entity> _entitiesBuffer = new();
         private readonly Queue<EcsEntityDebugView> _viewsToDelete = new();
@@ -13,15 +12,12 @@ namespace Lekret.Ecs.Editor
         private EcsManager _manager;
 
         public EcsManager Manager => _manager;
-
-        public static void Setup(EcsManager manager)
+        
+        public static void Create(EcsManager manager, bool allowCopies = false)
         {
-            if (Instance)
-            {
-                Debug.LogWarning("Ecs Debugger is already created");
+            if (!allowCopies && FindObjectOfType<EcsDebugger>())
                 return;
-            }
-
+            
             var go = new GameObject("[Ecs Debugger]");
             var debugger = go.AddComponent<EcsDebugger>();
             debugger._manager = manager;
@@ -29,15 +25,7 @@ namespace Lekret.Ecs.Editor
 
         private void Awake()
         {
-            if (Instance)
-            {
-                Destroy(gameObject);
-                return;
-            }
-            
-            Instance = this;
             _transform = transform;
-            DontDestroyOnLoad(gameObject);
         }
 
         private void LateUpdate()
