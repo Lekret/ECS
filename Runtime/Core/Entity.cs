@@ -2,23 +2,23 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-namespace Lekret.Ecs
+namespace ECS.Runtime.Core
 {
     [Serializable]
     public readonly struct Entity : IEquatable<Entity>
     {
         public const int NullId = -1;
-        public const short NullVersion = -1;
-        public static readonly Entity Null = new Entity(NullId, NullVersion, null);
+        public const short NullGen = -1;
+        public static readonly Entity Null = new Entity(NullId, NullGen, null);
 
         public readonly int Id;
-        public readonly short Version;
+        public readonly short Gen;
         public readonly EcsManager Owner;
 
-        internal Entity(int id, short version, EcsManager owner)
+        internal Entity(int id, short gen, EcsManager owner)
         {
             Id = id;
-            Version = version;
+            Gen = gen;
             Owner = owner;
         }
 
@@ -26,7 +26,7 @@ namespace Lekret.Ecs
         public bool Equals(Entity other)
         {
             return Id == other.Id &&
-                   Version == other.Version &&
+                   Gen == other.Gen &&
                    Owner == other.Owner;
         }
 
@@ -51,7 +51,7 @@ namespace Lekret.Ecs
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool IsNull()
         {
-            return Owner == null || Id == NullId || Version == NullVersion;
+            return Owner == null || Id == NullId || Gen == NullGen;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

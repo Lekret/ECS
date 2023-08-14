@@ -1,6 +1,10 @@
 ﻿using System.Collections.Generic;
+using ECS.Runtime.Access.Collector;
+using ECS.Runtime.Core;
+using ECS.Runtime.System;
+using ECS.Runtime.Utils;
 
-namespace Lekret.Ecs.Extensions
+namespace ECS.Runtime.Extensions
 {
     public abstract class ReactiveSystem : IUpdateSystem
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Lekret.Ecs.Extensions
+namespace ECS.Runtime.Extensions.SetListeners
 {
     public struct SetListeners<T>
     {

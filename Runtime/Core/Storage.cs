@@ -3,18 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-namespace Lekret.Ecs
+namespace ECS.Runtime.Core
 {
-    internal sealed class Components
+    internal sealed class Storage
     {
         private readonly World _world;
-        private readonly List<Array> _rawComponents;
+        private readonly List<Array> _components;
         private readonly List<bool[]> _flags;
 
-        internal Components(World world, int capacity)
+        internal Storage(World world, int capacity)
         {
             _world = world;
-            _rawComponents = new List<Array>(capacity);
+            _components = new List<Array>(capacity);
             _flags = new List<bool[]>(capacity);
         }
 
@@ -22,9 +22,9 @@ namespace Lekret.Ecs
         internal void OnEntityDestroyed(Entity entity)
         {
             var entityId = entity.Id;
-            for (var i = 0; i < _rawComponents.Count; i++)
+            for (var i = 0; i < _components.Count; i++)
             {
-                _rawComponents[i].SetValue(default, entityId);
+                _components[i].SetValue(default, entityId);
             }
 
             for (var i = 0; i < _flags.Count; i++)
@@ -36,13 +36,13 @@ namespace Lekret.Ecs
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal T GetComponent<T>(int entityId)
         {
-            return GetRawPool<T>()[entityId];
+            return GetPool<T>()[entityId];
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal bool GetFlag<T>(int entityId)
         {
-            return GetFlag(Component<T>.Index, entityId);
+            return GetFlag(ComponentType<T>.Index, entityId);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -54,21 +54,18 @@ namespace Lekret.Ecs
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal void SetComponent<T>(Entity entity, T value)
         {
-            var componentIndex = Component<T>.Index;
             var id = entity.Id;
-            GetRawPool<T>()[id] = value;
-            GetFlags(componentIndex)[id] = true;
+            GetPool<T>()[id] = value;
+            GetFlags(ComponentType<T>.Index)[id] = true;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal bool RemoveComponent<T>(Entity entity)
         {
-            var componentIndex = Component<T>.Index;
-            var id = entity.Id;
-            ref var hasComponent = ref GetFlags(componentIndex)[id];
+            ref var hasComponent = ref GetFlags(ComponentType<T>.Index)[entity.Id];
             if (hasComponent)
             {
-                GetRawPool<T>()[id] = default;
+                GetPool<T>()[entity.Id] = default;
                 hasComponent = false;
                 return true;
             }
@@ -80,39 +77,38 @@ namespace Lekret.Ecs
         internal void GetComponents(Entity entity, List<object> buffer)
         {
             buffer.Clear();
-            for (var i = 0; i < Component.Count; i++)
+            for (var i = 0; i < ComponentType.Count; i++)
             {
-                var flags = GetArrayForComponent<bool>(_flags, i);
+                var flags = GetEntitiesSizedArray<bool>(_flags, i);
                 if (flags[entity.Id])
                 {
-                    var components = GetArrayForComponent<object>(_rawComponents, i);
+                    var components = GetEntitiesSizedArray<object>(_components, i);
                     buffer.Add(components[entity.Id]);
                 }
             }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private T[] GetRawPool<T>()
+        private T[] GetPool<T>()
         {
-            var componentIndex = Component<T>.Index;
-            return GetArrayForComponent<T>(_rawComponents, componentIndex);
+            return GetEntitiesSizedArray<T>(_components, ComponentType<T>.Index);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private bool[] GetFlags(int componentIndex)
         {
-            return GetArrayForComponent<bool>(_flags, componentIndex);
+            return GetEntitiesSizedArray<bool>(_flags, componentIndex);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private T[] GetArrayForComponent<T>(IList listOfArrays, int componentIndex)
+        private T[] GetEntitiesSizedArray<T>(IList listOfArrays, int componentIndex)
         {
-            while (listOfArrays.Count < Component.Count)
+            while (listOfArrays.Count < ComponentType.Count)
             {
                 listOfArrays.Add(null);
             }
 
-            var requiredLength = _world.MaxEntityId + 1;
+            var requiredLength = (_world.MaxEntityId + 1) * 2;
             var array = (T[]) listOfArrays[componentIndex];
             if (array == null)
             {

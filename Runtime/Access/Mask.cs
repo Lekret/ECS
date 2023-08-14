@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Lekret.Ecs
+namespace ECS.Runtime.Access
 {
     public static class Mask
     {

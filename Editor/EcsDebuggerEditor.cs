@@ -1,6 +1,6 @@
 ﻿using UnityEditor;
 
-namespace Lekret.Ecs.Editor
+namespace ECS.Editor
 {
     [CustomEditor(typeof(EcsDebugger))]
     public class EcsDebuggerEditor : UnityEditor.Editor

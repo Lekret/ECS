@@ -1,6 +1,7 @@
 using System.Collections.Generic;
+using ECS.Runtime.Core;
 
-namespace Lekret.Ecs
+namespace ECS.Runtime.Access
 {
     internal sealed class EntityAccessor
     {
@@ -83,7 +84,7 @@ namespace Lekret.Ecs
 
         private void IncreaseFiltersRegistry()
         {
-            while (_typeToFilter.Count < Component.Count)
+            while (_typeToFilter.Count < ComponentType.Count)
             {
                 _typeToFilter.Add(new List<Filter>());
             }

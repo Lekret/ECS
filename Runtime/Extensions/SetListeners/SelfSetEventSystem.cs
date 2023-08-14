@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
+using ECS.Runtime.Access;
+using ECS.Runtime.Access.Collector;
+using ECS.Runtime.Core;
 
-namespace Lekret.Ecs.Extensions
+namespace ECS.Runtime.Extensions.SetListeners
 {
     public class SelfSetEventSystem<T> : ReactiveSystem
     {

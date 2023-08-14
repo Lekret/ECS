@@ -1,4 +1,8 @@
-﻿namespace Lekret.Ecs.Extensions
+﻿using ECS.Runtime.Access;
+using ECS.Runtime.Core;
+using ECS.Runtime.System;
+
+namespace ECS.Runtime.Extensions
 {
     public class RemoveComponentSystem<T> : IUpdateSystem
     {

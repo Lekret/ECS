@@ -1,4 +1,4 @@
-namespace Lekret.Ecs.Extensions
+namespace ECS.Runtime.Extensions
 {
     public enum EventTarget
     {

@@ -1,4 +1,6 @@
-﻿namespace Lekret.Ecs.Extensions
+﻿using ECS.Runtime.Core;
+
+namespace ECS.Runtime.Extensions.SetListeners
 {
     public interface ISetListener<T>
     {

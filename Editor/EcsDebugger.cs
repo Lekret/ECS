@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
+using ECS.Runtime.Core;
 using UnityEngine;
 
-namespace Lekret.Ecs.Editor
+namespace ECS.Editor
 {
     public class EcsDebugger : MonoBehaviour
     {

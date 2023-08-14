@@ -1,4 +1,4 @@
-﻿namespace Lekret.Ecs
+﻿namespace ECS.Runtime.System
 {
     public interface ISystem
     {

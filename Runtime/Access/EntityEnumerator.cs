@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using ECS.Runtime.Core;
+using ECS.Runtime.Utils;
 
-namespace Lekret.Ecs
+namespace ECS.Runtime.Access
 {
     public struct EntityEnumerator : IEnumerator<Entity>
     {

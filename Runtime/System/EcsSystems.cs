@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Lekret.Ecs
+namespace ECS.Runtime.System
 {
     public class EcsSystems :
         IInitSystem,
@@ -10,7 +10,7 @@ namespace Lekret.Ecs
         ITerminateSystem
     {
         protected List<IInitSystem> InitSystems = new List<IInitSystem>();
-        protected List<IUpdateSystem> UpdateSystem = new List<IUpdateSystem>();
+        protected List<IUpdateSystem> UpdateSystems = new List<IUpdateSystem>();
         protected List<IFixedUpdateSystem> FixedUpdateSystems = new List<IFixedUpdateSystem>();
         protected List<ILateUpdateSystem> LateUpdateSystems = new List<ILateUpdateSystem>();
         protected List<ITerminateSystem> TerminateSystems = new List<ITerminateSystem>();
@@ -24,7 +24,7 @@ namespace Lekret.Ecs
                 FixedUpdateSystems.Add(fixedUpdateSystem);
 
             if (system is IUpdateSystem updateSystem)
-                UpdateSystem.Add(updateSystem);
+                UpdateSystems.Add(updateSystem);
 
             if (system is ILateUpdateSystem lateUpdateSystem)
                 LateUpdateSystems.Add(lateUpdateSystem);
@@ -45,9 +45,9 @@ namespace Lekret.Ecs
 
         public virtual void Update()
         {
-            for (var i = 0; i < UpdateSystem.Count; i++)
+            for (var i = 0; i < UpdateSystems.Count; i++)
             {
-                UpdateSystem[i].Update();
+                UpdateSystems[i].Update();
             }
         }
 

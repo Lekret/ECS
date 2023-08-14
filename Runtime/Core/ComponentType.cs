@@ -1,17 +1,17 @@
 using System.Threading;
 
-namespace Lekret.Ecs
+namespace ECS.Runtime.Core
 {
-    public class Component
+    public class ComponentType
     {
         internal static int Count;
     }
 
-    public sealed class Component<T> : Component
+    public sealed class ComponentType<T> : ComponentType
     {
         public static readonly int Index;
 
-        static Component()
+        static ComponentType()
         {
             Index = Count;
             Interlocked.Increment(ref Count);

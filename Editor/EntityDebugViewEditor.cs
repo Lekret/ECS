@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEditor;
 
-namespace Lekret.Ecs.Editor
+namespace ECS.Editor
 {
     [CustomEditor(typeof(EntityDebugView))]
     public class EntityDebugViewEditor : UnityEditor.Editor

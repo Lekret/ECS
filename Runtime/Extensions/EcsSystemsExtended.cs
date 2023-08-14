@@ -1,4 +1,9 @@
-﻿namespace Lekret.Ecs.Extensions
+﻿using ECS.Runtime.Core;
+using ECS.Runtime.Extensions.RemoveListeners;
+using ECS.Runtime.Extensions.SetListeners;
+using ECS.Runtime.System;
+
+namespace ECS.Runtime.Extensions
 {
     public class EcsSystemsExtended : EcsSystems
     {

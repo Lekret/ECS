@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
+using ECS.Runtime.Access;
 
-namespace Lekret.Ecs
+namespace ECS.Runtime.Core
 {
     public sealed class EcsManager
     {
         private readonly EntityAccessor _accessor;
         private readonly World _world;
-        private readonly Components _components;
+        private readonly Storage _storage;
 
         public EcsManager() : this(EcsConfig.Default)
         {
@@ -17,7 +18,7 @@ namespace Lekret.Ecs
         {
             _world = new World(config.InitialEntityCapacity);
             _accessor = new EntityAccessor(_world);
-            _components = new Components(_world, config.InitialComponentsCapacity);
+            _storage = new Storage(_world, config.InitialComponentsCapacity);
         }
 
         public int EntitiesCount => _world.EntitiesCount;
@@ -38,7 +39,7 @@ namespace Lekret.Ecs
             return _world.CreateEntity(this);
         }
 
-        public Entity? GetOrCreateEntityWithId(int id)
+        public Entity GetOrCreateEntityWithId(int id)
         {
             return _world.GetOrCreateEntityWithId(this, id);
         }
@@ -97,21 +98,21 @@ namespace Lekret.Ecs
             if (!IsAlive(entity))
                 throw new Exception($"Cannot get component from non alive entity: {entity}");
             if (!HasComponent<T>(entity))
-                throw new Exception($"Entity do not have a component {typeof(T)}: {entity}");
-            return _components.GetComponent<T>(entity.Id);
+                throw new Exception($"Entity does not have a component {typeof(T)}: {entity}");
+            return _storage.GetComponent<T>(entity.Id);
         }
 
         public void GetComponents(Entity entity, List<object> buffer)
         {
-            _components.GetComponents(entity, buffer);
+            _storage.GetComponents(entity, buffer);
         }
 
         public void Set<T>(Entity entity, T value = default)
         {
             if (IsAlive(entity))
             {
-                _components.SetComponent(entity, value);
-                OnComponentChanged(entity, Component<T>.Index);
+                _storage.SetComponent(entity, value);
+                OnComponentChanged(entity, ComponentType<T>.Index);
             }
             else
             {
@@ -123,9 +124,9 @@ namespace Lekret.Ecs
         {
             if (IsAlive(entity))
             {
-                var removed = _components.RemoveComponent<T>(entity);
+                var removed = _storage.RemoveComponent<T>(entity);
                 if (removed)
-                    OnComponentChanged(entity, Component<T>.Index);
+                    OnComponentChanged(entity, ComponentType<T>.Index);
             }
             else
             {
@@ -142,7 +143,7 @@ namespace Lekret.Ecs
         {
             if (IsAlive(entity))
             {
-                _components.OnEntityDestroyed(entity);
+                _storage.OnEntityDestroyed(entity);
                 _world.OnEntityDestroyed(entity);
                 _accessor.OnEntityDestroyed(entity);
             }
@@ -161,7 +162,7 @@ namespace Lekret.Ecs
         {
             for (var i = 0; i < indices.Length; i++)
             {
-                if (_components.GetFlag(indices[i], entity.Id))
+                if (_storage.GetFlag(indices[i], entity.Id))
                     return true;
             }
 
@@ -172,7 +173,7 @@ namespace Lekret.Ecs
         {
             for (var i = 0; i < indices.Length; i++)
             {
-                if (!_components.GetFlag(indices[i], entity.Id))
+                if (!_storage.GetFlag(indices[i], entity.Id))
                     return false;
             }
 
@@ -181,12 +182,12 @@ namespace Lekret.Ecs
 
         private bool HasComponent<T>(Entity entity)
         {
-            return _components.GetFlag<T>(entity.Id);
+            return _storage.GetFlag<T>(entity.Id);
         }
 
         private bool HasComponent(Entity entity, int componentIndex)
         {
-            return _components.GetFlag(componentIndex, entity.Id);
+            return _storage.GetFlag(componentIndex, entity.Id);
         }
 
         private void OnComponentChanged(Entity entity, int componentIndex)

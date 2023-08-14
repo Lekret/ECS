@@ -1,8 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using ECS.Runtime.Core;
 
-namespace Lekret.Ecs
+namespace ECS.Runtime.Access
 {
     public sealed class Filter : IEnumerable<Entity>
     {

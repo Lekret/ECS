@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using ECS.Runtime.Core;
+using UnityEngine;
 
-namespace Lekret.Ecs.Editor
+namespace ECS.Editor
 {
     public class EntityDebugView : MonoBehaviour
     {

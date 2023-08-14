@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 
-namespace Lekret.Ecs
+namespace ECS.Runtime.Core
 {
     internal sealed class World
     {
         private struct RecycledEntity
         {
             public int Id;
-            public short Version;
+            public short Gen;
         }
 
         private readonly Queue<RecycledEntity> _recycledEntities = new Queue<RecycledEntity>();
@@ -26,10 +26,9 @@ namespace Lekret.Ecs
         internal Entity CreateEntity(EcsManager owner)
         {
             Entity entity;
-            if (_recycledEntities.Count > 0)
+            if (_recycledEntities.TryDequeue(out var recycledEntity))
             {
-                var recycledEntity = _recycledEntities.Dequeue();
-                entity = new Entity(recycledEntity.Id, recycledEntity.Version++, owner);
+                entity = new Entity(recycledEntity.Id, recycledEntity.Gen++, owner);
             }
             else
             {
@@ -64,7 +63,7 @@ namespace Lekret.Ecs
         internal bool IsAlive(Entity entity)
         {
             return _entities.TryGetValue(entity.Id, out var existingEntity) &&
-                   existingEntity.Version == entity.Version;
+                   existingEntity.Gen == entity.Gen;
         }
 
         internal void OnEntityDestroyed(Entity entity)
@@ -73,7 +72,7 @@ namespace Lekret.Ecs
             _recycledEntities.Enqueue(new RecycledEntity
             {
                 Id = entity.Id,
-                Version = entity.Version
+                Gen = entity.Gen
             });
         }
 

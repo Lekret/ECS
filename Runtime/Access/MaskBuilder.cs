@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
+using ECS.Runtime.Core;
 
-namespace Lekret.Ecs
+namespace ECS.Runtime.Access
 {
     public sealed class MaskBuilder
     {
@@ -10,7 +11,7 @@ namespace Lekret.Ecs
 
         public MaskBuilder With<T>()
         {
-            _indices.Add(Component<T>.Index);
+            _indices.Add(ComponentType<T>.Index);
             return this;
         }
     }

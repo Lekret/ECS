@@ -1,4 +1,4 @@
-namespace Lekret.Ecs
+namespace ECS.Runtime.Core
 {
     public struct EcsConfig
     {

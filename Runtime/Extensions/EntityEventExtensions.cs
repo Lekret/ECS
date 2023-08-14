@@ -1,6 +1,10 @@
 ﻿using System.Collections.Generic;
+using ECS.Runtime.Core;
+using ECS.Runtime.Extensions.RemoveListeners;
+using ECS.Runtime.Extensions.SetListeners;
+using ECS.Runtime.Utils;
 
-namespace Lekret.Ecs.Extensions
+namespace ECS.Runtime.Extensions
 {
     public static class EntityEventExtensions
     {
