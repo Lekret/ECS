@@ -31,6 +31,17 @@ namespace ECS.Runtime.Core
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public override bool Equals(object obj)
+        {
+            return obj is Entity other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id, Gen, Owner);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool operator ==(Entity left, Entity right)
         {
             return left.Equals(right);
