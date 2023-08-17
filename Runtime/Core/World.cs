@@ -84,6 +84,8 @@ namespace ECS.Runtime.Core
             }
 
             _entities.Clear();
+            _recycledEntities.Clear();
+            _currentId = 0;
         }
     }
 }

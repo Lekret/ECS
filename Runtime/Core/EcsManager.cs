@@ -18,7 +18,7 @@ namespace ECS.Runtime.Core
         {
             _world = new World(config.InitialEntityCapacity);
             _accessor = new EntityAccessor(_world);
-            _storage = new Storage(_world, config.InitialComponentsCapacity);
+            _storage = new Storage(_world);
         }
 
         public int EntitiesCount => _world.EntitiesCount;
@@ -78,7 +78,7 @@ namespace ECS.Runtime.Core
 
         public bool IsAlive(Entity entity)
         {
-            return _world.IsAlive(entity);
+            return !entity.IsNull() && _world.IsAlive(entity);
         }
 
         public bool TryGet<T>(Entity entity, out T value)
@@ -97,7 +97,7 @@ namespace ECS.Runtime.Core
         {
             if (!IsAlive(entity))
                 throw new Exception($"Cannot get component from non alive entity: {entity}");
-            if (!HasComponent<T>(entity))
+            if (!_storage.GetFlag<T>(entity.Id))
                 throw new Exception($"Entity does not have a component {typeof(T)}: {entity}");
             return _storage.GetComponent<T>(entity.Id);
         }
@@ -136,7 +136,7 @@ namespace ECS.Runtime.Core
 
         public bool Has<T>(Entity entity)
         {
-            return IsAlive(entity) && HasComponent<T>(entity);
+            return IsAlive(entity) && _storage.GetFlag<T>(entity.Id);
         }
 
         public void Destroy(Entity entity)
@@ -155,11 +155,14 @@ namespace ECS.Runtime.Core
 
         public bool Has(Entity entity, int componentIndex)
         {
-            return IsAlive(entity) && HasComponent(entity, componentIndex);
+            return IsAlive(entity) && _storage.GetFlag(componentIndex, entity.Id);
         }
 
         public bool HasAny(Entity entity, int[] indices)
         {
+            if (!IsAlive(entity))
+                return false;
+            
             for (var i = 0; i < indices.Length; i++)
             {
                 if (_storage.GetFlag(indices[i], entity.Id))
@@ -171,6 +174,9 @@ namespace ECS.Runtime.Core
 
         public bool HasAll(Entity entity, int[] indices)
         {
+            if (!IsAlive(entity))
+                return false;
+            
             for (var i = 0; i < indices.Length; i++)
             {
                 if (!_storage.GetFlag(indices[i], entity.Id))
@@ -178,16 +184,6 @@ namespace ECS.Runtime.Core
             }
 
             return true;
-        }
-
-        private bool HasComponent<T>(Entity entity)
-        {
-            return _storage.GetFlag<T>(entity.Id);
-        }
-
-        private bool HasComponent(Entity entity, int componentIndex)
-        {
-            return _storage.GetFlag(componentIndex, entity.Id);
         }
 
         private void OnComponentChanged(Entity entity, int componentIndex)

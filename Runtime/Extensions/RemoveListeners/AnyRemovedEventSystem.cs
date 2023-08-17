@@ -7,7 +7,7 @@ namespace ECS.Runtime.Extensions.RemoveListeners
 {
     public class AnyRemovedEventSystem<T> : ReactiveSystem
     {
-        private readonly List<IRemovedListener<T>> _listenerBuffer = new List<IRemovedListener<T>>();
+        private readonly List<ComponentRemoved<T>> _listenerBuffer = new List<ComponentRemoved<T>>();
         private readonly Filter _listeners;
 
         public AnyRemovedEventSystem(EcsManager manager) : base(manager)
@@ -34,12 +34,12 @@ namespace ECS.Runtime.Extensions.RemoveListeners
                 var value = entity.Get<T>();
                 for (var k = 0; k < listeners.Count; k++)
                 {
-                    listeners[k].OnRemoved(entity, value);
+                    listeners[k](entity);
                 }
             }
         }
 
-        private List<IRemovedListener<T>> GetListeners()
+        private List<ComponentRemoved<T>> GetListeners()
         {
             _listenerBuffer.Clear();
             foreach (var entity in _listeners)

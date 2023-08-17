@@ -7,7 +7,7 @@ namespace ECS.Runtime.Extensions.SetListeners
 {
     public class SelfSetEventSystem<T> : ReactiveSystem
     {
-        private readonly List<ISetListener<T>> _listenerBuffer = new List<ISetListener<T>>();
+        private readonly List<ComponentSet<T>> _listenerBuffer = new List<ComponentSet<T>>();
 
         public SelfSetEventSystem(EcsManager manager) : base(manager)
         {
@@ -34,7 +34,7 @@ namespace ECS.Runtime.Extensions.SetListeners
 
                 for (var k = 0; k < _listenerBuffer.Count; k++)
                 {
-                    _listenerBuffer[k].OnSet(entity, value);
+                    _listenerBuffer[k](entity, value);
                 }
             }
         }

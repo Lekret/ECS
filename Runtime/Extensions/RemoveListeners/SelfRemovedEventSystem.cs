@@ -7,7 +7,7 @@ namespace ECS.Runtime.Extensions.RemoveListeners
 {
     public class SelfRemovedEventSystem<T> : ReactiveSystem
     {
-        private readonly List<IRemovedListener<T>> _listenerBuffer = new List<IRemovedListener<T>>();
+        private readonly List<ComponentRemoved<T>> _listenerBuffer = new List<ComponentRemoved<T>>();
 
         public SelfRemovedEventSystem(EcsManager manager) : base(manager)
         {
@@ -34,7 +34,7 @@ namespace ECS.Runtime.Extensions.RemoveListeners
 
                 for (var k = 0; k < _listenerBuffer.Count; k++)
                 {
-                    _listenerBuffer[k].OnRemoved(entity, value);
+                    _listenerBuffer[k](entity);
                 }
             }
         }

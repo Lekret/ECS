@@ -7,7 +7,7 @@ namespace ECS.Runtime.Extensions.SetListeners
 {
     public class AnySetEventSystem<T> : ReactiveSystem
     {
-        private readonly List<ISetListener<T>> _listenerBuffer = new List<ISetListener<T>>();
+        private readonly List<ComponentSet<T>> _listenerBuffer = new List<ComponentSet<T>>();
         private readonly Filter _listeners;
 
         public AnySetEventSystem(EcsManager manager) : base(manager)
@@ -34,12 +34,12 @@ namespace ECS.Runtime.Extensions.SetListeners
                 var value = entity.Get<T>();
                 for (var k = 0; k < listeners.Count; k++)
                 {
-                    listeners[k].OnSet(entity, value);
+                    listeners[k](entity, value);
                 }
             }
         }
 
-        private List<ISetListener<T>> GetListeners()
+        private List<ComponentSet<T>> GetListeners()
         {
             _listenerBuffer.Clear();
             foreach (var entity in _listeners)

@@ -11,11 +11,11 @@ namespace ECS.Runtime.Core
         private readonly List<Array> _components;
         private readonly List<bool[]> _flags;
 
-        internal Storage(World world, int capacity)
+        internal Storage(World world)
         {
             _world = world;
-            _components = new List<Array>(capacity);
-            _flags = new List<bool[]>(capacity);
+            _components = new List<Array>();
+            _flags = new List<bool[]>();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

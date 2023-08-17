@@ -57,7 +57,7 @@ namespace ECS.Runtime.Core
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool IsAlive()
         {
-            return !IsNull() && Owner.IsAlive(this);
+            return Owner.IsAlive(this);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
