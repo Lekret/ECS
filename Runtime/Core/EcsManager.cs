@@ -188,8 +188,9 @@ namespace ECS.Runtime.Core
 
         public void Dispose()
         {
-            _storage?.Dispose();
-            _world?.Dispose();
+            _storage.Dispose();
+            _world.Dispose();
+            _accessor.Dispose();
         }
     }
 }
