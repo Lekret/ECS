@@ -1,9 +1,10 @@
+using System;
 using System.Collections.Generic;
 using ECS.Runtime.Core;
 
 namespace ECS.Runtime.Access
 {
-    internal sealed class EntityAccessor
+    internal sealed class EntityAccessor : IDisposable
     {
         private readonly List<List<Filter>> _typeToFilter = new List<List<Filter>>();
         private readonly World _world;
@@ -88,6 +89,11 @@ namespace ECS.Runtime.Access
             {
                 _typeToFilter.Add(new List<Filter>());
             }
+        }
+
+        public void Dispose()
+        {
+            _typeToFilter.Clear();
         }
     }
 }

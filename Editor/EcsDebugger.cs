@@ -17,7 +17,7 @@ namespace ECS.Editor
         public static void Create(
             EcsManager manager,
             bool allowCopies = false,
-            bool dontDestroyOnLoad = true)
+            bool dontDestroyOnLoad = false)
         {
             if (!allowCopies && FindObjectOfType<EcsDebugger>())
                 return;

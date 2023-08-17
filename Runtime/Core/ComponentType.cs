@@ -10,7 +10,7 @@ namespace ECS.Runtime.Core
     public sealed class ComponentType<T> : ComponentType
     {
         public static readonly int Index;
-
+        
         static ComponentType()
         {
             Index = Count;

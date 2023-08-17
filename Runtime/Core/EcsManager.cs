@@ -4,7 +4,7 @@ using ECS.Runtime.Access;
 
 namespace ECS.Runtime.Core
 {
-    public sealed class EcsManager
+    public sealed class EcsManager : IDisposable
     {
         private readonly EntityAccessor _accessor;
         private readonly World _world;
@@ -69,11 +69,6 @@ namespace ECS.Runtime.Core
         public Filter Filter(MaskBuilder maskBuilder)
         {
             return Filter(Mask.AllOf(maskBuilder));
-        }
-
-        public void DestroyAllEntities()
-        {
-            _world.DestroyAll();
         }
 
         public bool IsAlive(Entity entity)
@@ -189,6 +184,12 @@ namespace ECS.Runtime.Core
         private void OnComponentChanged(Entity entity, int componentIndex)
         {
             _accessor.OnComponentChanged(entity, componentIndex);
+        }
+
+        public void Dispose()
+        {
+            _storage?.Dispose();
+            _world?.Dispose();
         }
     }
 }

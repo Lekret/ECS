@@ -1,20 +1,21 @@
+using System;
 using System.Collections.Generic;
 
 namespace ECS.Runtime.Core
 {
-    internal sealed class World
+    internal sealed class World : IDisposable
     {
-        private struct RecycledEntity
+        private struct PooledEntity
         {
             public int Id;
             public short Gen;
         }
 
-        private readonly Queue<RecycledEntity> _recycledEntities = new Queue<RecycledEntity>();
+        private readonly Queue<PooledEntity> _pooledEntities = new Queue<PooledEntity>();
         private readonly Dictionary<int, Entity> _entities;
-        private int _currentId;
+        private int _maxEntityId;
 
-        internal int MaxEntityId => _currentId - _recycledEntities.Count;
+        internal int MaxEntityId => _maxEntityId;
         internal IEnumerable<Entity> Entities => _entities.Values;
         internal int EntitiesCount => _entities.Values.Count;
 
@@ -26,18 +27,18 @@ namespace ECS.Runtime.Core
         internal Entity CreateEntity(EcsManager owner)
         {
             Entity entity;
-            if (_recycledEntities.TryDequeue(out var recycledEntity))
+            if (_pooledEntities.TryDequeue(out var recycledEntity))
             {
                 entity = new Entity(recycledEntity.Id, recycledEntity.Gen++, owner);
             }
             else
             {
-                while (_entities.ContainsKey(_currentId))
+                while (_entities.ContainsKey(_maxEntityId))
                 {
-                    _currentId++;
+                    _maxEntityId++;
                 }
 
-                entity = new Entity(_currentId, 0, owner);
+                entity = new Entity(_maxEntityId, 0, owner);
             }
 
             _entities.Add(entity.Id, entity);
@@ -48,6 +49,21 @@ namespace ECS.Runtime.Core
         {
             if (_entities.TryGetValue(id, out var entity))
                 return entity;
+
+            while (_maxEntityId < id)
+            {
+                _maxEntityId++;
+
+                if (GetEntityById(id) == Entity.Null)
+                {
+                    _pooledEntities.Enqueue(new PooledEntity
+                    {
+                        Id = _maxEntityId,
+                        Gen = 0
+                    });
+                }
+            }
+            
             entity = new Entity(id, 0, owner);
             _entities.Add(id, entity);
             return entity;
@@ -62,30 +78,25 @@ namespace ECS.Runtime.Core
 
         internal bool IsAlive(Entity entity)
         {
-            return _entities.TryGetValue(entity.Id, out var existingEntity) &&
+            return _entities.TryGetValue(entity.Id, out var existingEntity) && 
                    existingEntity.Gen == entity.Gen;
         }
 
         internal void OnEntityDestroyed(Entity entity)
         {
             _entities.Remove(entity.Id);
-            _recycledEntities.Enqueue(new RecycledEntity
+            _pooledEntities.Enqueue(new PooledEntity
             {
                 Id = entity.Id,
                 Gen = entity.Gen
             });
         }
 
-        internal void DestroyAll()
+        public void Dispose()
         {
-            foreach (var entity in _entities.Values)
-            {
-                entity.Destroy();
-            }
-
             _entities.Clear();
-            _recycledEntities.Clear();
-            _currentId = 0;
+            _pooledEntities.Clear();
+            _maxEntityId = 0;
         }
     }
 }

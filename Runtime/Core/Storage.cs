@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 namespace ECS.Runtime.Core
 {
-    internal sealed class Storage
+    internal sealed class Storage : IDisposable
     {
         private readonly World _world;
         private readonly List<Array> _components;
@@ -13,23 +13,20 @@ namespace ECS.Runtime.Core
 
         internal Storage(World world)
         {
-            _world = world;
             _components = new List<Array>();
             _flags = new List<bool[]>();
+            _world = world;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal void OnEntityDestroyed(Entity entity)
         {
-            var entityId = entity.Id;
-            for (var i = 0; i < _components.Count; i++)
-            {
-                _components[i].SetValue(default, entityId);
-            }
-
             for (var i = 0; i < _flags.Count; i++)
             {
-                _flags[i][entityId] = false;
+                if (_flags[i] != null &&
+                    _flags[i].Length > entity.Id && 
+                    _flags[i][entity.Id])
+                    _components[i].SetValue(default, entity.Id);
             }
         }
 
@@ -82,8 +79,7 @@ namespace ECS.Runtime.Core
                 var flags = GetEntitiesSizedArray<bool>(_flags, i);
                 if (flags[entity.Id])
                 {
-                    var components = GetEntitiesSizedArray<object>(_components, i);
-                    buffer.Add(components[entity.Id]);
+                    buffer.Add(_components[i].GetValue(entity.Id));
                 }
             }
         }
@@ -108,23 +104,29 @@ namespace ECS.Runtime.Core
                 listOfArrays.Add(null);
             }
 
-            var requiredLength = (_world.MaxEntityId + 1) * 2;
+            var requiredLength = _world.MaxEntityId + 1;
             var array = (T[]) listOfArrays[componentIndex];
             if (array == null)
             {
-                array = new T[requiredLength];
+                array = new T[requiredLength * 2];
                 listOfArrays[componentIndex] = array;
             }
             else
             {
                 if (array.Length < requiredLength)
                 {
-                    Array.Resize(ref array, requiredLength);
+                    Array.Resize(ref array, requiredLength * 2);
                     listOfArrays[componentIndex] = array;
                 }
             }
 
             return array;
+        }
+
+        public void Dispose()
+        {
+            _components.Clear();
+            _flags.Clear();
         }
     }
 }
