@@ -18,7 +18,7 @@ namespace ECS.Runtime.Core
         {
             _world = new World(config.InitialEntityCapacity);
             _accessor = new EntityAccessor(_world);
-            _storage = new Storage(_world);
+            _storage = new Storage(_world, config.InitialEntityCapacity);
         }
 
         public int EntitiesCount => _world.EntitiesCount;

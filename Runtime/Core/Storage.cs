@@ -11,11 +11,12 @@ namespace ECS.Runtime.Core
         private readonly List<bool[]> _flags;
         private int _flagsCapacity;
 
-        internal Storage(World world)
+        internal Storage(World world, int initialEntityCapacity)
         {
             _components = new List<Array>();
             _flags = new List<bool[]>();
             _world = world;
+            _flagsCapacity = initialEntityCapacity;
             _world.MaxEntityIdChanged += OnMaxEntityIdChanged;
             ComponentType.CountChanged += OnComponentsCountChanged;
             OnComponentsCountChanged();
