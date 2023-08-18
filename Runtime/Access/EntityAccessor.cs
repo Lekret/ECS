@@ -13,6 +13,11 @@ namespace ECS.Runtime.Access
         {
             _world = world;
         }
+        
+        public void Dispose()
+        {
+            _typeToFilter.Clear();
+        }
 
         internal Filter GetFilter(CompoundMask mask)
         {
@@ -89,11 +94,6 @@ namespace ECS.Runtime.Access
             {
                 _typeToFilter.Add(new List<Filter>());
             }
-        }
-
-        public void Dispose()
-        {
-            _typeToFilter.Clear();
         }
     }
 }

@@ -13,15 +13,23 @@ namespace ECS.Runtime.Core
 
         private readonly Queue<PooledEntity> _pooledEntities = new Queue<PooledEntity>();
         private readonly Dictionary<int, Entity> _entities;
-        private int _maxEntityId;
+        private int _maxEntityId = -1;
 
         internal int MaxEntityId => _maxEntityId;
         internal IEnumerable<Entity> Entities => _entities.Values;
         internal int EntitiesCount => _entities.Values.Count;
+        internal event Action MaxEntityIdChanged;
 
         internal World(int initialEntityCapacity)
         {
             _entities = new Dictionary<int, Entity>(initialEntityCapacity);
+        }
+        
+        public void Dispose()
+        {
+            _entities.Clear();
+            _pooledEntities.Clear();
+            _maxEntityId = -1;
         }
 
         internal Entity CreateEntity(EcsManager owner)
@@ -33,39 +41,12 @@ namespace ECS.Runtime.Core
             }
             else
             {
-                while (_entities.ContainsKey(_maxEntityId))
-                {
-                    _maxEntityId++;
-                }
-
+                _maxEntityId++;
                 entity = new Entity(_maxEntityId, 0, owner);
+                MaxEntityIdChanged?.Invoke();
             }
 
             _entities.Add(entity.Id, entity);
-            return entity;
-        }
-
-        internal Entity GetOrCreateEntityWithId(EcsManager owner, int id)
-        {
-            if (_entities.TryGetValue(id, out var entity))
-                return entity;
-
-            while (_maxEntityId < id)
-            {
-                _maxEntityId++;
-
-                if (GetEntityById(id) == Entity.Null)
-                {
-                    _pooledEntities.Enqueue(new PooledEntity
-                    {
-                        Id = _maxEntityId,
-                        Gen = 0
-                    });
-                }
-            }
-            
-            entity = new Entity(id, 0, owner);
-            _entities.Add(id, entity);
             return entity;
         }
 
@@ -90,13 +71,6 @@ namespace ECS.Runtime.Core
                 Id = entity.Id,
                 Gen = entity.Gen
             });
-        }
-
-        public void Dispose()
-        {
-            _entities.Clear();
-            _pooledEntities.Clear();
-            _maxEntityId = 0;
         }
     }
 }

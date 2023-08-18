@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 
 namespace ECS.Runtime.Core
@@ -5,6 +6,9 @@ namespace ECS.Runtime.Core
     public class ComponentType
     {
         internal static int Count;
+        internal static event Action CountChanged;
+        
+        protected static void NotifyCountChanged() => CountChanged?.Invoke();
     }
 
     public sealed class ComponentType<T> : ComponentType
@@ -15,6 +19,7 @@ namespace ECS.Runtime.Core
         {
             Index = Count;
             Interlocked.Increment(ref Count);
+            NotifyCountChanged();
         }
     }
 }
