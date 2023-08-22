@@ -37,7 +37,7 @@ namespace ECS.Runtime.Core
             Entity entity;
             if (_pooledEntities.TryDequeue(out var recycledEntity))
             {
-                entity = new Entity(recycledEntity.Id, recycledEntity.Gen++, owner);
+                entity = new Entity(recycledEntity.Id, (short) (recycledEntity.Gen + 1), owner);
             }
             else
             {
