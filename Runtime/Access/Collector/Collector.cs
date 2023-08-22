@@ -84,7 +84,7 @@ namespace ECS.Runtime.Access.Collector
     public static class CollectorExtensions
     {
         public static Collector Collector(
-            this EcsManager manager,
+            this World world,
             params TriggerOnEvent[] triggers)
         {
             var filters = new Filter[triggers.Length];
@@ -92,7 +92,7 @@ namespace ECS.Runtime.Access.Collector
 
             for (var i = 0; i < triggers.Length; i++)
             {
-                filters[i] = manager.Filter(triggers[i].Mask);
+                filters[i] = world.Filter(triggers[i].Mask);
                 filterEvents[i] = triggers[i].FilterEvent;
             }
 

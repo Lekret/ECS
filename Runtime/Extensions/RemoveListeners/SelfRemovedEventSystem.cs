@@ -9,13 +9,13 @@ namespace ECS.Runtime.Extensions.RemoveListeners
     {
         private readonly List<ComponentRemoved<T>> _listenerBuffer = new List<ComponentRemoved<T>>();
 
-        public SelfRemovedEventSystem(EcsManager manager) : base(manager)
+        public SelfRemovedEventSystem(World world) : base(world)
         {
         }
 
-        protected override Collector GetCollector(EcsManager manager)
+        protected override Collector GetCollector(World world)
         {
-            return manager.Collector(Mask.With<T>().Removed());
+            return world.Collector(Mask.With<T>().Removed());
         }
 
         protected override bool Filter(Entity entity)

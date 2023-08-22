@@ -8,9 +8,9 @@ namespace ECS.Runtime.Extensions
     {
         private readonly Filter _filter;
 
-        public RemoveComponentSystem(EcsManager manager)
+        public RemoveComponentSystem(World world)
         {
-            _filter = manager.Filter(Mask.With<T>());
+            _filter = world.Filter(Mask.With<T>());
         }
 
         public void Update()

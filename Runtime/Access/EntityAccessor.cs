@@ -7,11 +7,11 @@ namespace ECS.Runtime.Access
     internal sealed class EntityAccessor : IDisposable
     {
         private readonly List<List<Filter>> _typeToFilter = new List<List<Filter>>();
-        private readonly World _world;
+        private readonly EntityStorage _entityStorage;
 
-        internal EntityAccessor(World world)
+        internal EntityAccessor(EntityStorage entityStorage)
         {
-            _world = world;
+            _entityStorage = entityStorage;
         }
         
         public void Dispose()
@@ -37,7 +37,7 @@ namespace ECS.Runtime.Access
 
         internal void CollectEntities(CompoundMask mask, ICollection<Entity> buffer)
         {
-            foreach (var entity in _world.Entities)
+            foreach (var entity in _entityStorage.Entities)
             {
                 if (mask.Matches(entity))
                     buffer.Add(entity);
@@ -71,7 +71,7 @@ namespace ECS.Runtime.Access
             var filter = new Filter(mask);
             IncreaseFiltersRegistry();
             RegisterFilter(filter);
-            foreach (var entity in _world.Entities)
+            foreach (var entity in _entityStorage.Entities)
             {
                 filter.HandleEntity(entity);
             }

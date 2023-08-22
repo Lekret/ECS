@@ -13,9 +13,9 @@ namespace ECS.Runtime.Core
 
         public readonly int Id;
         public readonly short Gen;
-        public readonly EcsManager Owner;
+        public readonly World Owner;
 
-        internal Entity(int id, short gen, EcsManager owner)
+        internal Entity(int id, short gen, World owner)
         {
             Id = id;
             Gen = gen;

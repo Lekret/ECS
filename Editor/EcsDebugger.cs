@@ -10,12 +10,12 @@ namespace ECS.Editor
         private readonly List<Entity> _entitiesBuffer = new();
         private readonly Queue<EntityDebugView> _viewsToDelete = new();
         private Transform _transform;
-        private EcsManager _manager;
+        private World _world;
 
-        public EcsManager Manager => _manager;
+        public World World => _world;
 
         public static void Create(
-            EcsManager manager,
+            World world,
             bool allowCopies = false,
             bool dontDestroyOnLoad = false)
         {
@@ -24,7 +24,7 @@ namespace ECS.Editor
 
             var debuggerObject = new GameObject("[Ecs Debugger]");
             var debugger = debuggerObject.AddComponent<EcsDebugger>();
-            debugger._manager = manager;
+            debugger._world = world;
             if (dontDestroyOnLoad)
                 DontDestroyOnLoad(debuggerObject);
         }
@@ -36,7 +36,7 @@ namespace ECS.Editor
 
         private void LateUpdate()
         {
-            _manager.GetEntities(_entitiesBuffer);
+            _world.GetEntities(_entitiesBuffer);
             DeleteViewsForDestroyedEntity();
             EnsureViewsForExistingEntity();
         }

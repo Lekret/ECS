@@ -1,76 +1,191 @@
 using System;
 using System.Collections.Generic;
+using ECS.Runtime.Access;
 
 namespace ECS.Runtime.Core
 {
-    internal sealed class World : IDisposable
+    public sealed class World : IDisposable
     {
-        private struct PooledEntity
+        private readonly EntityAccessor _accessor;
+        private readonly EntityStorage _entityStorage;
+        private readonly ComponentStorage _componentStorage;
+
+        public World() : this(EcsConfig.Default)
         {
-            public int Id;
-            public short Gen;
         }
 
-        private readonly Queue<PooledEntity> _pooledEntities = new Queue<PooledEntity>();
-        private readonly Dictionary<int, Entity> _entities;
-        private int _maxEntityId = -1;
-
-        internal int MaxEntityId => _maxEntityId;
-        internal IEnumerable<Entity> Entities => _entities.Values;
-        internal int EntitiesCount => _entities.Values.Count;
-        internal event Action MaxEntityIdChanged;
-
-        internal World(int initialEntityCapacity)
+        public World(EcsConfig config)
         {
-            _entities = new Dictionary<int, Entity>(initialEntityCapacity);
+            _entityStorage = new EntityStorage(config.InitialEntityCapacity);
+            _accessor = new EntityAccessor(_entityStorage);
+            _componentStorage = new ComponentStorage(_entityStorage, config.InitialEntityCapacity);
         }
+
+        public int EntitiesCount => _entityStorage.EntitiesCount;
         
-        public void Dispose()
+        public void GetEntities(List<Entity> buffer)
         {
-            _entities.Clear();
-            _pooledEntities.Clear();
-            _maxEntityId = -1;
+            buffer.Clear();
+            buffer.AddRange(_entityStorage.Entities);
         }
 
-        internal Entity CreateEntity(EcsManager owner)
+        public List<Entity> GetEntitiesCopy()
         {
-            Entity entity;
-            if (_pooledEntities.TryDequeue(out var recycledEntity))
+            return new List<Entity>(_entityStorage.Entities);
+        }
+
+        public Entity CreateEntity()
+        {
+            return _entityStorage.CreateEntity(this);
+        }
+
+        public Entity GetEntityById(int id)
+        {
+            return _entityStorage.GetEntityById(id);
+        }
+
+        public Filter Filter(CompoundMask mask)
+        {
+            return _accessor.GetFilter(mask);
+        }
+
+        public List<Entity> Query(MaskBuilder maskBuilder)
+        {
+            var buffer = new List<Entity>();
+            _accessor.CollectEntities(Mask.AllOf(maskBuilder), buffer);
+            return buffer;
+        }
+
+        public void Query(MaskBuilder maskBuilder, ICollection<Entity> buffer)
+        {
+            _accessor.CollectEntities(Mask.AllOf(maskBuilder), buffer);
+        }
+
+        public Filter Filter(MaskBuilder maskBuilder)
+        {
+            return Filter(Mask.AllOf(maskBuilder));
+        }
+
+        public bool IsAlive(Entity entity)
+        {
+            return !entity.IsNull() && _entityStorage.IsAlive(entity);
+        }
+
+        public bool TryGet<T>(Entity entity, out T value)
+        {
+            if (Has<T>(entity))
             {
-                entity = new Entity(recycledEntity.Id, recycledEntity.Gen++, owner);
+                value = Get<T>(entity);
+                return true;
+            }
+
+            value = default;
+            return false;
+        }
+
+        public T Get<T>(Entity entity)
+        {
+            if (!IsAlive(entity))
+                throw new Exception($"Cannot get component from non alive entity: {entity}");
+            if (!_componentStorage.GetFlag<T>(entity.Id))
+                throw new Exception($"Entity does not have a component {typeof(T)}: {entity}");
+            return _componentStorage.GetComponent<T>(entity.Id);
+        }
+
+        public void GetComponents(Entity entity, List<object> buffer)
+        {
+            _componentStorage.GetComponents(entity, buffer);
+        }
+
+        public void Set<T>(Entity entity, T value = default)
+        {
+            if (IsAlive(entity))
+            {
+                _componentStorage.SetComponent(entity, value);
+                OnComponentChanged(entity, ComponentType<T>.Index);
             }
             else
             {
-                _maxEntityId++;
-                entity = new Entity(_maxEntityId, 0, owner);
-                MaxEntityIdChanged?.Invoke();
+                throw new Exception($"Cannot set {typeof(T)} for non alive entity: {entity}");
+            }
+        }
+
+        public void Remove<T>(Entity entity)
+        {
+            if (IsAlive(entity))
+            {
+                var removed = _componentStorage.RemoveComponent<T>(entity);
+                if (removed)
+                    OnComponentChanged(entity, ComponentType<T>.Index);
+            }
+            else
+            {
+                throw new Exception($"Cannot remove {typeof(T)} for non alive entity: {entity}");
+            }
+        }
+
+        public bool Has<T>(Entity entity)
+        {
+            return IsAlive(entity) && _componentStorage.GetFlag<T>(entity.Id);
+        }
+
+        public void Destroy(Entity entity)
+        {
+            if (IsAlive(entity))
+            {
+                _componentStorage.OnEntityDestroyed(entity);
+                _entityStorage.OnEntityDestroyed(entity);
+                _accessor.OnEntityDestroyed(entity);
+            }
+            else
+            {
+                throw new Exception($"Entity is not alive: {entity}");
+            }
+        }
+
+        public bool Has(Entity entity, int componentIndex)
+        {
+            return IsAlive(entity) && _componentStorage.GetFlag(componentIndex, entity.Id);
+        }
+
+        public bool HasAny(Entity entity, int[] indices)
+        {
+            if (!IsAlive(entity))
+                return false;
+            
+            for (var i = 0; i < indices.Length; i++)
+            {
+                if (_componentStorage.GetFlag(indices[i], entity.Id))
+                    return true;
             }
 
-            _entities.Add(entity.Id, entity);
-            return entity;
+            return false;
         }
 
-        internal Entity GetEntityById(int id)
+        public bool HasAll(Entity entity, int[] indices)
         {
-            if (_entities.TryGetValue(id, out var entity))
-                return entity;
-            return Entity.Null;
-        }
-
-        internal bool IsAlive(Entity entity)
-        {
-            return _entities.TryGetValue(entity.Id, out var existingEntity) && 
-                   existingEntity.Gen == entity.Gen;
-        }
-
-        internal void OnEntityDestroyed(Entity entity)
-        {
-            _entities.Remove(entity.Id);
-            _pooledEntities.Enqueue(new PooledEntity
+            if (!IsAlive(entity))
+                return false;
+            
+            for (var i = 0; i < indices.Length; i++)
             {
-                Id = entity.Id,
-                Gen = entity.Gen
-            });
+                if (!_componentStorage.GetFlag(indices[i], entity.Id))
+                    return false;
+            }
+
+            return true;
+        }
+
+        private void OnComponentChanged(Entity entity, int componentIndex)
+        {
+            _accessor.OnComponentChanged(entity, componentIndex);
+        }
+
+        public void Dispose()
+        {
+            _componentStorage.Dispose();
+            _entityStorage.Dispose();
+            _accessor.Dispose();
         }
     }
 }

@@ -10,14 +10,14 @@ namespace ECS.Runtime.Extensions.SetListeners
         private readonly List<ComponentSet<T>> _listenerBuffer = new List<ComponentSet<T>>();
         private readonly Filter _listeners;
 
-        public AnySetEventSystem(EcsManager manager) : base(manager)
+        public AnySetEventSystem(World world) : base(world)
         {
-            _listeners = manager.Filter(Mask.With<SetListeners<T>>());
+            _listeners = world.Filter(Mask.With<SetListeners<T>>());
         }
 
-        protected override Collector GetCollector(EcsManager manager)
+        protected override Collector GetCollector(World world)
         {
-            return manager.Collector(Mask.With<T>().Set());
+            return world.Collector(Mask.With<T>().Set());
         }
 
         protected override bool Filter(Entity entity)

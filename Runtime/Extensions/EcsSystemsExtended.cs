@@ -7,11 +7,11 @@ namespace ECS.Runtime.Extensions
 {
     public class EcsSystemsExtended : EcsSystems
     {
-        private readonly EcsManager _manager;
+        private readonly World _world;
 
-        public EcsSystemsExtended(EcsManager manager)
+        public EcsSystemsExtended(World world)
         {
-            _manager = manager;
+            _world = world;
         }
 
         public EcsSystemsExtended NotifySet<T>(EventTarget eventTarget)
@@ -19,10 +19,10 @@ namespace ECS.Runtime.Extensions
             switch (eventTarget)
             {
                 case EventTarget.Self:
-                    Add(new SelfSetEventSystem<T>(_manager));
+                    Add(new SelfSetEventSystem<T>(_world));
                     break;
                 case EventTarget.Any:
-                    Add(new AnySetEventSystem<T>(_manager));
+                    Add(new AnySetEventSystem<T>(_world));
                     break;
             }
 
@@ -34,10 +34,10 @@ namespace ECS.Runtime.Extensions
             switch (eventTarget)
             {
                 case EventTarget.Self:
-                    Add(new SelfRemovedEventSystem<T>(_manager));
+                    Add(new SelfRemovedEventSystem<T>(_world));
                     break;
                 case EventTarget.Any:
-                    Add(new AnyRemovedEventSystem<T>(_manager));
+                    Add(new AnyRemovedEventSystem<T>(_world));
                     break;
             }
 
@@ -46,7 +46,7 @@ namespace ECS.Runtime.Extensions
 
         public EcsSystemsExtended Remove<T>()
         {
-            Add(new RemoveComponentSystem<T>(_manager));
+            Add(new RemoveComponentSystem<T>(_world));
             return this;
         }
     }

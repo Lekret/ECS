@@ -14,7 +14,7 @@ namespace ECS.Editor
 
         public override void OnInspectorGUI()
         {
-            EditorGUILayout.LabelField($"Entities count: {_target.Manager.EntitiesCount}");
+            EditorGUILayout.LabelField($"Entities count: {_target.World.EntitiesCount}");
         }
     }
 }

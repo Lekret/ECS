@@ -10,12 +10,12 @@ namespace ECS.Runtime.Extensions
     {
         private readonly Collector _collector;
 
-        protected ReactiveSystem(EcsManager manager)
+        protected ReactiveSystem(World world)
         {
-            _collector = GetCollector(manager);
+            _collector = GetCollector(world);
         }
 
-        protected abstract Collector GetCollector(EcsManager manager);
+        protected abstract Collector GetCollector(World world);
 
         protected abstract bool Filter(Entity entity);
 

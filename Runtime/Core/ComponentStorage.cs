@@ -3,21 +3,21 @@ using System.Collections.Generic;
 
 namespace ECS.Runtime.Core
 {
-    internal sealed class Storage : IDisposable
+    internal sealed class ComponentStorage : IDisposable
     {
         private const int ResizeMultiplier = 2;
-        private readonly World _world;
+        private readonly EntityStorage _entityStorage;
         private readonly List<Array> _components;
         private readonly List<bool[]> _flags;
         private int _flagsCapacity;
 
-        internal Storage(World world, int initialEntityCapacity)
+        internal ComponentStorage(EntityStorage entityStorage, int initialEntityCapacity)
         {
             _components = new List<Array>();
             _flags = new List<bool[]>();
-            _world = world;
+            _entityStorage = entityStorage;
             _flagsCapacity = initialEntityCapacity;
-            _world.MaxEntityIdChanged += OnMaxEntityIdChanged;
+            _entityStorage.MaxEntityIdChanged += OnMaxEntityIdChanged;
             ComponentType.CountChanged += OnComponentsCountChanged;
             OnComponentsCountChanged();
         }
@@ -26,7 +26,7 @@ namespace ECS.Runtime.Core
         {
             _components.Clear();
             _flags.Clear();
-            _world.MaxEntityIdChanged -= OnMaxEntityIdChanged;
+            _entityStorage.MaxEntityIdChanged -= OnMaxEntityIdChanged;
             ComponentType.CountChanged -= OnComponentsCountChanged;
         }
 
@@ -130,7 +130,7 @@ namespace ECS.Runtime.Core
 
         private void OnComponentsCountChanged()
         {
-            var requiredLength = _world.MaxEntityId + 1;
+            var requiredLength = _entityStorage.MaxEntityId + 1;
             if (_flagsCapacity < requiredLength)
                 _flagsCapacity = requiredLength;
             
@@ -143,7 +143,7 @@ namespace ECS.Runtime.Core
 
         private int GetRequiredRowLength()
         {
-            return _world.MaxEntityId + 1;
+            return _entityStorage.MaxEntityId + 1;
         }
     }
 }
