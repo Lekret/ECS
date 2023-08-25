@@ -1,6 +1,6 @@
 ﻿using ECS.Runtime.Access;
 using ECS.Runtime.Core;
-using ECS.Runtime.System;
+using ECS.Runtime.Systems;
 
 namespace ECS.Runtime.Extensions
 {

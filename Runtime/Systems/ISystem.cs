@@ -1,4 +1,4 @@
-﻿namespace ECS.Runtime.System
+﻿namespace ECS.Runtime.Systems
 {
     public interface ISystem
     {

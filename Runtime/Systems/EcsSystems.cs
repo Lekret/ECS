@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ECS.Runtime.System
+namespace ECS.Runtime.Systems
 {
     public class EcsSystems :
         IInitSystem,

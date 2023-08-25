@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using ECS.Runtime.Access.Collector;
 using ECS.Runtime.Core;
-using ECS.Runtime.System;
+using ECS.Runtime.Systems;
 using ECS.Runtime.Utils;
 
 namespace ECS.Runtime.Extensions

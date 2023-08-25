@@ -1,7 +1,7 @@
 ﻿using ECS.Runtime.Core;
 using ECS.Runtime.Extensions.RemoveListeners;
 using ECS.Runtime.Extensions.SetListeners;
-using ECS.Runtime.System;
+using ECS.Runtime.Systems;
 
 namespace ECS.Runtime.Extensions
 {
