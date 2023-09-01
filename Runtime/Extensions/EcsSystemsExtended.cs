@@ -14,6 +14,11 @@ namespace ECS.Runtime.Extensions
             _world = world;
         }
 
+        public new EcsSystemsExtended Add(ISystem system)
+        {
+            return (EcsSystemsExtended) base.Add(system);
+        }
+        
         public EcsSystemsExtended NotifySet<T>(EventTarget eventTarget)
         {
             switch (eventTarget)
