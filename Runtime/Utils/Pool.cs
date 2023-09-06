@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace ECS.Runtime.Utils
 {
@@ -24,10 +25,7 @@ namespace ECS.Runtime.Utils
         private static Queue<T> GetPool()
         {
             if (Queue == null)
-            {
                 Queue = new Queue<T>();
-            }
-
             return Queue;
         }
     }
