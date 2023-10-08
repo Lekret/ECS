@@ -21,7 +21,7 @@ namespace ECS.Runtime.Core
             ComponentType.CountChanged += OnComponentsCountChanged;
             OnComponentsCountChanged();
         }
-        
+
         public void Dispose()
         {
             _components.Clear();
@@ -133,7 +133,7 @@ namespace ECS.Runtime.Core
             var requiredLength = _entityStorage.MaxEntityId + 1;
             if (_flagsCapacity < requiredLength)
                 _flagsCapacity = requiredLength;
-            
+
             while (_flags.Count < ComponentType.Count)
             {
                 var flags = _flagsCapacity > 0 ? new bool[_flagsCapacity] : Array.Empty<bool>();

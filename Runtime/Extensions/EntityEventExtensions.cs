@@ -1,74 +1,75 @@
 ﻿using System.Collections.Generic;
 using ECS.Runtime.Core;
-using ECS.Runtime.Extensions.RemoveListeners;
-using ECS.Runtime.Extensions.SetListeners;
+using ECS.Runtime.Extensions.Listeners;
+using ECS.Runtime.Extensions.Listeners.Global;
+using ECS.Runtime.Extensions.Listeners.Self;
 using ECS.Runtime.Utils;
 
 namespace ECS.Runtime.Extensions
 {
     public static class EntityEventExtensions
     {
-        public static Entity SubscribeSet<T>(this Entity entity, ComponentSet<T> callback)
+        public static Entity SubscribeChanged<T>(this Entity entity, ComponentChanged<T> callback)
         {
-            if (entity.Has<SetListeners<T>>())
+            if (entity.Has<ComponentChangedListeners<T>>())
             {
-                entity.Get<SetListeners<T>>().Value.Add(callback);
+                entity.Get<ComponentChangedListeners<T>>().Value.Add(callback);
             }
             else
             {
-                var listeners = Pool<List<ComponentSet<T>>>.Spawn();
+                var listeners = Pool<List<ComponentChanged<T>>>.Spawn();
                 listeners.Add(callback);
-                entity.Set(new SetListeners<T> {Value = listeners});
+                entity.Set(new ComponentChangedListeners<T> {Value = listeners});
             }
 
             return entity;
         }
 
-        public static Entity UnsubscribeSet<T>(this Entity entity, ComponentSet<T> callback)
+        public static Entity UnsubscribeChanged<T>(this Entity entity, ComponentChanged<T> callback)
         {
-            if (entity.Has<SetListeners<T>>())
+            if (entity.Has<ComponentChangedListeners<T>>())
             {
-                var listeners = entity.Get<SetListeners<T>>().Value;
+                var listeners = entity.Get<ComponentChangedListeners<T>>().Value;
                 listeners.Remove(callback);
                 if (listeners.Count == 0)
                 {
-                    entity.Remove<SetListeners<T>>();
-                    Pool<List<ComponentSet<T>>>.Release(listeners);
+                    entity.Remove<ComponentChangedListeners<T>>();
+                    Pool<List<ComponentChanged<T>>>.Release(listeners);
                 }
             }
             
             return entity;
         }
-
-        public static Entity SubscribeRemoved<T>(this Entity entity, ComponentRemoved<T> callback)
+        
+        public static Entity SubscribeChangedGlobal<T>(this Entity entity, ComponentChanged<T> callback)
         {
-            if (entity.Has<RemovedListeners<T>>())
+            if (entity.Has<ComponentChangedGlobalListeners<T>>())
             {
-                entity.Get<RemovedListeners<T>>().Value.Add(callback);
+                entity.Get<ComponentChangedGlobalListeners<T>>().Value.Add(callback);
             }
             else
             {
-                var listeners = Pool<List<ComponentRemoved<T>>>.Spawn();
+                var listeners = Pool<List<ComponentChanged<T>>>.Spawn();
                 listeners.Add(callback);
-                entity.Set(new RemovedListeners<T> {Value = listeners});
+                entity.Set(new ComponentChangedGlobalListeners<T> {Value = listeners});
             }
-            
+
             return entity;
         }
-
-        public static Entity UnsubscribeRemoved<T>(this Entity entity, ComponentRemoved<T> callback)
+        
+        public static Entity UnsubscribeChangedGlobal<T>(this Entity entity, ComponentChanged<T> callback)
         {
-            if (entity.Has<RemovedListeners<T>>())
+            if (entity.Has<ComponentChangedGlobalListeners<T>>())
             {
-                var listeners = entity.Get<RemovedListeners<T>>().Value;
-                listeners.Remove(callback);
-                if (listeners.Count == 0)
-                {
-                    entity.Remove<RemovedListeners<T>>();
-                    Pool<List<ComponentRemoved<T>>>.Release(listeners);
-                }
+                entity.Get<ComponentChangedGlobalListeners<T>>().Value.Add(callback);
             }
-            
+            else
+            {
+                var listeners = Pool<List<ComponentChanged<T>>>.Spawn();
+                listeners.Add(callback);
+                entity.Set(new ComponentChangedGlobalListeners<T> {Value = listeners});
+            }
+
             return entity;
         }
     }

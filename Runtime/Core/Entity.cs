@@ -8,8 +8,7 @@ namespace ECS.Runtime.Core
     public readonly struct Entity : IEquatable<Entity>
     {
         public const int NullId = -1;
-        public const short NullGen = -1;
-        public static readonly Entity Null = new Entity(NullId, NullGen, null);
+        public static readonly Entity Null = new Entity(NullId, -1, null);
 
         public readonly int Id;
         public readonly short Gen;
@@ -62,7 +61,7 @@ namespace ECS.Runtime.Core
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool IsNull()
         {
-            return Owner == null || Id == NullId || Gen == NullGen;
+            return Owner == null || Id == NullId;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

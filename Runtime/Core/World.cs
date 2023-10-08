@@ -29,7 +29,7 @@ namespace ECS.Runtime.Core
             buffer.AddRange(_entityStorage.Entities);
         }
 
-        public List<Entity> GetEntitiesCopy()
+        public List<Entity> GetAllEntities()
         {
             return new List<Entity>(_entityStorage.Entities);
         }
@@ -49,11 +49,14 @@ namespace ECS.Runtime.Core
             return _accessor.GetFilter(mask);
         }
 
-        public List<Entity> Query(MaskBuilder maskBuilder)
+        public Filter Filter(MaskBuilder maskBuilder)
         {
-            var buffer = new List<Entity>();
-            _accessor.CollectEntities(Mask.AllOf(maskBuilder), buffer);
-            return buffer;
+            return Filter(Mask.AllOf(maskBuilder));
+        }
+
+        public void Query(CompoundMask mask, ICollection<Entity> buffer)
+        {
+            _accessor.CollectEntities(mask, buffer);
         }
 
         public void Query(MaskBuilder maskBuilder, ICollection<Entity> buffer)
@@ -61,9 +64,16 @@ namespace ECS.Runtime.Core
             _accessor.CollectEntities(Mask.AllOf(maskBuilder), buffer);
         }
 
-        public Filter Filter(MaskBuilder maskBuilder)
+        public List<Entity> Query(CompoundMask mask)
         {
-            return Filter(Mask.AllOf(maskBuilder));
+            var buffer = new List<Entity>();
+            Query(mask, buffer);
+            return buffer;
+        }
+
+        public List<Entity> Query(MaskBuilder maskBuilder)
+        {
+            return Query(Mask.AllOf(maskBuilder));
         }
 
         public bool IsAlive(Entity entity)

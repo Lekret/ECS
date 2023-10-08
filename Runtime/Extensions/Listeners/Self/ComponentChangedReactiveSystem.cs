@@ -2,25 +2,26 @@
 using ECS.Runtime.Access;
 using ECS.Runtime.Access.Collector;
 using ECS.Runtime.Core;
+using ECS.Runtime.Utils;
 
-namespace ECS.Runtime.Extensions.RemoveListeners
+namespace ECS.Runtime.Extensions.Listeners.Self
 {
-    public class SelfRemovedEventSystem<T> : ReactiveSystem
+    public class ComponentChangedReactiveSystem<T> : ReactiveSystem
     {
-        private readonly List<ComponentRemoved<T>> _listenerBuffer = new List<ComponentRemoved<T>>();
+        private readonly List<ComponentChanged<T>> _listenerBuffer = new();
 
-        public SelfRemovedEventSystem(World world) : base(world)
+        public ComponentChangedReactiveSystem(World world) : base(world)
         {
         }
 
         protected override Collector GetCollector(World world)
         {
-            return world.Collector(Mask.With<T>().Removed());
+            return world.Collector(Mask.With<T>().SetOrRemoved());
         }
 
         protected override bool Filter(Entity entity)
         {
-            return !entity.Has<T>() && entity.Has<RemovedListeners<T>>();
+            return entity.IsAlive() && entity.Has<ComponentChangedListeners<T>>();
         }
 
         protected override void Execute(List<Entity> entities)
@@ -29,9 +30,7 @@ namespace ECS.Runtime.Extensions.RemoveListeners
             {
                 var entity = entities[i];
                 _listenerBuffer.Clear();
-                _listenerBuffer.AddRange(entity.Get<RemovedListeners<T>>().Value);
-                var value = entity.Get<T>();
-
+                _listenerBuffer.AddRange(entity.Get<ComponentChangedListeners<T>>().Value);
                 for (var k = 0; k < _listenerBuffer.Count; k++)
                 {
                     _listenerBuffer[k](entity);

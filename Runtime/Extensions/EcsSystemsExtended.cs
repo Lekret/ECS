@@ -1,6 +1,7 @@
 ﻿using ECS.Runtime.Core;
-using ECS.Runtime.Extensions.RemoveListeners;
-using ECS.Runtime.Extensions.SetListeners;
+using ECS.Runtime.Extensions.Listeners;
+using ECS.Runtime.Extensions.Listeners.Global;
+using ECS.Runtime.Extensions.Listeners.Self;
 using ECS.Runtime.Systems;
 
 namespace ECS.Runtime.Extensions
@@ -19,33 +20,15 @@ namespace ECS.Runtime.Extensions
             return (EcsSystemsExtended) base.Add(system);
         }
         
-        public EcsSystemsExtended NotifySet<T>(EventTarget eventTarget)
+        public EcsSystemsExtended NotifyChanged<T>()
         {
-            switch (eventTarget)
-            {
-                case EventTarget.Self:
-                    Add(new SelfSetEventSystem<T>(_world));
-                    break;
-                case EventTarget.Any:
-                    Add(new AnySetEventSystem<T>(_world));
-                    break;
-            }
-
+            Add(new ComponentChangedReactiveSystem<T>(_world));
             return this;
         }
 
-        public EcsSystemsExtended NotifyRemoved<T>(EventTarget eventTarget)
+        public EcsSystemsExtended NotifyChangedGlobal<T>()
         {
-            switch (eventTarget)
-            {
-                case EventTarget.Self:
-                    Add(new SelfRemovedEventSystem<T>(_world));
-                    break;
-                case EventTarget.Any:
-                    Add(new AnyRemovedEventSystem<T>(_world));
-                    break;
-            }
-
+            Add(new ComponentChangedGlobalReactiveSystem<T>(_world));
             return this;
         }
 
